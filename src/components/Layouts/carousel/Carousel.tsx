@@ -38,7 +38,7 @@ class Carousel extends React.Component<ICarouselProps,ICarouselStates> {
       }
       level = this.state.active - i;
       items.push(
-        <Item key={index} /* id={this.state.items[index]} */ level={level} />
+        <Item key={index} /* id={this.state.items[index]} */ img={this.state.items[index].images} level={level} />
       );
     }
     return items;
@@ -61,17 +61,21 @@ class Carousel extends React.Component<ICarouselProps,ICarouselStates> {
     });
   }
 
+  componentDidMount(): void {
+      console.log(this.state.items);
+  }
+
   render() {
     return (
       <div id="carousel" className="noselect">
         <div className="arrow arrow-left" onClick={this.leftClick}>
-          <FontAwesomeIcon icon={'arrow-alt-circle-left'} size='lg' />
+          <FontAwesomeIcon icon={'arrow-alt-circle-left'} size='xs' />
         </div>
         <TransitionGroup transitionName={this.state.direction}>
           {this.generateItems()}
         </TransitionGroup>
         <div className="arrow arrow-right" onClick={this.rightClick}>
-        <FontAwesomeIcon icon={'arrow-alt-circle-right'} size='lg'/>
+        <FontAwesomeIcon icon={'arrow-alt-circle-right'} size='xs'/>
         </div>
        
       </div>
@@ -81,6 +85,7 @@ class Carousel extends React.Component<ICarouselProps,ICarouselStates> {
 
 interface IItemProps{
   level:number;
+  img:string;
 }
 
 interface IItemStates{
@@ -101,8 +106,8 @@ class Item extends React.Component<IItemProps,IItemStates> {
       <div
         className={className}
         style={{
-          backgroundImage: "url(http://lorempixel.com/400/200/)",
-          backgroundSize: "cover",
+          backgroundImage: `url(${this.props.img})`,
+          backgroundSize: 'auto'/* "cover" */,
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center center",
         }}

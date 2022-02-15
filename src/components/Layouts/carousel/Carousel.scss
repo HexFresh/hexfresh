@@ -94,47 +94,47 @@ body {
 }
 
 .level-2 {
-    box-shadow: $level-2-bs;
+    //box-shadow: $level-2-bs;
     height: $level2-height;
     width: $level2-width;
     line-height: $level2-height;
-    background-color: #228291;
+    background-color: transparent/* #228291 */;
     left: $level-2-left;
 }
 
 .level-1 {
-    box-shadow: $level-1-bs;
+    //box-shadow: $level-1-bs;
     height: $level1-height;
     width: $level1-width;
     line-height: $level1-height;
-    background-color: #6796E5;
+    background-color: transparent/* #6796E5 */;
     left: $level-1-left;
 }
 
 .level0 {
-    box-shadow: $level0-bs;
+    //box-shadow: $level0-bs;
     height: $level0-height;
     width: $level0-width;
     line-height: $level0-height;
-    background-color: #4EC9E1;
+    background-color: transparent/* #4EC9E1 */;
     left: $level0-left;
 }
 
 .level1 {
-    box-shadow: $level1-bs;
+    //box-shadow: $level1-bs;
     height: $level1-height;
     width: $level1-width;
     line-height: $level1-height;
-    background-color: #6796E5;
+    background-color:/*  #6796E5 */ transparent;
     left: $level1-left;
 }
 
 .level2 {
-    box-shadow: $level2-bs;
+    //box-shadow: $level2-bs;
     height: $level2-height;
     width: $level2-width;
     line-height: $level2-height;
-    background-color: #228291;
+    background-color: /* #228291 */ transparent;
     left: $level2-left;
 }
 
