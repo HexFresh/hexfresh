@@ -11,3 +11,25 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.mh-medium{
+  margin-top: 1rem !important;
+  margin-bottom: 1rem !important;
+}
+
+.carousel-item{
+  height: '160px';
+  color: '#fff';
+  line-height: '160px';
+  text-align: 'center';
+  background: '#364d79';
+}
+
+.app{
+  height: 100vh;
+  background-image: url('https://res.cloudinary.com/droruloek/image/upload/v1644420176/hexfresh/background_ylukwf.jpg');
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover;
+}
+
