@@ -4,10 +4,10 @@ $default-height: 80%;
 $default-width: 25%;
 $level2-height: $default-height - 8%;
 $level2-width: $default-width - 8%;
-$level1-height: $default-height - 2%;
-$level1-width: $default-width - 2%;
-$level0-height: $default-height + 5%;
-$level0-width: $default-width + 5%;
+$level1-height: 26%;
+$level1-width: 8%;
+$level0-height: 67%;
+$level0-width: 20%;
 $level-2-left: 15%;
 $level-1-left: 30%;
 $level0-left: 50%;
@@ -90,7 +90,7 @@ body {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    transition: box-shadow 1s,  height 250ms, width 250ms, left 1s, margin-top 1s, line-height 250ms, background-color 1s;
+    transition: box-shadow 0s,  height 250ms, width 250ms, left .5s, margin-top 1s, line-height 250ms, background-color 1s, background-size .5s ease-in 0.3s;
 }
 
 .level-2 {
@@ -118,6 +118,8 @@ body {
     line-height: $level0-height;
     background-color: transparent/* #4EC9E1 */;
     left: $level0-left;
+    box-shadow: 1rem 1rem 16rem 4rem #d9d814;
+    border-radius: 77%;
 }
 
 .level1 {
@@ -127,6 +129,7 @@ body {
     line-height: $level1-height;
     background-color:/*  #6796E5 */ transparent;
     left: $level1-left;
+    border-radius: 77%;
 }
 
 .level2 {

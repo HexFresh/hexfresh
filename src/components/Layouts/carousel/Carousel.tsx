@@ -102,12 +102,13 @@ class Item extends React.Component<IItemProps,IItemStates> {
 
   render() {
     const className = "item level" + this.props.level;
+    const backgroundSize = this.props.level===0?'400px':'auto';
     return (
       <div
         className={className}
         style={{
           backgroundImage: `url(${this.props.img})`,
-          backgroundSize: 'auto'/* "cover" */,
+          backgroundSize: backgroundSize/* "cover" */,
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center center",
         }}
