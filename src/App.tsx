@@ -77,6 +77,11 @@ function App() {
     <div className="app">
       <Header/>
     {<Carousel items={DUMMY_DATA} active={0}/>}
+    <div>
+
+    <img className='footer' src='/footer.png' alt='footer background'/>
+    <img className='character' src='/main.png' alt='main character'/>
+    </div>
     </div>
   );
 }

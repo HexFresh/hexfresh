@@ -33,3 +33,19 @@ code {
   background-size: cover;
 }
 
+.footer{
+  position: fixed;
+  z-index: 1000;
+  width: 100%;
+  bottom: -7%;
+}
+
+.character{
+  bottom: 1%;
+    position: fixed;
+    z-index: 1001;
+    width: 150px;
+    right: 45%;
+    left: 28%;
+}
+

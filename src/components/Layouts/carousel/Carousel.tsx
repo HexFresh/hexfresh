@@ -104,6 +104,7 @@ class Item extends React.Component<IItemProps,IItemStates> {
     const className = "item level" + this.props.level;
     const backgroundSize = this.props.level===0?'400px':'auto';
     return (
+      <>
       <div
         className={className}
         style={{
@@ -112,7 +113,12 @@ class Item extends React.Component<IItemProps,IItemStates> {
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center center",
         }}
-      ></div>
+        > 
+        <span className="itemname">Onboarding</span>
+        <button className="btn btn-5">Press to do</button>
+        </div>
+        
+        </>
     );
   }
 }
