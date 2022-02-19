@@ -55,11 +55,10 @@ const SignIn = () => {
   };
 
   return (
-    <div>
-      <Grid container style={{ minHeight: '100vh' }}>
+      <Grid container style={{ minHeight: '100vh', backgroundColor:'white' }}>
         <Grid item xs={12} sm={6}>
           <img
-            src="https://res.cloudinary.com/droruloek/image/upload/v1644420176/hexfresh/background_ylukwf.jpg"
+            src="https://res.cloudinary.com/droruloek/image/upload/v1645286113/hexfresh/bg_giveof.png"
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             alt="brand"
           />
@@ -80,7 +79,7 @@ const SignIn = () => {
           alignItems="center"
         >
           <Grid container justifyContent="center">
-            <img src="/Elearning.png" width="75%" alt="logo" />
+            <img src="/logo.svg" width="200px" alt="logo" />
           </Grid>
           <Typography component="h1" variant="h5">
             Sign In
@@ -190,7 +189,6 @@ const SignIn = () => {
           </Box>
         </Grid>
       </Grid>
-    </div>
   );
 };
 
