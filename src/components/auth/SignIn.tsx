@@ -78,8 +78,9 @@ const SignIn = () => {
           }}
           alignItems="center"
         >
-          <Grid container justifyContent="center">
+          <Grid container justifyContent="center" display={'flex'} flexDirection='column' alignItems={'center'}>
             <img src="/logo.svg" width="200px" alt="logo" />
+            <Typography component={'h1'} variant='h2'>HexFresh</Typography>
           </Grid>
           <Typography component="h1" variant="h5">
             Sign In
