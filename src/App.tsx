@@ -4,6 +4,8 @@ import Carousel from './components/Layouts/carousel/Carousel';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { faCoffee } from '@fortawesome/fontawesome-free-solid'
 import MeteorShower from './components/Layouts/meteo-shower/MeteorShower';
+import HeaderLandingPage from './components/Layouts/Header/Header';
+import HeaderInternal from './components/Layouts/Header/HeaderInternal';
 
 const DUMMY_DATA = [
   {
@@ -77,7 +79,7 @@ function App() {
   return (
     <div className="app">
       <MeteorShower/>
-      <Header/>
+      <HeaderInternal/>
     {<Carousel items={DUMMY_DATA} active={0}/>}
     <div>
 

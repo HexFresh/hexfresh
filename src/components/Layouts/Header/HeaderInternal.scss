@@ -1,0 +1,47 @@
+.header-internal {
+  height: 64px;
+  line-height: 64px;
+  box-shadow: 0 4px 12px rgb(138 166 195 / 45%);
+  transition: box-shadow 0.45s cubic-bezier(0.215, 0.61, 0.355, 1);
+  color: white ;
+  .header-content {
+    flex-direction: row;
+    margin: 0 auto;
+    max-width: 1140px;
+    padding: 0 24px;
+  }
+  .header-item {
+    display: flex;
+    align-items: center;
+  }
+  a{
+    color: white;
+  }
+}
+
+.item-space {
+  flex-grow: 1;
+  height: 100%;
+}
+
+.header-content {
+  box-sizing: border-box;
+  display: flex;
+  height: 100%;
+  position: relative;
+}
+
+.logo-item {
+  display: flex;
+  align-items: center;
+  .logo-img {
+    margin-right: 1rem;
+    img {
+      cursor: pointer;
+      height: 36px;
+      padding-right: 0;
+      transition: filter 0.2s;
+      width: 36px;
+    }
+  }
+}
