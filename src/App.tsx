@@ -6,6 +6,7 @@ import { faCoffee } from '@fortawesome/fontawesome-free-solid'
 import MeteorShower from './components/Layouts/meteo-shower/MeteorShower';
 import HeaderLandingPage from './components/Layouts/Header/Header';
 import HeaderInternal from './components/Layouts/Header/HeaderInternal';
+import ProgressCard from './components/Layouts/goalcard/ProgressCard';
 
 const DUMMY_DATA = [
   {
@@ -80,6 +81,7 @@ function App() {
     <div className="app">
       <MeteorShower/>
       <HeaderInternal/>
+      <ProgressCard/>
     {<Carousel items={DUMMY_DATA} active={0}/>}
     <div>
 
