@@ -1,12 +1,12 @@
 import { Space, Table, Tag } from 'antd';
 import 'antd/dist/antd.css';
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 const columns = [
   {
     title: 'Name',
     dataIndex: 'name',
     key: 'name',
-    render: (text:string) => <p>{text}</p>,
+    render: (text: string) => <p>{text}</p>,
   },
   {
     title: 'Age',
@@ -22,9 +22,9 @@ const columns = [
     title: 'Tags',
     key: 'tags',
     dataIndex: 'tags',
-    render: (tags:Array<any>) => (
+    render: (tags: Array<any>) => (
       <>
-        {tags.map(tag => {
+        {tags.map((tag) => {
           let color = tag.length > 5 ? 'geekblue' : 'green';
           if (tag === 'loser') {
             color = 'volcano';
@@ -41,7 +41,7 @@ const columns = [
   {
     title: 'Action',
     key: 'action',
-    render: (text:string, record:any) => (
+    render: (text: string, record: any) => (
       <Space size="middle">
         <a>Invite {record.name}</a>
         <a>Delete</a>
@@ -76,10 +76,8 @@ const data = [
 
 export class EmployeeList extends Component {
   render() {
-    return (
-      <Table columns={columns} dataSource={data}/>
-    )
+    return <p> HellO</p>;
   }
 }
 
-export default EmployeeList
+export default EmployeeList;

@@ -1,0 +1,97 @@
+.list-program {
+  background-color: #fafafb;
+  width: 100vw;
+  height: 100vh;
+}
+
+.list-program .container {
+  width: 100%;
+  height: 100%;
+  background-color: burlywood;
+}
+
+.list-program .container .left {
+  width: 400px;
+  height: 100%;
+  background-color: #fafafb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.list-program .container .left .top {
+  width: 100%;
+  height: 250px;
+  background-color: white;
+  position: relative;
+  border-bottom-left-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+
+.list-program .container .left .top .coverphoto {
+  width: 100%;
+  height: 120px;
+}
+
+.list-program .container .left .top .coverphoto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.list-program .container .left .top .logo {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 100px;
+  border-radius: var(--border-radius);
+}
+
+.list-program .container .left .top .logo img {
+  background-color: white;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  padding: 10px;
+}
+
+.list-program .container .left .top .title {
+  margin-top: 70px;
+  text-align: center;
+  font-weight: bold;
+  font-size: var(--page-name);
+}
+
+.list-program .container .left .bottom {
+  margin-top: 20px;
+  padding: 10px;
+  width: 90%;
+  background-color: white;
+  position: relative;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+
+.list-program .container .left .bottom .list-program {
+  width: 100%;
+  height: 100%;
+}
+
+.list-program .container .left .bottom .list-program .program {
+  background-color: white;
+  border-radius: 2px;
+  box-shadow: var(--shadow);
+  padding: 5px;
+  margin-top: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.list-program .container .left .bottom .list-program .program:hover {
+  background-color: blue;
+  color: white;
+}
