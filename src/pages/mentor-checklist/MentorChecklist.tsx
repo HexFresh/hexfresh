@@ -10,15 +10,15 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import Logout from '@mui/icons-material/Logout';
-import './list-program.css';
+import './mentor-checklist.css';
 
 interface IProgram {
   id: string;
   name: string;
 }
 
-export default function ListProgram() {
-  const [programs, setPrograms] = useState<IProgram[] | []>([]);
+export default function MentorChecklist() {
+  const [checklist, setChecklist] = useState<IProgram[] | []>([]);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -28,7 +28,7 @@ export default function ListProgram() {
     setAnchorEl(null);
   };
 
-  console.log(programs);
+  console.log(checklist);
 
   useEffect(() => {
     const data = [
@@ -61,7 +61,7 @@ export default function ListProgram() {
         name: 'Program 7',
       },
     ];
-    setPrograms(data);
+    setChecklist(data);
   }, []);
 
   return (
@@ -81,13 +81,13 @@ export default function ListProgram() {
                 alt="logo"
               />
             </div>
-            <p className="title">List Program</p>
+            <p className="title">Checklist</p>
           </div>
           <div className="bottom">
             <div className="list-program">
-              {programs.map((program) => (
-                <div key={program.id} className="program">
-                  <div className="program__name">{program.name}</div>
+              {checklist.map((item) => (
+                <div key={item.id} className="program">
+                  <div className="program__name">{item.name}</div>
                 </div>
               ))}
             </div>
@@ -100,7 +100,7 @@ export default function ListProgram() {
                 <AddIcon />
               </IconButton>
             </Tooltip>
-            <div className="program__name">Program 1</div>
+            <div className="program__name">Check 1</div>
             <IconButton
               onClick={handleClick}
               size="small"
