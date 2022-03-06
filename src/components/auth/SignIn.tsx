@@ -34,7 +34,7 @@ const SignIn = () => {
     onChangeHandler: passwordOnChangeHandler,
   } = useInput(passwordValidate);
 
-  
+
   const formIsValid = emailIsValid && passwordIsValid;
 
   const submitHandler = (event: { preventDefault: () => void; }) => {
@@ -48,148 +48,142 @@ const SignIn = () => {
 
   const forgotPasswordHandler = () => {
     if (!email && email.trim() === '') {
-     // dispatch(showModal('You need to provide your email first!.'));
+      // dispatch(showModal('You need to provide your email first!.'));
       return;
     }
 
   };
 
   return (
-      <Grid container style={{ minHeight: '100vh', backgroundColor:'white' }}>
-        <Grid item xs={12} sm={6}>
-          <img
-            src="https://res.cloudinary.com/droruloek/image/upload/v1645286113/hexfresh/bg_giveof.png"
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            alt="brand"
-          />
+    <Grid container style={{ minHeight: '100vh', backgroundColor: 'white' }}>
+      <Grid
+        item
+        xs={12}
+        sm={12}
+        sx={{
+          display: 'grid',
+          flexDirection: 'column',
+          alignItems: 'stretch',
+          flexWrap: 'nowrap',
+          justifyContent: 'center',
+          '& > :not(style)': {},
+          padding: '2rem',
+        }}
+        alignItems="center"
+      >
+        <Grid container justifyContent="center" display={'flex'} flexDirection='column' alignItems={'center'}>
+          <img src="/logo.svg" width="100px" alt="logo" />
+          <Typography component={'h4'} variant='h4'>HexFresh</Typography>
         </Grid>
-        <Grid 
-          item
-          xs={12}
-          sm={6}
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'stretch',
-            flexWrap: 'nowrap',
-            justifyContent: 'center',
-            '& > :not(style)': { m: 2 },
-            padding: '2rem',
-          }}
-          alignItems="center"
-        >
-          <Grid container justifyContent="center" display={'flex'} flexDirection='column' alignItems={'center'}>
-            <img src="/logo.svg" width="200px" alt="logo" />
-            <Typography component={'h1'} variant='h2'>HexFresh</Typography>
-          </Grid>
-          <Typography component="h1" variant="h5">
-            Sign In
-          </Typography>
-          <Box component="form" noValidate sx={{ mt: 3 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              error={emailHasError}
-              onBlur={emailOnBlurHandler}
-              onChange={emailOnChangeHandler}
-              value={email}
-              helperText={
-                emailHasError
-                  ? 'Username must not be empty and include \'@\' if it is email and is a number if it is your studentID'
-                  : ''
-              }
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              error={passwordHasError}
-              onBlur={passwordOnBlurHandler}
-              onChange={passwordOnChangeHandler}
-              value={password}
-              helperText={
-                passwordHasError ? 'Pass must has more than 8 characters.' : ''
-              }
-            />
+        <Typography component="h1" variant="h2" sx={{ textAlignLast: 'center', marginBottom:'-70px' }}>
+          Sign In
+        </Typography>
+        <Box component="form" noValidate sx={{ mt: 3 }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            error={emailHasError}
+            onBlur={emailOnBlurHandler}
+            onChange={emailOnChangeHandler}
+            value={email}
+            helperText={
+              emailHasError
+                ? 'Username must not be empty and include \'@\' if it is email and is a number if it is your studentID'
+                : ''
+            }
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            error={passwordHasError}
+            onBlur={passwordOnBlurHandler}
+            onChange={passwordOnChangeHandler}
+            value={password}
+            helperText={
+              passwordHasError ? 'Pass must has more than 8 characters.' : ''
+            }
+          />
+          <Grid
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              flexWrap: 'nowrap',
+              justifyContent: 'center',
+              '& > :not(style)': { m: 2 },
+            }}
+          >
+            <Button
+              onClick={submitHandler}
+              variant="contained"
+              sx={{
+                maxHeight: 70,
+                borderRadius: 4,
+                height: 50,
+                fontSize: 20,
+                textTransform: 'none',
+                maxWidth: 160,
+              }}
+            >
+              {isLoading ? (
+                <CircularProgress color="inherit" />
+              ) : (
+                'Sign In'
+              )}
+            </Button>
+            <Grid container>
+              <Grid item xs>
+                <div
+                  className={classes['forgot-password']}
+                  aria-hidden="true"
+                  onClick={forgotPasswordHandler}
+                >
+                  Forgot password?
+                  {' '}
+                  {isLoading ? <CircularProgress size={15} /> : ''}
+                </div>
+              </Grid>
+              <Grid item>
+                <Link to="/signup">Don&apos;t have an account? Sign Up</Link>
+              </Grid>
+            </Grid>
+
+            <Divider>
+              <Typography
+                gutterBottom
+                variant="subtitle1"
+                component="div"
+                sx={{ opacity: 0.7, fontWeight: 400, marginBottom: '-7px' }}
+              >
+                Or With
+              </Typography>
+            </Divider>
             <Grid
+              container
               sx={{
                 display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'stretch',
-                flexWrap: 'nowrap',
+                flexDirection: 'row',
                 justifyContent: 'center',
                 '& > :not(style)': { m: 2 },
               }}
             >
-              <Button
-                onClick={submitHandler}
-                variant="contained"
-                sx={{
-                  maxHeight: 80,
-                  borderRadius: 4,
-                  height: 50,
-                  fontSize: 20,
-                  textTransform: 'none',
-                }}
-              >
-                {isLoading ? (
-                  <CircularProgress color="inherit" />
-                ) : (
-                  'Sign In'
-                )}
-              </Button>
-              <Grid container>
-                <Grid item xs>
-                  <div
-                    className={classes['forgot-password']}
-                    aria-hidden="true"
-                    onClick={forgotPasswordHandler}
-                  >
-                    Forgot password?
-                    {' '}
-                    {isLoading ? <CircularProgress size={15} /> : ''}
-                  </div>
-                </Grid>
-                <Grid item>
-                  <Link to="/signup">Don&apos;t have an account? Sign Up</Link>
-                </Grid>
-              </Grid>
-
-              <Divider>
-                <Typography
-                  gutterBottom
-                  variant="subtitle1"
-                  component="div"
-                  sx={{ opacity: 0.7, fontWeight: 400, marginBottom: '-7px' }}
-                >
-                  Or With
-                </Typography>
-              </Divider>
-              <Grid
-                container
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                  '& > :not(style)': { m: 2 },
-                }}
-              >
-                {/* <GoogleSignin /> */}
-              </Grid>
+              {/* <GoogleSignin /> */}
             </Grid>
-          </Box>
-        </Grid>
+          </Grid>
+        </Box>
       </Grid>
+    </Grid>
   );
 };
 
