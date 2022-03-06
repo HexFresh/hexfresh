@@ -8,6 +8,7 @@ import ListProgram from './pages/list-program/ListProgram';
 import PlanetView from './pages/planet/PlanetView';
 import { Provider } from 'react-redux';
 import rootStore from './store/store';
+import MentorChecklist from './pages/mentor-checklist/MentorChecklist';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -19,6 +20,7 @@ ReactDOM.render(
         <Route path="/mentor" element={<ListProgram />} />
 
         <Route path="/planet" element={<PlanetView />} />
+        <Route path="/mentor/plannet/:id" element={<MentorChecklist />} />
       </Routes>
     </BrowserRouter>
   </Provider>
