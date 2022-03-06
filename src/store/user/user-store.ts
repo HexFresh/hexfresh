@@ -1,7 +1,6 @@
-import { createModel } from '@rematch/core'
-import type { RootModel } from '../index'
- 
-export const user = createModel<RootModel>()({
+import { IRootDispatch } from "../store";
+
+export const user:any = {
 	state: {
     userId: '',
     token:''
@@ -9,6 +8,6 @@ export const user = createModel<RootModel>()({
 	reducers: {
 		
 	},
-	effects: (dispatch) => ({
+	effects: (dispatch:IRootDispatch) => ({
 	}),
-})
+}
