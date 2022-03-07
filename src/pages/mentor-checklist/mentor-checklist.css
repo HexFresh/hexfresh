@@ -1,16 +1,16 @@
-.list-program {
+.checklist {
   background-color: #eeeeee;
   width: 100vw;
   height: 100vh;
 }
 
-.list-program .container {
+.checklist .container {
   width: 100%;
   height: 100%;
   display: flex;
 }
 
-.list-program .container .left {
+.checklist .container .left {
   flex: 2;
   width: 100%;
   height: 100%;
@@ -20,7 +20,7 @@
   align-items: center;
 }
 
-.list-program .container .left .top {
+.checklist .container .left .top {
   width: 100%;
   height: 250px;
   background-color: white;
@@ -30,18 +30,18 @@
   box-shadow: var(--shadow);
 }
 
-.list-program .container .left .top .coverphoto {
+.checklist .container .left .top .coverphoto {
   width: 100%;
   height: 120px;
 }
 
-.list-program .container .left .top .coverphoto img {
+.checklist .container .left .top .coverphoto img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.list-program .container .left .top .logo {
+.checklist .container .left .top .logo {
   width: 100%;
   display: flex;
   justify-content: center;
@@ -51,7 +51,7 @@
   border-radius: var(--border-radius);
 }
 
-.list-program .container .left .top .logo img {
+.checklist .container .left .top .logo img {
   background-color: white;
   width: 80px;
   height: 80px;
@@ -61,14 +61,14 @@
   padding: 10px;
 }
 
-.list-program .container .left .top .title {
+.checklist .container .left .top .title {
   margin-top: 70px;
   text-align: center;
   font-weight: bold;
   font-size: var(--page-name);
 }
 
-.list-program .container .left .bottom {
+.checklist .container .left .bottom {
   margin-top: 20px;
   padding: 10px;
   width: 90%;
@@ -80,11 +80,11 @@
   overflow-y: hidden;
 }
 
-.list-program .container .left .bottom:hover {
+.checklist .container .left .bottom:hover {
   overflow: scroll;
 }
 
-.list-program .container .left .bottom .list-program {
+.checklist .container .left .bottom .checklist {
   width: 100%;
   height: 100%;
   display: flex;
@@ -93,7 +93,7 @@
   background-color: white;
 }
 
-.list-program .container .left .bottom .list-program .program {
+.checklist .container .left .bottom .checklist .program {
   background-color: white;
   border-radius: 4px;
   box-shadow: var(--shadow);
@@ -101,17 +101,17 @@
   cursor: pointer;
   font-weight: bold;
 }
-.list-program .container .left .bottom .list-program .program:hover {
+.checklist .container .left .bottom .checklist .program:hover {
   background-color: blue;
   color: white;
 }
 
-.list-program .container .right {
+.checklist .container .right {
   width: 100%;
   flex: 6;
 }
 
-.list-program .container .right .title-bar {
+.checklist .container .right .title-bar {
   background-color: white;
   box-shadow: var(--shadow);
   display: flex;
@@ -120,17 +120,17 @@
   padding: 10px;
 }
 
-.list-program .container .right .title-bar .add-button {
+.checklist .container .right .title-bar .add-button {
   cursor: pointer;
   width: 40px;
   height: 40px;
 }
 
-.list-program .container .right .title-bar .program__name {
+.checklist .container .right .title-bar .program__name {
   font-size: var(--page-name);
   font-weight: bold;
 }
 
-.list-program .container .right .title-bar .more-button {
+.checklist .container .right .title-bar .more-button {
   cursor: pointer;
 }

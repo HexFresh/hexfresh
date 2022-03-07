@@ -65,7 +65,7 @@ export default function MentorChecklist() {
   }, []);
 
   return (
-    <div className="list-program">
+    <div className="checklist">
       <div className="container">
         <div className="left">
           <div className="top">
@@ -84,7 +84,7 @@ export default function MentorChecklist() {
             <p className="title">Checklist</p>
           </div>
           <div className="bottom">
-            <div className="list-program">
+            <div className="checklist">
               {checklist.map((item) => (
                 <div key={item.id} className="program">
                   <div className="program__name">{item.name}</div>

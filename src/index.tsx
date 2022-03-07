@@ -13,17 +13,17 @@ import MentorChecklist from './pages/mentor-checklist/MentorChecklist';
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={rootStore}>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/mentor" element={<ListProgram />} />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/mentor/programs" element={<ListProgram />} />
 
-        <Route path="/planet" element={<PlanetView />} />
-        <Route path="/mentor/plannet/:id" element={<MentorChecklist />} />
-      </Routes>
-    </BrowserRouter>
-  </Provider>
+          <Route path="/planet" element={<PlanetView />} />
+          <Route path="/mentor/planet/:id" element={<MentorChecklist />} />
+        </Routes>
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
