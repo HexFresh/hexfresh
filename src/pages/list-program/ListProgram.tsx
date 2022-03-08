@@ -6,6 +6,9 @@ import FolderIcon from '@mui/icons-material/Folder';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import Fade from '@mui/material/Fade';
+import InputBase from '@mui/material/InputBase';
+import SearchIcon from '@mui/icons-material/Search';
+import Pagination from '@mui/material/Pagination';
 import './list-program.css';
 
 interface IProgram {
@@ -15,8 +18,16 @@ interface IProgram {
 
 export default function ListProgram() {
   const [programs, setPrograms] = useState<IProgram[] | []>([]);
+  const [page, setPage] = React.useState(1);
 
-  console.log(programs);
+  const handleChangePage = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setPage(value);
+  };
+
+  console.log({ programs, page });
 
   useEffect(() => {
     document.title = 'Programs';
@@ -106,6 +117,40 @@ export default function ListProgram() {
           </div>
           <div className="name-page">
             <div className="container">Programs</div>
+          </div>
+          <div className="filter-search">
+            <div className="container">
+              <div className="filter">Filter</div>
+              <div className="search">
+                <SearchIcon />
+                <InputBase placeholder="Search" />
+              </div>
+            </div>
+          </div>
+          <div className="programs">
+            <div className="container">
+              {programs.map((program) => (
+                <div className="program" key={program.id}>
+                  <div className="effect"></div>
+                  <div className="cover-photo">
+                    <img
+                      src="https://photo-net-production-images.s3.amazonaws.com/18577502-lg.jpg"
+                      alt="cover"
+                    />
+                    <div className="program-name">{program.name}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="pagination">
+            <Pagination
+              count={10}
+              shape="rounded"
+              color="secondary"
+              page={page}
+              onChange={handleChangePage}
+            />
           </div>
         </div>
       </div>

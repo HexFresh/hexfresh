@@ -122,3 +122,90 @@
 .list-program .container .page-content .name-page .container {
   width: 80%;
 }
+
+.list-program .container .page-content .filter-search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.list-program .container .page-content .filter-search .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  width: 80%;
+}
+
+.list-program .container .page-content .filter-search .container .search {
+  display: flex;
+  align-items: center;
+  grid-gap: 5px;
+  border-radius: 20px;
+  border: 1px solid #dcdfe3;
+  padding: 0 10px;
+}
+
+.list-program .container .page-content .programs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.list-program .container .page-content .programs .container {
+  width: 80%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 20px;
+}
+
+.list-program .container .page-content .program {
+  width: 100%;
+  background-color: white;
+  height: 400px;
+  box-shadow: var(--shadow);
+  border-radius: 20px;
+  cursor: pointer;
+  position: relative;
+}
+
+.list-program .container .page-content .program:hover .effect {
+  position: absolute;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  top: 0;
+  width: 100%;
+  height: 50%;
+  background-color: black;
+  opacity: 0.3;
+}
+
+.list-program .container .page-content .program .cover-photo {
+  width: 100%;
+  height: 50%;
+}
+
+.list-program .container .page-content .program img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.list-program .container .page-content .program .program-name {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.list-program .container .page-content .pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 20px;
+}
