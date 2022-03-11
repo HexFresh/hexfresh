@@ -66,16 +66,20 @@ const SignIn = () => {
           alignItems: 'stretch',
           flexWrap: 'nowrap',
           justifyContent: 'center',
+          maxWidth: 'fit-content !important',
           '& > :not(style)': {},
           padding: '2rem',
+          margin: 'auto',
+          border: '2px solid #f1f1f1',
+          borderRadius:1.5,
         }}
         alignItems="center"
       >
         <Grid container justifyContent="center" display={'flex'} flexDirection='column' alignItems={'center'}>
           <img src="/logo.svg" width="100px" alt="logo" />
-          <Typography component={'h4'} variant='h4'>HexFresh</Typography>
+          <Typography component={'h2'} variant='h2'>HexFresh</Typography>
         </Grid>
-        <Typography component="h1" variant="h2" sx={{ textAlignLast: 'center', marginBottom:'-70px' }}>
+        <Typography component="h4" variant="h4" sx={{ textAlignLast: 'center', marginTop: '20px' }}>
           Sign In
         </Typography>
         <Box component="form" noValidate sx={{ mt: 3 }}>
@@ -127,14 +131,14 @@ const SignIn = () => {
             <Button
               onClick={submitHandler}
               variant="contained"
-              sx={{
+              /* sx={{
                 maxHeight: 70,
                 borderRadius: 4,
                 height: 50,
                 fontSize: 20,
                 textTransform: 'none',
                 maxWidth: 160,
-              }}
+              }} */
             >
               {isLoading ? (
                 <CircularProgress color="inherit" />
