@@ -100,7 +100,6 @@ export const user: any = {
 				const timer = tokenData.duration;
 				this.runLogoutTimer({ dispatch, timer, navigate });
 				navigate(location.pathname + location.search);
-				console.log('here');
 			}
 		}
 

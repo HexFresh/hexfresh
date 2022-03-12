@@ -60,3 +60,7 @@ code {
 .full-height {
   height: 100vh !important;
 }
+
+.link {
+  color: inherit;
+}

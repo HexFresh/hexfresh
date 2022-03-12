@@ -1,0 +1,197 @@
+.list-phase {
+  padding: 0;
+  margin: 0;
+  width: 100vw;
+  min-height: 100vh;
+  background-color: darkgrey;
+}
+
+.list-phase .container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.list-phase .container .menu {
+  width: 70px;
+  height: 100vh;
+  background-color: #0f171f;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.list-phase .container .menu .logo {
+  margin-top: 10px;
+  padding: 5px;
+  background-color: white;
+  border-radius: 10px;
+  margin-bottom: 30px;
+}
+
+.list-phase .container .menu .menu-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 30px;
+  color: white;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.list-phase .container .menu .menu-item.active {
+  position: relative;
+  opacity: 1;
+}
+
+.list-phase .container .menu .menu-item.active:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 6px;
+  height: 100%;
+  background-color: #446cfc;
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
+}
+
+.list-phase .container .menu .menu-item:hover {
+  opacity: 1;
+}
+
+.list-phase .container .menu .bottom {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 10px;
+  grid-gap: 20px;
+}
+
+.list-phase .container .menu .bottom .folder,
+.list-phase .container .menu .bottom .settings {
+  color: white;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.list-phase .container .menu .bottom .folder:hover,
+.list-phase .container .menu .bottom .settings:hover {
+  opacity: 1;
+}
+
+.list-phase .container .page-content {
+  width: calc(100% - 70px);
+  height: 100vh;
+  background-color: #f6f7f8;
+}
+
+.list-phase .container .page-content .topbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  background-color: white;
+  border-bottom: 1px solid #f6f7f8;
+}
+
+.list-phase .container .page-content .topbar p {
+  font-size: 20px;
+  color: #364d79;
+  font-weight: bold;
+  margin: 0;
+  margin-left: 10px;
+}
+
+.list-phase .container .page-content .name-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background-color: white;
+  border-bottom: 1px solid #f6f7f8;
+  font-size: 24px;
+  font-weight: bold;
+  padding: 20px 0;
+}
+
+.list-phase .container .page-content .name-page .container {
+  width: 80%;
+}
+
+.list-phase .container .page-content .filter-search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.list-phase .container .page-content .filter-search .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  width: 80%;
+}
+
+.list-phase .container .page-content .filter-search .container .search {
+  display: flex;
+  align-items: center;
+  grid-gap: 5px;
+  border-radius: 20px;
+  border: 1px solid #dcdfe3;
+  padding: 0 10px;
+}
+
+.list-phase .container .page-content .phases {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  overflow-y: scroll;
+  height: calc(100vh - 200px);
+}
+
+.list-phase .container .page-content .phases .container {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  grid-gap: 20px;
+}
+
+.list-phase .container .page-content .phase {
+  width: 100%;
+  background-color: white;
+  box-shadow: var(--shadow);
+  border-radius: 10px;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 20px;
+}
+
+.list-phase .container .page-content .phase:hover {
+  background-color: #0f171f;
+  color: white;
+}
+
+.list-phase .container .page-content .phase .cover-photo {
+  margin-right: 20px;
+}
+
+.list-phase .container .page-content .phase img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.list-phase .container .page-content .phase .phase-name {
+  font-size: 18px;
+  font-weight: bold;
+}

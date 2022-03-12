@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import AppsIcon from '@mui/icons-material/Apps';
 import SchoolIcon from '@mui/icons-material/School';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -10,58 +11,52 @@ import Fade from '@mui/material/Fade';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import Pagination from '@mui/material/Pagination';
-import './list-program.css';
+import './list-phase.css';
 
-interface IProgram {
+interface Iphase {
   id: string;
   name: string;
 }
 
-export default function ListProgram() {
-  const [programs, setPrograms] = useState<IProgram[] | []>([]);
-  const [page, setPage] = React.useState(1);
+export default function ListPhase() {
+  const [phases, setphases] = useState<Iphase[] | []>([]);
 
-  const handleChangePage = (
-    event: React.ChangeEvent<unknown>,
-    value: number
-  ) => {
-    setPage(value);
-  };
+  const programId = useParams<{ programId: string }>().programId;
 
-  console.log({ programs, page });
+  console.log({ phases, programId });
 
   useEffect(() => {
-    document.title = 'Programs';
+    document.title = 'Phases';
     const data = [
       {
         id: '1',
-        name: 'Program 1',
+        name: 'phase 1',
       },
       {
         id: '2',
-        name: 'Program 2',
+        name: 'phase 2',
       },
       {
         id: '3',
-        name: 'Program 3',
+        name: 'phase 3',
       },
       {
         id: '4',
-        name: 'Program 4',
+        name: 'phase 4',
       },
     ];
-    setPrograms(data);
+    setphases(data);
   }, []);
 
   return (
-    <div className="list-program">
+    <div className="list-phase">
       <div className="container">
         <div className="menu">
-          <div className="logo">
-            <Link to="/mentor/programs">
+          <Link to="/mentor/programs">
+            <div className="logo">
               <img src="/logo.svg" width="40px" alt="logo" />
-            </Link>
-          </div>
+            </div>
+          </Link>
           <div className="menu-item active">
             <Tooltip
               TransitionComponent={Fade}
@@ -121,7 +116,7 @@ export default function ListProgram() {
             <p>Hexfresh</p>
           </div>
           <div className="name-page">
-            <div className="container">Programs</div>
+            <div className="container">Phases</div>
           </div>
           <div className="filter-search">
             <div className="container">
@@ -132,35 +127,20 @@ export default function ListProgram() {
               </div>
             </div>
           </div>
-          <div className="programs">
+          <div className="phases">
             <div className="container">
-              {programs.map((program) => (
-                <Link
-                  key={program.id}
-                  to={`/mentor/programs/${program.id}/phases`}
-                >
-                  <div className="program">
-                    <div className="effect"></div>
-                    <div className="cover-photo">
-                      <img
-                        src="https://photo-net-production-images.s3.amazonaws.com/18577502-lg.jpg"
-                        alt="cover"
-                      />
-                      <div className="program-name">{program.name}</div>
-                    </div>
+              {phases.map((phase) => (
+                <div className="phase" key={phase.id}>
+                  <div className="cover-photo">
+                    <img
+                      src="https://photo-net-production-images.s3.amazonaws.com/18577502-lg.jpg"
+                      alt="cover"
+                    />
                   </div>
-                </Link>
+                  <div className="phase-name">{phase.name}</div>
+                </div>
               ))}
             </div>
-          </div>
-          <div className="pagination">
-            <Pagination
-              count={10}
-              shape="rounded"
-              color="secondary"
-              page={page}
-              onChange={handleChangePage}
-            />
           </div>
         </div>
       </div>

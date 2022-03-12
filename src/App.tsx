@@ -9,6 +9,8 @@ import SignIn from './components/auth/SignIn';
 import ListProgram from './pages/list-program/ListProgram';
 import PlanetView from './pages/planet/PlanetView';
 import MentorChecklist from './pages/mentor-checklist/MentorChecklist';
+import ListPhase from './pages/list-phase/ListPhase';
+import PhaseDetail from './pages/phase-detail/PhaseDetail';
 import { IRootDispatch, IRootStore } from './store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
@@ -122,6 +124,14 @@ function App() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/mentor/programs" element={<ListProgram />} />
+      <Route
+            path="/mentor/programs/:programId/phases"
+            element={<ListPhase />}
+          />
+          <Route
+            path="/mentor/programs/:programId/phases/:phaseId"
+            element={<PhaseDetail />}
+          />
 
       <Route path="/planet" element={<PlanetView />} />
       <Route path="/mentor/planet/:id" element={<MentorChecklist />} />
