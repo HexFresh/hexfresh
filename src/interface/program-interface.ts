@@ -25,8 +25,8 @@ export interface ITask{
   attachments:IAttachmentTask[];
 
   /* for single choice */
-
   /* for multiple choices */
+  choices: IChoice[];
 
   //insert content for a detail task
 }
@@ -36,4 +36,10 @@ export interface IAttachmentTask{
   attachmentUrl:string;
   attachmentStatus: AttachmentStatus;
   attachmentName:string;
+}
+
+export interface IChoice{
+  choiceId: string;
+  content: string;
+  //isRight: boolean;
 }

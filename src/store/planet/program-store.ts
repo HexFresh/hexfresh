@@ -25,15 +25,55 @@ const programStore: any = {
             },
             {
               id: 'tks2',
-              name: 'Update your vaccination',
+              name: 'What are the e wallets?',
               type: TaskCategory.MULTIPLE_CHOICES,
               taskStatus: TaskStatus.DOING,
+              choices:[{
+                choiceId: 'choice1',
+                content: 'ZaloPay',
+                //isRight: true,
+              },
+              {
+                choiceId: 'choice2',
+                content: 'Momo',
+                //isRight: true,
+              },
+              {
+                choiceId: 'choice3',
+                content: 'Shopee',
+                //isRight: false,
+              },
+              {
+                choiceId: 'choice4',
+                content: 'Paypall',
+                //isRight: true,
+              }],
             },
             {
               id: 'tks3',
-              name: 'Update your study status',
+              name: 'What is the University of Science\'s main campus adderss?',
               type: TaskCategory.SINGLE_CHOICE,
               taskStatus: TaskStatus.TODO,
+              choices:[{
+                choiceId: 'choice1',
+                content: '22 Nuyen Van Cu, D.5.',
+                //isRight: false,
+              },
+              {
+                choiceId: 'choice2',
+                content: '227 Nguyen Van Cu Street, D.5',
+                //isRight: true,
+              },
+              {
+                choiceId: 'choice3',
+                content: 'Linh Trung, Thu Duc City.',
+                //isRight: false,
+              },
+              {
+                choiceId: 'choice4',
+                content: '546 Ngo Gia TU Street, D.5',
+                //isRight: true,
+              }],
             }
           ]
         },

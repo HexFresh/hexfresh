@@ -3,7 +3,7 @@ import 'antd/dist/antd.css';
 //import './index.css';
 import { Layout, Menu, Breadcrumb } from 'antd';
 import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
-import FooterFresher from '../../components/Layouts/footer/FooterFresher';
+import FooterFresher from '../../components/layouts/footer/FooterFresher';
 import { IRootStore, state } from '../../store/store';
 import { connect } from 'react-redux';
 import _ from 'lodash'
@@ -55,7 +55,6 @@ export class PlanetView extends Component<
   }
 
   private _onChangeSelectedTask(task:ITask){
-    console.log(task,'task');
     if(task){
       this.setState({
         selectedTask: task,
@@ -67,7 +66,7 @@ export class PlanetView extends Component<
   render() {
     const { selectedProgram } = this.props;
     const {selectedTask, defaultOpenKeys, defaultSelectedKeys} = this.state;
-    console.log(defaultOpenKeys,defaultSelectedKeys,'ajshdbjahdja');
+   
     return (
       <Layout className='full-height'>
         <Content style={{ padding: '0 50px' }}>

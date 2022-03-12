@@ -1,21 +1,26 @@
-import React from 'react';
+import React, { Dispatch } from 'react';
 import { /* Redirect, */ useNavigate, Link } from 'react-router-dom';
 import {
   Grid,
   TextField,
-  Button,
   Typography,
   Divider,
   CircularProgress,
   FormHelperText,
 } from '@mui/material';
+import {Button} from 'antd';
 import { Box } from '@mui/system';
 import useInput from '../../hooks/use-input';
 import { nameValidate, passwordValidate } from '../../utils/inputValidate';
 import classes from './SignIn.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { IRootDispatch, IRootStore } from '../../store/store';
+import { ILocationStore } from '../../store/location/location-store';
 
 const SignIn = () => {
-  const history = useNavigate();
+  const dispatch = useDispatch<IRootDispatch>()
+  const navigate = useNavigate();
+  const preLocation:ILocationStore = useSelector<IRootStore>((state) => state.locationStore);
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const {
@@ -42,7 +47,7 @@ const SignIn = () => {
     if (!formIsValid) {
       return;
     }
-
+    dispatch.user.signIn({email, password,navigate, preLocation: preLocation.location});
     //dispatch(signIn({ username: email, password }, history, preLocation));
   };
 
@@ -128,24 +133,7 @@ const SignIn = () => {
               '& > :not(style)': { m: 2 },
             }}
           >
-            <Button
-              onClick={submitHandler}
-              variant="contained"
-              /* sx={{
-                maxHeight: 70,
-                borderRadius: 4,
-                height: 50,
-                fontSize: 20,
-                textTransform: 'none',
-                maxWidth: 160,
-              }} */
-            >
-              {isLoading ? (
-                <CircularProgress color="inherit" />
-              ) : (
-                'Sign In'
-              )}
-            </Button>
+            
             <Grid container>
               <Grid item xs>
                 <div
@@ -162,6 +150,15 @@ const SignIn = () => {
                 <Link to="/signup">Don&apos;t have an account? Sign Up</Link>
               </Grid>
             </Grid>
+
+            <Button
+            type="primary"
+            loading={isLoading}
+            size='large'
+            onClick={submitHandler}
+          >
+            Sign In
+          </Button>
 
             <Divider>
               <Typography

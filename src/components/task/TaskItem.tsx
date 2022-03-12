@@ -2,9 +2,10 @@ import Title from 'antd/lib/typography/Title'
 import React, { Component } from 'react'
 import { ITask } from '../../interface/program-interface'
 import { TaskCategory } from '../../utilities/enum-utils';
-import { Upload, message, Radio, Space, Input } from 'antd';
+import { Upload, message, Radio, Space, Input, Typography, Checkbox } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import Dragger from 'antd/lib/upload/Dragger';
+import _ from 'lodash';
 
 interface ITaskItemProps {
   task: ITask | null;
@@ -13,14 +14,16 @@ interface ITaskItemProps {
 interface ITaskItemState {
   radioValue: number;
   selectedFiles: File[];
+  multipleChoices: string[];
 
 }
 
 export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
 
   state = {
-    radioValue: 1,
-    selectedFiles: []
+    radioValue: 0,
+    selectedFiles: [],
+    multipleChoices: [],
   };
 
   componentDidMount() {
@@ -28,17 +31,25 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
   }
 
   componentDidUpdate() {
-
+    console.log(this.state.radioValue);
+    console.log(this.state.multipleChoices);
   }
 
   private _onChangeSingleChoice(e: any) {
-    console.log('radio checked', e.target.value);
-    const {value} = e.target;
-    console.log(value,'value');
-    console.log(this,'this');
-    if(value){
+    const { value } = e.target;
+
+    if (value) {
       this.setState({
-        radioValue:value,
+        radioValue: value,
+      });
+    }
+  }
+
+  private _onChangeMultipleChoices(checkedValues: any) {
+
+    if (checkedValues) {
+      this.setState({
+        multipleChoices: checkedValues,
       });
     }
   }
@@ -81,20 +92,24 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
           </>;
         case TaskCategory.MULTIPLE_CHOICES:
           return <>
-
+            <Checkbox.Group style={{ width: '100%' }} onChange={this._onChangeMultipleChoices.bind(this)}>
+              <Space direction="vertical">
+                {task.choices && _.map(
+                  task.choices,
+                  choice => <Checkbox key={choice.choiceId} value={choice.choiceId}>{choice.content}</Checkbox>
+                )}
+              </Space>
+            </Checkbox.Group>
           </>;
         case TaskCategory.SINGLE_CHOICE:
           const { radioValue } = this.state;
           return <>
             <Radio.Group onChange={this._onChangeSingleChoice.bind(this)} value={radioValue}>
               <Space direction="vertical">
-                <Radio value={1}>Option A</Radio>
-                <Radio value={2}>Option B</Radio>
-                <Radio value={3}>Option C</Radio>
-                <Radio value={4}>
-                  More...
-                  {radioValue === 4 ? <Input style={{ width: 100, marginLeft: 10 }} /> : null}
-                </Radio>
+                {task.choices && _.map(
+                  task.choices,
+                  choice => <Radio key={choice.choiceId} value={choice.choiceId}>{choice.content}</Radio>
+                )}
               </Space>
             </Radio.Group></>;
         default:
