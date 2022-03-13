@@ -4,7 +4,13 @@ import Carousel from './components/layouts/carousel/Carousel';
 import MeteorShower from './components/layouts/meteo-shower/MeteorShower';
 import HeaderInternal from './components/layouts/Header/HeaderInternal';
 import ProgressCard from './components/layouts/goalcard/ProgressCard';
-import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
 import SignIn from './components/auth/SignIn';
 import ListProgram from './pages/list-program/ListProgram';
 import PlanetView from './pages/planet/PlanetView';
@@ -24,22 +30,27 @@ const Home = () => {
       <ProgressCard />
       {<Carousel/>}
       <div>
-
-        <img className='footer' src='/footer.png' alt='footer background' />
-        <img className='character' src='/main.png' alt='main character' />
+        <img className="footer" src="/footer.png" alt="footer background" />
+        <img className="character" src="/main.png" alt="main character" />
       </div>
     </div>
   );
-}
+};
 
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch<IRootDispatch>();
-  const auth: IUserStore = useSelector<IRootStore>(state => state.user);
+  const auth: IUserStore = useSelector<IRootStore>((state) => state.user);
 
   console.log(auth, 'auth');
-  if (!auth.token && (location.pathname !== '/signin' && location.pathname !== '/signup' && location.pathname !== '/courses' && location.pathname !== '/')) {
+  if (
+    !auth.token &&
+    location.pathname !== '/signin' &&
+    location.pathname !== '/signup' &&
+    location.pathname !== '/courses' &&
+    location.pathname !== '/'
+  ) {
     console.log(location.pathname + location.search, 'inititate...');
     dispatch.location.startAt(location.pathname + location.search);
   }
@@ -50,7 +61,7 @@ function App() {
   const routeWithoutSignIn = (
     <Routes>
       <Route path="/signin" element={<SignIn />} />
-      <Route path="*" element={<Navigate to='/signin' />} />
+      <Route path="*" element={<Navigate to="/signin" />} />
     </Routes>
   );
 
@@ -61,25 +72,22 @@ function App() {
       <Route path="planets/:planetId" element={<PlanetView />} />
       <Route path="/mentor/programs" element={<ListProgram />} />
       <Route
-            path="/mentor/programs/:programId/phases"
-            element={<ListPhase />}
-          />
-          <Route
-            path="/mentor/programs/:programId/phases/:phaseId"
-            element={<PhaseDetail />}
-          />
+        path="/mentor/programs/:programId/phases"
+        element={<ListPhase />}
+      />
+      <Route
+        path="/mentor/programs/:programId/phases/:phaseId"
+        element={<PhaseDetail />}
+      />
 
       <Route path="/mentor/planet/:id" element={<MentorChecklist />} />
     </Routes>
   );
 
-  const routeContent = auth.token !== null ? routerWithSignIn : routeWithoutSignIn;
+  const routeContent =
+    auth.token !== null ? routerWithSignIn : routeWithoutSignIn;
 
-  return (
-    <>
-      {routeContent}
-    </>
-  );
+  return <>{routeContent}</>;
 }
 
 export default App;
