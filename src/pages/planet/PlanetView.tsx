@@ -4,11 +4,12 @@ import 'antd/dist/antd.css';
 import { Layout, Menu, Breadcrumb } from 'antd';
 import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
 import FooterFresher from '../../components/layouts/footer/FooterFresher';
-import { IRootStore, state } from '../../store/store';
+import { IRootDispatch, IRootStore } from '../../store/store';
 import { connect } from 'react-redux';
 import _ from 'lodash'
 import TaskItem from '../../components/task/TaskItem';
 import { ITask } from '../../interface/program-interface';
+import { RematchDispatch } from '@rematch/core';
 
 const { SubMenu } = Menu;
 const { Header, Content, Footer, Sider } = Layout;
@@ -19,12 +20,14 @@ interface IPlanetViewStates {
   defaultOpenKeys:string;
 }
 
-interface IPlanetViewProps {
-  selectedProgram?: typeof state.programStore.selectedProgram;
-}
+/* interface IPlanetViewProps {
+  selectedProgram?: RematchDispatch<>;
+  programs?: typeof state.programStore.programs;
+  setSelectedProgram?: typeof dispatch.programStore.setSelectedProgram;
+} */
 
 export class PlanetView extends Component<
-  IPlanetViewProps,
+  PlanViewProps,
   IPlanetViewStates
 > {
 
@@ -36,10 +39,20 @@ export class PlanetView extends Component<
   }
 
   componentDidMount = async () => {
-    const {selectedProgram} = this.props;
+    const {selectedProgram, programs} = this.props;
+    const queryParams = new URLSearchParams(window.location.search);
+    const id = queryParams.get('planetId');
+
+    //do fetch program with programId
+
+    const program = _.find(programs,['id',id]);
+
+    if(program){
+      
+    }
+    
     const selectedKey = selectedProgram&&selectedProgram.checklists[0].id;
     const firstTask = selectedProgram&&selectedProgram.checklists[0].tasks[0];
-    console.log(selectedKey, firstTask);
 
     this.setState({
       defaultSelectedKeys:selectedKey,
@@ -49,7 +62,7 @@ export class PlanetView extends Component<
     
   }
 
-  componentDidUpdate(preProps: IPlanetViewProps, preState: IPlanetViewStates) {
+  componentDidUpdate(preProps: PlanViewProps, preState: IPlanetViewStates) {
     //console.log(preProps,preState);
     
   }
@@ -107,6 +120,15 @@ export class PlanetView extends Component<
 
 const mapStateToProps = (state: IRootStore) => ({
   selectedProgram: state.programStore.selectedProgram,
+  programs: state.programStore.programs,
 })
 
-export default connect(mapStateToProps, null)(PlanetView);
+const mapDispatchToProps = (dispatch:IRootDispatch)=>({
+  setSelectedProgram: dispatch.programStore.setSelectedProgram,
+})
+
+type PlanViewStateProps = ReturnType<typeof mapStateToProps>;
+type PlanViewDispatchProps = ReturnType<typeof mapDispatchToProps>;
+type PlanViewProps = PlanViewStateProps&PlanViewDispatchProps;
+
+export default connect(mapStateToProps, mapDispatchToProps)(PlanetView);

@@ -1,6 +1,16 @@
 // @filename: models.ts
-import programStore from "./planet/program-store"
 import { user } from "./user/user-store"
 import {locationStore} from "./location/location-store"
+import { Models } from "@rematch/core"
+import { programStore } from "./planet/program-store"
 
-export const models = { user, programStore, locationStore }
+export interface RootModel extends Models<RootModel> {
+  user: typeof user,
+  programStore: typeof programStore,
+  location: typeof locationStore,
+}
+ 
+export const models:RootModel = {
+  user, programStore,
+  location: locationStore
+}

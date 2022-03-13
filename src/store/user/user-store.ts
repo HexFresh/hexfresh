@@ -48,12 +48,12 @@ export const user: any = {
 				//console.log(response, 'response');
 
 				const expirationTime = new Date(
-					new Date().getTime() + 10 * 1000,
+					new Date().getTime() + 600 * 1000,
 				);
 
 				localStorage.setItem('token', 'QWERTYUIOPASDFGHJKLWQERTYUIOPASDFGHJKL');
 				localStorage.setItem('expirationTime', expirationTime.toISOString());
-				const timer = 10000;
+				const timer = 600000;
 
 				this.runLogoutTimer({ dispatch, timer, navigate })
 

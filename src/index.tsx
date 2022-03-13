@@ -5,9 +5,6 @@ import App from './App';
 import { Provider } from 'react-redux';
 import rootStore from './store/store';
 import { BrowserRouter } from 'react-router-dom';
-import MentorChecklist from './pages/mentor-checklist/MentorChecklist';
-import ListPhase from './pages/list-phase/ListPhase';
-import PhaseDetail from './pages/phase-detail/PhaseDetail';
 
 ReactDOM.render(
 

@@ -1,36 +1,39 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TransitionGroup } from "react-transition-group";
 import "./Carousel.scss";
+import { IRootStore } from "../../../store/store";
+import { IPhase } from "../../../interface/program-interface";
+import { connect } from "react-redux";
+import { Link, NavigateFunction, useNavigate } from "react-router-dom";
+import { programStore } from "../../../store/planet/program-store";
 interface ICarouselProps {
-  items: Array<any>;
-  active: number
+  programs?: typeof programStore.program;
 }
-interface ICarouselStates{
-  items: Array<any>;
+interface ICarouselStates {
+  items: IPhase[];
   active: number;
   direction: string;
 }
-class Carousel extends React.Component<ICarouselProps,ICarouselStates> {
+class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
   constructor(props: ICarouselProps) {
     super(props);
     this.state = {
-      items: this.props.items,
-      active: this.props.active,
+      items: this.props.programs,
+      active: 0,
       direction: "",
     };
     this.rightClick = this.moveRight.bind(this);
     this.leftClick = this.moveLeft.bind(this);
   }
-  private rightClick(){};
-  private leftClick(){};
+  private rightClick() { };
+  private leftClick() { };
 
   generateItems() {
-    var items = [];
-    var level;
+    const items = [];
+    let level;
     console.log(this.state.active);
-    for (var i = this.state.active - 2; i < this.state.active + 3; i++) {
-      var index = i;
+    for (let i = this.state.active - 2; i < this.state.active + 3; i++) {
+      let index = i;
       if (i < 0) {
         index = this.state.items.length + i;
       } else if (i >= this.state.items.length) {
@@ -38,14 +41,14 @@ class Carousel extends React.Component<ICarouselProps,ICarouselStates> {
       }
       level = this.state.active - i;
       items.push(
-        <Item key={index} /* id={this.state.items[index]} */ img={this.state.items[index].images} level={level} />
+        <Item key={index} /* id={this.state.items[index]} */ level={level} program={this.state.items[index]} />
       );
     }
     return items;
   }
 
   moveLeft() {
-    var newActive = this.state.active;
+    let newActive = this.state.active;
     newActive--;
     this.setState({
       active: newActive < 0 ? this.state.items.length - 1 : newActive,
@@ -54,7 +57,7 @@ class Carousel extends React.Component<ICarouselProps,ICarouselStates> {
   }
 
   moveRight() {
-    var newActive = this.state.active;
+    let newActive = this.state.active;
     this.setState({
       active: (newActive + 1) % this.state.items.length,
       direction: "right",
@@ -62,7 +65,7 @@ class Carousel extends React.Component<ICarouselProps,ICarouselStates> {
   }
 
   componentDidMount(): void {
-     
+
   }
 
   render() {
@@ -75,24 +78,31 @@ class Carousel extends React.Component<ICarouselProps,ICarouselStates> {
           {this.generateItems()}
         </TransitionGroup>
         <div className="arrow arrow-right" onClick={this.rightClick}>
-        {/* <FontAwesomeIcon icon={'arrow-alt-circle-right'} size='xs'/> */}
+          {/* <FontAwesomeIcon icon={'arrow-alt-circle-right'} size='xs'/> */}
         </div>
-       
+
       </div>
     );
   }
 }
 
-interface IItemProps{
-  level:number;
-  img:string;
+interface IItemProps {
+  level: number;
+  program: IPhase;
+  navigate: NavigateFunction;
 }
 
-interface IItemStates{
-  level:number,
+interface IItemStates {
+  level: number;
 }
 
-class Item extends React.Component<IItemProps,IItemStates> {
+const Item = (props: any) => {
+  const navigate = useNavigate();
+
+  return <ItemClass {...props} navigate={navigate} />
+}
+
+class ItemClass extends React.Component<IItemProps, IItemStates> {
   constructor(props: IItemProps | Readonly<IItemProps>) {
     super(props);
     this.state = {
@@ -102,25 +112,30 @@ class Item extends React.Component<IItemProps,IItemStates> {
 
   render() {
     const className = "item level" + this.props.level;
-    const backgroundSize = this.props.level===0?'400px':'auto';
+    const backgroundSize = this.props.level === 0 ? '400px' : 'auto';
+    const { program, navigate } = this.props;
     return (
       <>
-      <div
-        className={className}
-        style={{
-          backgroundImage: `url(${this.props.img})`,
-          backgroundSize: backgroundSize/* "cover" */,
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center center",
-        }}
-        > 
-        <span className="itemname">Onboarding</span>
-        <button className="btn btn-5">Press to do</button>
+        <div
+          className={className}
+          style={{
+            backgroundImage: `url(${program.imageSrc})`,
+            backgroundSize: backgroundSize/* "cover" */,
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center center",
+          }}
+        >
+          <span className="itemname">{program.name}</span>
+          <button onClick={() => { navigate(`/planets/${program.id}`) }} className="btn btn-5">Press to do</button>
         </div>
-        
-        </>
+
+      </>
     );
   }
 }
 
-export default Carousel;
+const mapStateToProps = (state: IRootStore) => ({
+  programs: state.programStore.programs,
+})
+
+export default connect(mapStateToProps, null)(Carousel);

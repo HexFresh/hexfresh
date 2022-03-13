@@ -20,7 +20,7 @@ import { ILocationStore } from '../../store/location/location-store';
 const SignIn = () => {
   const dispatch = useDispatch<IRootDispatch>()
   const navigate = useNavigate();
-  const preLocation:ILocationStore = useSelector<IRootStore>((state) => state.locationStore);
+  const preLocation:ILocationStore = useSelector<IRootStore>((state) => state.location);
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const {

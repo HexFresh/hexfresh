@@ -5,6 +5,7 @@ import { AttachmentStatus, TaskCategory, TaskStatus } from "../utilities/enum-ut
 export interface IPhase{
   id:string;
   name:string;
+  imageSrc:string;
   checklists: ICheckList[];
 }
 
