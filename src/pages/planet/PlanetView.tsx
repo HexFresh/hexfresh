@@ -3,7 +3,7 @@ import 'antd/dist/antd.css';
 //import './index.css';
 import { Layout, Menu, Breadcrumb } from 'antd';
 import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
-import FooterFresher from '../../components/layouts/footer/FooterFresher';
+import FooterFresher from '../../components/Layouts/footer/FooterFresher';
 import { IRootStore, state } from '../../store/store';
 import { connect } from 'react-redux';
 import _ from 'lodash'
