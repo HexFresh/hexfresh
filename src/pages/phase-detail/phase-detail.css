@@ -1,16 +1,55 @@
-#components-layout-demo-top-side-2 .logo {
-  float: left;
-  width: 120px;
-  height: 31px;
-  margin: 16px 24px 16px 0;
-  background: rgba(255, 255, 255, 0.3);
+.phase-detail {
+  height: 100vh;
+  width: 100%;
+  background-color: aquamarine;
 }
 
-.ant-row-rtl #components-layout-demo-top-side-2 .logo {
-  float: right;
-  margin: 16px 0 16px 24px;
+.phase-detail .topbar {
+  height: 50px;
+  width: 100%;
+  background-color: #0f171f;
 }
 
-.site-layout-background {
-  background: #fff;
+.phase-detail .container {
+  width: 100%;
+  padding: 0;
+  height: 100%;
+  display: flex;
+}
+
+.phase-detail .container .sider {
+  flex: 3;
+  background-color: #fff;
+  height: 100vh;
+  padding: 0;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-bottom: 100px;
+}
+
+.phase-detail .container .content {
+  flex: 10;
+  min-height: 100vh;
+  padding: 0;
+}
+
+.phase-detail .add-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.phase-detail .add-task-btn {
+  width: 90%;
+  height: 40px;
+  border-radius: 10px;
+}
+
+.phase-detail .add-checklist-btn {
+  margin-top: 20px;
+  width: 90%;
+  height: 50px;
+  border-radius: 10px;
+  font-weight: bold;
 }

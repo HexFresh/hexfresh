@@ -65,7 +65,7 @@ export default function ListPhase() {
               placement="right"
               arrow
             >
-              <Link className="link" to="/mentor/programs">
+              <Link className="link apps" to="/mentor/programs">
                 <AppsIcon sx={{ width: 40, height: 40 }} />
               </Link>
             </Tooltip>
@@ -130,15 +130,21 @@ export default function ListPhase() {
           <div className="phases">
             <div className="container">
               {phases.map((phase) => (
-                <div className="phase" key={phase.id}>
-                  <div className="cover-photo">
-                    <img
-                      src="https://photo-net-production-images.s3.amazonaws.com/18577502-lg.jpg"
-                      alt="cover"
-                    />
+                <Link
+                  className="link"
+                  key={phase.id}
+                  to={`/mentor/programs/${programId}/phases/${phase.id}`}
+                >
+                  <div className="phase">
+                    <div className="cover-photo">
+                      <img
+                        src="https://photo-net-production-images.s3.amazonaws.com/18577502-lg.jpg"
+                        alt="cover"
+                      />
+                    </div>
+                    <div className="phase-name">{phase.name}</div>
                   </div>
-                  <div className="phase-name">{phase.name}</div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>

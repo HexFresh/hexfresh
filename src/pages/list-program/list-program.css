@@ -44,6 +44,7 @@
 .list-program .container .menu .menu-item.active {
   position: relative;
   opacity: 1;
+  color: white;
 }
 
 .list-program .container .menu .menu-item.active:before {

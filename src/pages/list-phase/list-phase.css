@@ -6,6 +6,14 @@
   background-color: darkgrey;
 }
 
+.list-phase .link {
+  color: black;
+}
+
+.list-phase .link.apps {
+  color: white;
+}
+
 .list-phase .container {
   width: 100%;
   height: 100%;

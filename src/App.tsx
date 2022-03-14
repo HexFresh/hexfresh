@@ -85,7 +85,7 @@ function App() {
   );
 
   const routeContent =
-    auth.token !== null ? routerWithSignIn : routeWithoutSignIn;
+    auth.token === null ? routerWithSignIn : routeWithoutSignIn;
 
   return <>{routeContent}</>;
 }

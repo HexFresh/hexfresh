@@ -1,77 +1,90 @@
 import React from 'react';
-import { Layout, Menu, Breadcrumb } from 'antd';
-import {
-  UserOutlined,
-  LaptopOutlined,
-  NotificationOutlined,
-} from '@ant-design/icons';
+import { Layout, Menu } from 'antd';
+import Button from '@mui/material/Button';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import './phase-detail.css';
 
 const { SubMenu } = Menu;
-const { Header, Content, Sider } = Layout;
+const { Content, Sider } = Layout;
+
+const click = () => {
+  console.log('click');
+};
 
 function PhaseDetail() {
   return (
-    <Layout>
-      <Header className="header">
-        <div className="logo" />
-        <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
-          <Menu.Item key="1">nav 1</Menu.Item>
-          <Menu.Item key="2">nav 2</Menu.Item>
-          <Menu.Item key="3">nav 3</Menu.Item>
-        </Menu>
-      </Header>
-      <Layout>
-        <Sider width={400} className="site-layout-background">
-          <Menu
-            mode="inline"
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
-            style={{ height: '100vh', borderRight: 0 }}
-          >
-            <SubMenu key="sub1" icon={<UserOutlined />} title="subnav 1">
-              <Menu.Item key="1">option1</Menu.Item>
-              <Menu.Item key="2">option2</Menu.Item>
-              <Menu.Item key="3">option3</Menu.Item>
-              <Menu.Item key="4">option4</Menu.Item>
-            </SubMenu>
-            <SubMenu key="sub2" icon={<LaptopOutlined />} title="subnav 2">
-              <Menu.Item key="5">option5</Menu.Item>
-              <Menu.Item key="6">option6</Menu.Item>
-              <Menu.Item key="7">option7</Menu.Item>
-              <Menu.Item key="8">option8</Menu.Item>
-            </SubMenu>
-            <SubMenu
-              key="sub3"
-              icon={<NotificationOutlined />}
-              title="subnav 3"
+    <div className="phase-detail">
+      <div className="topbar"></div>
+      <div className="container">
+        <div className="sider">
+          <div className="menu">
+            <Menu mode="inline" style={{ height: '100%', borderRight: 0 }}>
+              <SubMenu key="sub1" title="Checklist 1">
+                <Menu.Item key="1">Task 1</Menu.Item>
+                <Menu.Item key="2">Task 2</Menu.Item>
+                <Menu.Item key="3">Task 3</Menu.Item>
+                <Menu.Item key="4">Task 4</Menu.Item>
+                <Menu.Item key="5">Task 5</Menu.Item>
+                <Menu.Item key="6">Task 6</Menu.Item>
+                <Menu.Item key="7">Task 7</Menu.Item>
+                <div className="add-btn">
+                  <Button
+                    onClick={click}
+                    className="add-task-btn"
+                    variant="outlined"
+                    startIcon={<AddCircleIcon />}
+                  >
+                    Add Task
+                  </Button>
+                </div>
+              </SubMenu>
+              <SubMenu key="sub2" title="Checklist 2">
+                <Menu.Item key="8">Task 8</Menu.Item>
+                <Menu.Item key="9">Task 9</Menu.Item>
+                <Menu.Item key="10">Task 10</Menu.Item>
+                <Menu.Item key="11">Task 11</Menu.Item>
+                <div className="add-btn">
+                  <Button
+                    onClick={click}
+                    className="add-task-btn"
+                    variant="outlined"
+                    startIcon={<AddCircleIcon />}
+                  >
+                    Add Task
+                  </Button>
+                </div>
+              </SubMenu>
+              <SubMenu key="sub3" title="Checklist 3">
+                <Menu.Item key="12">Task 12</Menu.Item>
+                <Menu.Item key="13">Task 13</Menu.Item>
+                <Menu.Item key="14">Task 14</Menu.Item>
+                <Menu.Item key="15">Task 15</Menu.Item>
+                <div className="add-btn">
+                  <Button
+                    onClick={click}
+                    className="add-task-btn"
+                    variant="outlined"
+                    startIcon={<AddCircleIcon />}
+                  >
+                    Add Task
+                  </Button>
+                </div>
+              </SubMenu>
+            </Menu>
+          </div>
+          <div className="add-btn">
+            <Button
+              className="add-checklist-btn"
+              variant="outlined"
+              startIcon={<AddCircleIcon />}
             >
-              <Menu.Item key="9">option9</Menu.Item>
-              <Menu.Item key="10">option10</Menu.Item>
-              <Menu.Item key="11">option11</Menu.Item>
-              <Menu.Item key="12">option12</Menu.Item>
-            </SubMenu>
-          </Menu>
-        </Sider>
-        <Layout style={{ padding: '0 24px 24px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>Home</Breadcrumb.Item>
-            <Breadcrumb.Item>List</Breadcrumb.Item>
-            <Breadcrumb.Item>App</Breadcrumb.Item>
-          </Breadcrumb>
-          <Content
-            className="site-layout-background"
-            style={{
-              padding: 24,
-              margin: 0,
-              minHeight: 280,
-            }}
-          >
-            Content
-          </Content>
-        </Layout>
-      </Layout>
-    </Layout>
+              Add Checklist
+            </Button>
+          </div>
+        </div>
+        <div className="content"></div>
+      </div>
+    </div>
   );
 }
 
