@@ -1,11 +1,32 @@
 import React from 'react';
-import { Layout, Menu } from 'antd';
+import { Menu } from 'antd';
 import Button from '@mui/material/Button';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import './phase-detail.css';
 
+interface ITask {
+  id: string;
+  checklistId: number;
+  typeId: number;
+  title: string;
+  index: number;
+  point: number;
+  isCompleted: boolean;
+  isChecked: boolean;
+  isActive: boolean;
+}
+
+interface IChecklist {
+  id: number;
+  phaseId: number;
+  index: number;
+  title: string;
+  isCompleted: boolean;
+  isActive: boolean;
+  tasks: ITask[];
+}
+
 const { SubMenu } = Menu;
-const { Content, Sider } = Layout;
 
 const click = () => {
   console.log('click');
@@ -82,7 +103,7 @@ function PhaseDetail() {
             </Button>
           </div>
         </div>
-        <div className="content"></div>
+        <div className="content">ABC</div>
       </div>
     </div>
   );

@@ -21,50 +21,47 @@ const data = [
   {
     id: '1',
     name: 'phase 1',
+    planet: '1',
     order: 1,
   },
   {
     id: '2',
     name: 'phase 2',
+    planet: '1',
     order: 2,
   },
   {
     id: '3',
     name: 'phase 3',
+    planet: '1',
     order: 3,
   },
   {
     id: '4',
     name: 'phase 4',
+    planet: '1',
     order: 4,
   },
   {
     id: '5',
     name: 'phase 5',
+    planet: '1',
     order: 5,
-  },
-  {
-    id: '6',
-    name: 'phase 6',
-    order: 6,
-  },
-  {
-    id: '7',
-    name: 'phase 7',
-    order: 7,
   },
 ];
 
-interface Iphase {
+interface IPhase {
   id: string;
   name: string;
+  planet: string;
   order: number;
 }
 
 export default function ListPhase() {
-  const [phases, setphases] = useState<Iphase[] | []>([]);
+  const [phases, setphases] = useState<IPhase[] | []>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [name, setName] = useState<string>('');
+  const [planet, setPlanet] = useState<string>('1');
 
   const programId = useParams<{ programId: string }>().programId;
 
@@ -75,7 +72,7 @@ export default function ListPhase() {
     setphases(data);
   }, []);
 
-  const updatePhase = (phases: Iphase[]) => {
+  const updatePhase = (phases: IPhase[]) => {
     const newPhases = [...phases];
     setphases(newPhases);
   };
@@ -97,7 +94,7 @@ export default function ListPhase() {
   };
 
   function handleChangePlanet(value: any) {
-    console.log(`selected ${value}`);
+    setPlanet(value);
   }
 
   const submitNewPhase = () => {
@@ -105,6 +102,7 @@ export default function ListPhase() {
       const newPhase = {
         id: phases.length + 1 + '',
         name: name,
+        planet: planet,
         order: phases.length + 1,
       };
       const newPhases = [...phases, newPhase];
@@ -219,6 +217,7 @@ export default function ListPhase() {
         </div>
       </div>
       <Modal
+        className="modal"
         title="Create new phase"
         visible={isModalVisible}
         onOk={handleOk}
@@ -236,24 +235,17 @@ export default function ListPhase() {
           <div className="field">
             <label>Name</label>
             <Input value={name} onChange={changeNewName} />
-            <br />
-            <br />
+          </div>
+          <div className="field">
             <label>Choose planet</label>
             <Select
-              defaultValue="lucy"
+              value={planet}
               style={{ width: '100%' }}
               onChange={handleChangePlanet}
             >
-              <Option value="jack" style={{ height: '80px', display: 'flex' }}>
-                <img
-                  style={{ width: '80px', height: '80px', marginRight: '10px' }}
-                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/640px-Image_created_with_a_mobile_phone.png"
-                  alt=""
-                />
-                Hello
-              </Option>
-              <Option value="lucy">Lucy</Option>
-              <Option value="Yiminghe">yiminghe</Option>
+              <Option value="1">Planet 1</Option>
+              <Option value="2">Planet 2</Option>
+              <Option value="3">Planet 3</Option>
             </Select>
           </div>
         </div>
