@@ -93,7 +93,7 @@ export default function ListPhase() {
     setName(e.target.value);
   };
 
-  function handleChangePlanet(value: any) {
+  function changePlanet(value: any) {
     setPlanet(value);
   }
 
@@ -241,7 +241,7 @@ export default function ListPhase() {
             <Select
               value={planet}
               style={{ width: '100%' }}
-              onChange={handleChangePlanet}
+              onChange={changePlanet}
             >
               <Option value="1">Planet 1</Option>
               <Option value="2">Planet 2</Option>
