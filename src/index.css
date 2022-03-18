@@ -64,3 +64,11 @@ code {
 .link {
   color: inherit;
 }
+
+.mt-medium{
+  margin-top: 12px !important;
+}
+
+.mr-medium{
+  margin-right: 12px !important;
+}

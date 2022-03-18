@@ -81,6 +81,7 @@ function App() {
       />
 
       <Route path="/mentor/planet/:id" element={<MentorChecklist />} />
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 
