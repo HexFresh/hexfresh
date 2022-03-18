@@ -14,7 +14,6 @@ import {
 import SignIn from './components/auth/SignIn';
 import ListProgram from './pages/list-program/ListProgram';
 import PlanetView from './pages/planet/PlanetView';
-import MentorChecklist from './pages/mentor-checklist/MentorChecklist';
 import ListPhase from './pages/list-phase/ListPhase';
 import PhaseDetail from './pages/phase-detail/PhaseDetail';
 import { IRootDispatch, IRootStore } from './store/store';
@@ -79,8 +78,6 @@ function App() {
         path="/mentor/programs/:programId/phases/:phaseId"
         element={<PhaseDetail />}
       />
-
-      <Route path="/mentor/planet/:id" element={<MentorChecklist />} />
     </Routes>
   );
 
