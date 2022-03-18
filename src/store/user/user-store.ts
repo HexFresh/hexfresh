@@ -67,7 +67,7 @@ export const user: any = {
 				});
 
 				if (preLocation) {
-					dispatch.locationStore.arrivedStartLocation();
+					dispatch.location.arrivedStartLocation();
 					navigate(preLocation, { replace: true });
 				} else {
 					navigate('/', { replace: true });

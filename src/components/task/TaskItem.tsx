@@ -2,7 +2,7 @@ import Title from 'antd/lib/typography/Title'
 import React, { Component } from 'react'
 import { ITask } from '../../interface/program-interface'
 import { TaskCategory } from '../../utilities/enum-utils';
-import { Upload, message, Radio, Space, Input, Typography, Checkbox } from 'antd';
+import { message, Radio, Space, Checkbox, Button } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import Dragger from 'antd/lib/upload/Dragger';
 import _ from 'lodash';
@@ -104,7 +104,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
         case TaskCategory.SINGLE_CHOICE:
           const { radioValue } = this.state;
           return <>
-            <Radio.Group onChange={this._onChangeSingleChoice.bind(this)} value={radioValue}>
+            <Radio.Group style={{ width: '100%' }} onChange={this._onChangeSingleChoice.bind(this)} value={radioValue}>
               <Space direction="vertical">
                 {task.choices && _.map(
                   task.choices,
@@ -128,6 +128,8 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
         <Title>{task?.name}</Title>
         <br></br>
         {this._renderTaskContent()}
+        <Button type='primary' className='mt-medium mr-medium'>Submit</Button>
+        <Button type='ghost' className='mt-medium'>Retake</Button>
       </div>
     )
   }

@@ -78,6 +78,8 @@ function App() {
         path="/mentor/programs/:programId/phases/:phaseId"
         element={<PhaseDetail />}
       />
+
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 
