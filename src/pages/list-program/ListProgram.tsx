@@ -70,7 +70,7 @@ export default function ListProgram() {
               placement="right"
               arrow
             >
-              <Link className="link" to="/mentor/programs">
+              <Link className="link apps" to="/mentor/programs">
                 <AppsIcon sx={{ width: 40, height: 40 }} />
               </Link>
             </Tooltip>
@@ -157,7 +157,7 @@ export default function ListProgram() {
             <Pagination
               count={10}
               shape="rounded"
-              color="secondary"
+              color="primary"
               page={page}
               onChange={handleChangePage}
             />

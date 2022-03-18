@@ -6,6 +6,10 @@
   background-color: darkgrey;
 }
 
+.list-program .link.apps {
+  color: white;
+}
+
 .list-program .container {
   width: 100%;
   height: 100%;
@@ -44,6 +48,7 @@
 .list-program .container .menu .menu-item.active {
   position: relative;
   opacity: 1;
+  color: white;
 }
 
 .list-program .container .menu .menu-item.active:before {
@@ -200,6 +205,7 @@
   font-size: 18px;
   font-weight: bold;
   margin-left: 10px;
+  color: black;
 }
 
 .list-program .container .page-content .pagination {

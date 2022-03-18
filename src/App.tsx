@@ -28,7 +28,7 @@ const Home = () => {
       <MeteorShower />
       <HeaderInternal />
       <ProgressCard />
-      {<Carousel/>}
+      {<Carousel />}
       <div>
         <img className="footer" src="/footer.png" alt="footer background" />
         <img className="character" src="/main.png" alt="main character" />
@@ -67,8 +67,8 @@ function App() {
 
   const routerWithSignIn = (
     <Routes>
-      <Route path='/' element={<Navigate to='/planets'/>}/>
-      <Route path="planets" element={<Home />}/>
+      <Route path="/" element={<Navigate to="/planets" />} />
+      <Route path="planets" element={<Home />} />
       <Route path="planets/:planetId" element={<PlanetView />} />
       <Route path="/mentor/programs" element={<ListProgram />} />
       <Route
@@ -86,7 +86,7 @@ function App() {
   );
 
   const routeContent =
-    auth.token !== null ? routerWithSignIn : routeWithoutSignIn;
+    auth.token === null ? routerWithSignIn : routeWithoutSignIn;
 
   return <>{routeContent}</>;
 }
