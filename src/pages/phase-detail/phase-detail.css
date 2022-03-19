@@ -40,16 +40,16 @@
 }
 
 .phase-detail .add-task-btn {
-  border-radius: 10px;
   width: 90%;
+  border-radius: 5px;
 }
 
 .phase-detail .add-checklist-btn {
   margin-top: 20px;
   width: 90%;
   height: 50px;
-  border-radius: 10px;
   font-weight: bold;
+  border-radius: 5px;
 }
 .phase-detail .page-content .no-task {
   display: flex;
