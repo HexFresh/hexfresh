@@ -76,6 +76,11 @@ code {
 .ml-small{
   margin-left: 4px;
 }
+
+.txt-color-black{
+  color: black !important;
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 10px;

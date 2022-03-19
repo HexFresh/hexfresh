@@ -2,7 +2,6 @@ import { NavigateFunction } from "react-router-dom";
 import axiosClient from "../../api/axiosClient";
 import { IRootDispatch, IRootStore } from "../store";
 import { retrieveStoredToken } from '../../utils/calc';
-//axiosClient.defaults.withCredentials=true;
 
 let logoutTimer: NodeJS.Timeout;
 const initialState = {
@@ -45,16 +44,15 @@ export const user: any = {
 			console.log(email, password);
 			try {
 				const response = await axiosClient.post(endpoint, `username=admin&password=123`);
-				console.log(response, 'response');
-
+				const { data } = response;
 				dispatch.user.loginSucces({
 					body: {
-						id: '',
-						email: '123',
-						username: 'admin',
-						roleId: 'ADMIN',
-					}, token: 'QWERTYUIOPASDFGHJKLWQERTYUIOPASDFGHJKL'
+						...data.user
+					}, 
+					token: data.token,
 				});
+
+				localStorage.setItem('token', data.token);
 
 				if (preLocation) {
 					dispatch.location.arrivedStartLocation();
@@ -92,15 +90,26 @@ export const user: any = {
 				navigate(location.pathname + location.search);
 			}
 		},
-		async checkAutoLoginV2({ dispatch, navigate, location }: { dispatch: IRootDispatch, navigate: NavigateFunction, location: any }){
-			const endpoint = `program/1`;
+		async checkAutoLoginV2({ dispatch, navigate, location }: { dispatch: IRootDispatch, navigate: NavigateFunction, location: any }) {
+			const endpoint = `program/12`;
+			const token = localStorage.getItem('token');
+
+			if (token) {
+				dispatch.user.retrieveToken(token);
+			}
+
 			try {
 				const response = await axiosClient.get(endpoint);
-			console.log(response.status,'status');
+				
+				if (response.status === 200) {
+					dispatch.user.loginSucces({
+					 token: 'isLoggedin'
+					});
+				}
 			} catch (error) {
-				console.log(error,'error');
+				console.log(error, 'error');
 			}
-			
+
 		}
 
 	}),

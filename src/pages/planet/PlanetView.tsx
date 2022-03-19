@@ -14,6 +14,7 @@ import _ from 'lodash';
 import TaskItem from '../../components/task/TaskItem';
 import { ITask } from '../../interface/program-interface';
 import { RematchDispatch } from '@rematch/core';
+import HeaderInternal from '../../components/layouts/Header/HeaderInternal';
 
 const { SubMenu } = Menu;
 const { Header, Content, Footer, Sider } = Layout;
@@ -77,6 +78,7 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
 
     return (
       <Layout className="full-height">
+        <HeaderInternal textColorClassName='txt-color-black'/>
         <Content style={{ padding: '0 50px' }}>
           <Breadcrumb style={{ margin: '16px 0' }}>
             <Breadcrumb.Item>Home</Breadcrumb.Item>
