@@ -7,6 +7,12 @@ import {
   PlusOutlined,
 } from '@ant-design/icons';
 import { Button } from 'antd';
+import SpeedDial from '@mui/material/SpeedDial';
+import SpeedDialIcon from '@mui/material/SpeedDialIcon';
+import SpeedDialAction from '@mui/material/SpeedDialAction';
+import Delete from '@mui/icons-material/Delete';
+import SaveIcon from '@mui/icons-material/Save';
+import { styled } from '@mui/material/styles';
 
 interface SelectedQuestionChoice {
   id: number;
@@ -36,12 +42,20 @@ const data = [
   },
 ];
 
+const StyledSpeedDial = styled(SpeedDial)(({ theme }) => ({
+  position: 'absolute',
+  '&.MuiSpeedDial-directionDown, &.MuiSpeedDial-directionRight': {
+    top: theme.spacing(2),
+    right: theme.spacing(2),
+  },
+}));
+
 function MultipleChoiceTask(props: any) {
   const { task } = props;
   const [choices, setChoices] = React.useState<SelectedQuestionChoice[]>([]);
 
   React.useEffect(() => {
-    setChoices(data);
+    // setChoices(data);
   }, []);
 
   const handleIsRightChange = (id: number) => {
@@ -86,7 +100,6 @@ function MultipleChoiceTask(props: any) {
         maxRows={10}
         sx={{ width: '100%', fontSize: '30px', fontWeight: 'bold' }}
         placeholder="Untitled"
-        value={task.title}
       />
       <div className="answer">
         {choices.map((choice: SelectedQuestionChoice) => {
@@ -106,17 +119,18 @@ function MultipleChoiceTask(props: any) {
                 />
               </div>
               <MinusCircleOutlined
-                style={{ fontSize: '30px', color: 'gray' }}
+                className="remove-choice-btn"
+                style={{ fontSize: '25px', color: 'gray' }}
                 onClick={() => handleRemoveChoice(choice.id)}
               />
               {choice.isRight ? (
                 <CheckSquareOutlined
-                  style={{ fontSize: '30px', color: 'green' }}
+                  style={{ fontSize: '25px', color: 'green' }}
                   onClick={() => handleIsRightChange(choice.id)}
                 />
               ) : (
                 <BorderOutlined
-                  style={{ fontSize: '30px', color: 'gray' }}
+                  style={{ fontSize: '25px', color: 'gray' }}
                   onClick={() => handleIsRightChange(choice.id)}
                 />
               )}
@@ -132,6 +146,22 @@ function MultipleChoiceTask(props: any) {
           </Button>
         </div>
       </div>
+      <StyledSpeedDial
+        ariaLabel="SpeedDial playground example"
+        icon={<SpeedDialIcon />}
+        direction="down"
+      >
+        <SpeedDialAction
+          key="delete-task"
+          icon={<Delete />}
+          tooltipTitle="Delete task"
+        />
+        <SpeedDialAction
+          key="save-task"
+          icon={<SaveIcon />}
+          tooltipTitle="Save task"
+        />
+      </StyledSpeedDial>
     </div>
   );
 }

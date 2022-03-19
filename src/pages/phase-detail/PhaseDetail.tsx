@@ -76,6 +76,7 @@ function PhaseDetail() {
   const [isChecklistModalVisible, setIsChecklistModalVisible] =
     React.useState(false);
   const [taskTitle, setTaskTitle] = React.useState<string>('');
+  const [taskPoint, setTaskPoint] = React.useState<number>(0);
   const [taskType, setTaskType] = React.useState<string>('1');
   const [checklistTitle, setChecklistTitle] = React.useState<string>('');
 
@@ -103,7 +104,7 @@ function PhaseDetail() {
         typeId: Number(taskType),
         title: taskTitle,
         index: Math.random() * 1000000,
-        point: 1,
+        point: taskPoint,
         isCompleted: false,
         isChecked: false,
         isActive: true,
@@ -149,6 +150,10 @@ function PhaseDetail() {
 
   const changeTaskTitle = (e: any) => {
     setTaskTitle(e.target.value);
+  };
+
+  const changeTaskPoint = (e: any) => {
+    setTaskPoint(e.target.value);
   };
 
   const changeTaskType = (value: any) => {
@@ -232,6 +237,10 @@ function PhaseDetail() {
           <div className="field">
             <label>Title</label>
             <Input value={taskTitle} onChange={changeTaskTitle} />
+          </div>
+          <div className="field">
+            <label>Point</label>
+            <Input type="number" value={taskPoint} onChange={changeTaskPoint} />
           </div>
           <div className="field">
             <label>Choose type of task</label>
