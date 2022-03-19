@@ -73,7 +73,7 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
   }
 
   render() {
-    const { selectedProgram } = this.props;
+    const { selectedProgram, doSubmitTask } = this.props;
     const { selectedTask, defaultOpenKeys, defaultSelectedKeys } = this.state;
 
     return (
@@ -114,7 +114,7 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
               </Menu>
             </Sider>
             <Content style={{ padding: '0 24px', minHeight: 280 }}>
-              <TaskItem task={selectedTask} />
+              <TaskItem task={selectedTask} doSubmitTask={doSubmitTask} />
             </Content>
           </Layout>
         </Content>
@@ -131,6 +131,7 @@ const mapStateToProps = (state: IRootStore) => ({
 
 const mapDispatchToProps = (dispatch: IRootDispatch) => ({
   setSelectedProgram: dispatch.programStore.setSelectedProgram,
+  doSubmitTask: dispatch.programStore.doSubmitTask,
 });
 
 type PlanViewStateProps = ReturnType<typeof mapStateToProps>;

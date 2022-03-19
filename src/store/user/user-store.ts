@@ -58,7 +58,7 @@ export const user: any = {
 					dispatch.location.arrivedStartLocation();
 					navigate(preLocation, { replace: true });
 				} else {
-					navigate('/', { replace: true });
+					//navigate('/', { replace: true });
 				}
 			} catch (error) {
 				console.log(error);

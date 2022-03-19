@@ -1,4 +1,5 @@
 import { createModel } from '@rematch/core';
+import axiosClient from '../../api/axiosClient';
 import { IPhase } from '../../interface/program-interface';
 import { TaskCategory, TaskStatus } from '../../utilities/enum-utils';
 import { IRootDispatch, IRootStore } from '../store';
@@ -1668,7 +1669,22 @@ export const programStore:any = createModel<IRootStore>()( {
     /* async doFetchProgram(payload: IPhase) {
       console.log(payload,)
       dispatch.setSelectedProgram({});
-    } */
+    }, */
+
+    async doSubmitTask(payload:{
+      checklistId: string;
+      taskId: string;
+    }){
+
+      const {checklistId, taskId} = payload;
+      const endpoint = `checklist/${checklistId}/task/${taskId}`;
+
+      //const reponse = await axiosClient.post(endpoint,payload);
+      // update new repnose task and insert into selected program and set it to state.
+      //..
+      //dispatch.programStore.setSelectedProgram();
+     // return reponse.data;
+    }
   }),
 
 });

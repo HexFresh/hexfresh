@@ -13,6 +13,7 @@ import _ from 'lodash';
 
 interface ITaskItemProps {
   task: ITask | null;
+  doSubmitTask: any;
 }
 
 interface ITaskItemState {
@@ -20,7 +21,7 @@ interface ITaskItemState {
   selectedFiles: File[];
   multipleChoices: string[];
   inputTextArea: string;
-
+  binaryChoices: Map<string, string>;
 }
 
 export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
@@ -30,6 +31,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
     selectedFiles: [],
     multipleChoices: [],
     inputTextArea: '',
+    binaryChoices: new Map(),
   };
 
   componentDidMount() {
@@ -37,8 +39,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
   }
 
   componentDidUpdate() {
-    console.log(this.state.radioValue);
-    console.log(this.state.multipleChoices);
+
   }
 
   private _onChangeSingleChoice(e: any) {
@@ -64,18 +65,44 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
     this.setState({ inputTextArea: target.value });
   }
 
-  private _onChangeBinaryQuiz(e: any) {
+  private _onChangeBinaryChoices(e: any) {
     const { value } = e.target;
 
     if (value) {
-      this.setState({
-        radioValue: value,
-      });
+      const binaryValue = value[0];
+      const key = _.slice(value, 1).toString();
+      console.log(key, binaryValue);
+
+      let binaryChoices = new Map<string, string>(this.state.binaryChoices);
+
+      console.log(binaryChoices);
+
+      binaryChoices.set(key, binaryValue);
+      this.setState({ binaryChoices: binaryChoices });
+      console.log(this.state.binaryChoices, 'binary choice');
     }
+  }
+
+  private _onSubmitTask = () => {
+    const { task, doSubmitTask } = this.props;
+    const { inputTextArea, multipleChoices, radioValue, selectedFiles } = this.state;
+    const payload = {
+      taskId: task?.id,
+      inputTextArea,
+      multipleChoices,
+      radioValue,
+      selectedFiles,
+    }
+    doSubmitTask(payload);
+  }
+
+  private _onRetakeTask = () => {
+
   }
 
   private _renderTaskContent() {
     const { task } = this.props;
+    const { binaryChoices } = this.state;
     if (task) {
       switch (task.type) {
         case TaskCategory.ASSIGNMENT:
@@ -152,10 +179,10 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
               dataSource={task.binarylist}
               renderItem={item => <List.Item >
                 <Space direction="horizontal">
-                  <Radio.Group style={{ width: '100%' }} onChange={this._onChangeSingleChoice.bind(this)} value={'1'}>
+                  <Radio.Group style={{ width: '100%' }} onChange={this._onChangeBinaryChoices.bind(this)} value={binaryChoices.get(item.id)+item.id}>
                     <Space direction="horizontal">
-                      <Radio className='ml-small' key={'1' + item.id} value={'1' + item.content}></Radio>
-                      <Radio className='ml-small' key={'0' + item.id} value={'0' + item.content}></Radio>
+                      <Radio className='ml-small' key={'1' + item.id} value={'1' + item.id}></Radio>
+                      <Radio className='ml-small' key={'0' + item.id} value={'0' + item.id}></Radio>
                     </Space>
                   </Radio.Group>
                   {item.content}
