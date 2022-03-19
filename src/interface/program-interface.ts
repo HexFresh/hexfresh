@@ -24,12 +24,18 @@ export interface ITask{
 
   /* for assignment task */
   attachments:IAttachmentTask[];
-
+  content?:string;
+  binarylist?: IBinaryTask[];
   /* for single choice */
   /* for multiple choices */
   choices: IChoice[];
 
   //insert content for a detail task
+}
+
+export interface IBinaryTask{
+  id: string;
+  content: string;
 }
 
 export interface IAttachmentTask{

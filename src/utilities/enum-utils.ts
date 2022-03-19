@@ -1,7 +1,9 @@
 export enum TaskCategory{
   ASSIGNMENT,
   SINGLE_CHOICE,
-  MULTIPLE_CHOICES
+  MULTIPLE_CHOICES,
+  WRITTING,
+  BINARY,
 }
 
 export enum TaskStatus{

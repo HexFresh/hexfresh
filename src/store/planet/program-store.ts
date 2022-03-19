@@ -489,7 +489,7 @@ export const programStore:any = createModel<IRootStore>()( {
       },
       {
         id: 'abcd6',
-        name: 'Sex onboarding',
+        name: 'Six onboarding',
         imageSrc: 'https://res.cloudinary.com/droruloek/image/upload/v1643119273/hexfresh/planet-09_jvied4.png',
         checklists: [
           {
@@ -1630,6 +1630,31 @@ export const programStore:any = createModel<IRootStore>()( {
                 content: '546 Ngo Gia TU Street, D.5',
                 //isRight: true,
               }],
+            },
+            {
+              id: 'tks15',
+              name: 'Provide your interests',
+              type: TaskCategory.WRITTING,
+              taskStatus: TaskStatus.TODO,
+              content: "",
+              choices: [],
+            },
+            {
+              id: 'tks16',
+              name: 'Your gender',
+              type: TaskCategory.BINARY,
+              taskStatus: TaskStatus.TODO,
+              binarylist:[
+                {
+                  id:'1',
+                  content:'Hexfresh has 6 members.'
+                },
+                {
+                  id:'2',
+                  content:'Hexfresh is all of young boys.',
+                }
+              ],
+              choices: [],
             }
           ]
         },

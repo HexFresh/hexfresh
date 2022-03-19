@@ -55,7 +55,7 @@ function App() {
     dispatch.location.startAt(location.pathname + location.search);
   }
   useEffect(() => {
-    dispatch.user.checkAutoLogin({ dispatch, navigate, location });
+    dispatch.user.checkAutoLoginV2({ dispatch, navigate, location });
   }, []);
 
   const routeWithoutSignIn = (
@@ -86,7 +86,7 @@ function App() {
   );
 
   const routeContent =
-    auth.token === null ? routerWithSignIn : routeWithoutSignIn;
+    auth.token !== null ? routerWithSignIn : routeWithoutSignIn;
 
   return <>{routeContent}</>;
 }

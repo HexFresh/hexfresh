@@ -2,7 +2,7 @@ import { NavigateFunction } from "react-router-dom";
 import axiosClient from "../../api/axiosClient";
 import { IRootDispatch, IRootStore } from "../store";
 import { retrieveStoredToken } from '../../utils/calc';
-
+//axiosClient.defaults.withCredentials=true;
 
 let logoutTimer: NodeJS.Timeout;
 const initialState = {
@@ -44,18 +44,8 @@ export const user: any = {
 			const endpoint = `/auth/login`;
 			console.log(email, password);
 			try {
-				//const response = await axiosClient.post(endpoint, `username=admin&password=123`);
-				//console.log(response, 'response');
-
-				const expirationTime = new Date(
-					new Date().getTime() + 600 * 1000,
-				);
-
-				localStorage.setItem('token', 'QWERTYUIOPASDFGHJKLWQERTYUIOPASDFGHJKL');
-				localStorage.setItem('expirationTime', expirationTime.toISOString());
-				const timer = 600000;
-
-				this.runLogoutTimer({ dispatch, timer, navigate })
+				const response = await axiosClient.post(endpoint, `username=admin&password=123`);
+				console.log(response, 'response');
 
 				dispatch.user.loginSucces({
 					body: {
@@ -101,6 +91,16 @@ export const user: any = {
 				this.runLogoutTimer({ dispatch, timer, navigate });
 				navigate(location.pathname + location.search);
 			}
+		},
+		async checkAutoLoginV2({ dispatch, navigate, location }: { dispatch: IRootDispatch, navigate: NavigateFunction, location: any }){
+			const endpoint = `program/1`;
+			try {
+				const response = await axiosClient.get(endpoint);
+			console.log(response.status,'status');
+			} catch (error) {
+				console.log(error,'error');
+			}
+			
 		}
 
 	}),

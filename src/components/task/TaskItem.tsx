@@ -1,10 +1,14 @@
-import Title from 'antd/lib/typography/Title'
 import React, { Component } from 'react'
 import { ITask } from '../../interface/program-interface'
 import { TaskCategory } from '../../utilities/enum-utils';
-import { message, Radio, Space, Checkbox, Button } from 'antd';
+
+import { message, Radio, Space, Checkbox, Button, List } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
+import Title from 'antd/lib/typography/Title';
+import Text from 'antd/lib/typography/Text';
 import Dragger from 'antd/lib/upload/Dragger';
+import TextArea from 'antd/lib/input/TextArea';
+
 import _ from 'lodash';
 
 interface ITaskItemProps {
@@ -15,6 +19,7 @@ interface ITaskItemState {
   radioValue: number;
   selectedFiles: File[];
   multipleChoices: string[];
+  inputTextArea: string;
 
 }
 
@@ -24,6 +29,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
     radioValue: 0,
     selectedFiles: [],
     multipleChoices: [],
+    inputTextArea: '',
   };
 
   componentDidMount() {
@@ -50,6 +56,20 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
     if (checkedValues) {
       this.setState({
         multipleChoices: checkedValues,
+      });
+    }
+  }
+
+  private _onChangeTextArea({ target }: any) {
+    this.setState({ inputTextArea: target.value });
+  }
+
+  private _onChangeBinaryQuiz(e: any) {
+    const { value } = e.target;
+
+    if (value) {
+      this.setState({
+        radioValue: value,
       });
     }
   }
@@ -112,6 +132,38 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
                 )}
               </Space>
             </Radio.Group></>;
+        case TaskCategory.WRITTING:
+
+          return <>
+            <TextArea
+              value={_.isEmpty(this.state.inputTextArea) ? task.content : this.state.inputTextArea}
+              onChange={this._onChangeTextArea.bind(this)}
+              placeholder="Enter your anwser here."
+              autoSize={{ minRows: 3, maxRows: 5 }}
+            />
+          </>;
+        case TaskCategory.BINARY:
+          return <>
+            <Space direction='horizontal'>
+              <Text strong>True</Text>
+              <Text strong>False</Text>
+            </Space>
+            <List
+              dataSource={task.binarylist}
+              renderItem={item => <List.Item >
+                <Space direction="horizontal">
+                  <Radio.Group style={{ width: '100%' }} onChange={this._onChangeSingleChoice.bind(this)} value={'1'}>
+                    <Space direction="horizontal">
+                      <Radio className='ml-small' key={'1' + item.id} value={'1' + item.content}></Radio>
+                      <Radio className='ml-small' key={'0' + item.id} value={'0' + item.content}></Radio>
+                    </Space>
+                  </Radio.Group>
+                  {item.content}
+                </Space>
+              </List.Item>}
+            />
+
+          </>;
         default:
           break;
       }
@@ -128,8 +180,15 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
         <Title>{task?.name}</Title>
         <br></br>
         {this._renderTaskContent()}
-        <Button type='primary' className='mt-medium mr-medium'>Submit</Button>
-        <Button type='ghost' className='mt-medium'>Retake</Button>
+        <Space direction="vertical">
+          <Text type='success'>Your anwser is correct.</Text>
+          <Text type='danger'>Your anwser is incorrect.</Text>
+          <Space direction="horizontal">
+            <Button type='primary' className='mt-medium mr-medium'>Submit</Button>
+            <Button type='ghost' className='mt-medium'>Retake</Button>
+          </Space>
+
+        </Space>
       </div>
     )
   }
