@@ -1,6 +1,6 @@
 import { NavigateFunction } from "react-router-dom";
 import axiosClient from "../../api/axiosClient";
-import { IRootDispatch, IRootStore } from "../store";
+import rootStore, { IRootDispatch, IRootStore } from "../store";
 import { retrieveStoredToken } from '../../utils/calc';
 
 let logoutTimer: NodeJS.Timeout;
@@ -58,7 +58,7 @@ export const user: any = {
 					dispatch.location.arrivedStartLocation();
 					navigate(preLocation, { replace: true });
 				} else {
-					//navigate('/', { replace: true });
+					navigate('/', { replace: true });
 				}
 			} catch (error) {
 				console.log(error);
@@ -91,21 +91,33 @@ export const user: any = {
 			}
 		},
 		async checkAutoLoginV2({ dispatch, navigate, location }: { dispatch: IRootDispatch, navigate: NavigateFunction, location: any }) {
-			const endpoint = `program/12`;
+			const endpoint = `program/1`;
 			const token = localStorage.getItem('token');
 
 			if (token) {
 				dispatch.user.retrieveToken(token);
 			}
 
+			console.log(rootStore.getState());
+
 			try {
 				const response = await axiosClient.get(endpoint);
-				
+				console.log(response,'response');
 				if (response.status === 200) {
 					dispatch.user.loginSucces({
-					 token: 'isLoggedin'
+					 token: response.data.token||'qưertyuiopasdfghjkl'
 					});
+
+					const preLocation = rootStore.getState().location.location;
+					console.log(preLocation);
+
+					if(preLocation){
+						navigate(`${rootStore.getState().location.location}`)
+					}else{
+						navigate('/');
+					}
 				}
+				
 			} catch (error) {
 				console.log(error, 'error');
 			}

@@ -42,17 +42,14 @@ function App() {
   const dispatch = useDispatch<IRootDispatch>();
   const auth: IUserStore = useSelector<IRootStore>((state) => state.user);
 
-  console.log(auth, 'auth');
-  if (
-    !auth.token &&
-    location.pathname !== '/signin' &&
-    location.pathname !== '/signup' &&
-    location.pathname !== '/courses' &&
-    location.pathname !== '/'
-  ) {
+  if (!auth.token && (
+    location.pathname !== '/signin' 
+    && location.pathname !== '/planets'
+    && location.pathname !== '/')) {
     console.log(location.pathname + location.search, 'inititate...');
     dispatch.location.startAt(location.pathname + location.search);
   }
+
   useEffect(() => {
     dispatch.user.checkAutoLoginV2({ dispatch, navigate, location });
   }, []);
@@ -60,7 +57,7 @@ function App() {
   const routeWithoutSignIn = (
     <Routes>
       <Route path="/signin" element={<SignIn />} />
-      <Route path="*" element={<Navigate to="/signin" />} />
+      {/* <Route path="*" element={<Navigate to="/signin" />} /> */}
     </Routes>
   );
 
@@ -79,7 +76,7 @@ function App() {
         element={<PhaseDetail />}
       />
 
-      <Route path="*" element={<Navigate to="/" />} />
+      {/* <Route path="*" element={<Navigate to="/" />} /> */}
     </Routes>
   );
 
