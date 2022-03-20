@@ -6,13 +6,9 @@ import {
   MinusCircleOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
-import { Button } from 'antd';
-import SpeedDial from '@mui/material/SpeedDial';
-import SpeedDialIcon from '@mui/material/SpeedDialIcon';
-import SpeedDialAction from '@mui/material/SpeedDialAction';
-import Delete from '@mui/icons-material/Delete';
-import SaveIcon from '@mui/icons-material/Save';
-import { styled } from '@mui/material/styles';
+import { Button, message } from 'antd';
+
+const key = 'updatable';
 
 interface SelectedQuestionChoice {
   id: number;
@@ -21,41 +17,23 @@ interface SelectedQuestionChoice {
   isRight: boolean;
 }
 
-const data = [
-  {
-    id: 1,
-    taskId: 1,
-    content: 'Content 1',
-    isRight: false,
-  },
-  {
-    id: 2,
-    taskId: 1,
-    content: 'Content 2',
-    isRight: false,
-  },
-  {
-    id: 3,
-    taskId: 1,
-    content: 'Content 3',
-    isRight: true,
-  },
-];
-
-const StyledSpeedDial = styled(SpeedDial)(({ theme }) => ({
-  position: 'absolute',
-  '&.MuiSpeedDial-directionDown, &.MuiSpeedDial-directionRight': {
-    top: theme.spacing(2),
-    right: theme.spacing(2),
-  },
-}));
-
 function MultipleChoiceTask(props: any) {
   const { task } = props;
   const [choices, setChoices] = React.useState<SelectedQuestionChoice[]>([]);
+  const [question, setQuestion] = React.useState('');
+  const [point, setPoint] = React.useState(0);
+
+  const openMessage = (content: string) => {
+    message.loading({ content, key });
+    setTimeout(() => {
+      message.success({ content: 'Saved!', key, duration: 2 });
+    }, 1000);
+  };
 
   React.useEffect(() => {
     // setChoices(data);
+    // get question (/:taskId/quiz)
+    setPoint(task.point);
   }, []);
 
   const handleIsRightChange = (id: number) => {
@@ -76,7 +54,7 @@ function MultipleChoiceTask(props: any) {
   const handleRemoveChoice = (id: number) => {
     const newChoices = [...choices];
     const index = newChoices.findIndex((c) => c.id === id);
-    const temp = newChoices.splice(index, 1);
+    newChoices.splice(index, 1);
     console.log(newChoices);
     setChoices(newChoices);
   };
@@ -93,6 +71,23 @@ function MultipleChoiceTask(props: any) {
     }
   };
 
+  const handleUpdateQuestion = (taskId: number) => {
+    openMessage('Saving...');
+    // if '' => create new question
+    // else update question
+    console.log({ taskId, question });
+  };
+
+  const handleUpdatePoint = (taskId: number) => {
+    openMessage('Saving...');
+    console.log({ checklistId: task.checklistId, taskId, point });
+  };
+
+  const handleUpdateContent = (choiceId: number, newContent: string) => {
+    openMessage('Saving...');
+    console.log({ taskId: task.id, choiceId, newContent });
+  };
+
   return (
     <div className="multiple-choice-task">
       <InputBase
@@ -100,7 +95,25 @@ function MultipleChoiceTask(props: any) {
         maxRows={10}
         sx={{ width: '100%', fontSize: '30px', fontWeight: 'bold' }}
         placeholder="Untitled"
+        value={question}
+        onChange={(e) => setQuestion(e.target.value)}
+        onBlur={() => handleUpdateQuestion(task.id)}
       />
+      <div className="task-point">
+        <div className="task-point-title">Point:</div>
+        <InputBase
+          type="number"
+          sx={{
+            width: '100px',
+            padding: '5px',
+            fontSize: '20px',
+            border: '1px solid #ccc',
+          }}
+          value={point}
+          onChange={(e) => setPoint(Number(e.target.value))}
+          onBlur={() => handleUpdatePoint(task.id)}
+        />
+      </div>
       <div className="answer">
         {choices.map((choice: SelectedQuestionChoice) => {
           return (
@@ -115,6 +128,7 @@ function MultipleChoiceTask(props: any) {
                   onChange={(e) =>
                     handleContentChange(choice.id, e.target.value)
                   }
+                  onBlur={(e) => handleUpdateContent(choice.id, e.target.value)}
                   placeholder="Fill answer"
                 />
               </div>
@@ -140,28 +154,13 @@ function MultipleChoiceTask(props: any) {
         <div className="add-new-choice">
           <Button
             onClick={addNewChoice}
-            style={{ width: '100%', borderRadius: '20px' }}
+            style={{ width: '100%', borderRadius: '5px' }}
+            disabled={choices.length >= 5}
           >
             <PlusOutlined />
           </Button>
         </div>
       </div>
-      <StyledSpeedDial
-        ariaLabel="SpeedDial playground example"
-        icon={<SpeedDialIcon />}
-        direction="down"
-      >
-        <SpeedDialAction
-          key="delete-task"
-          icon={<Delete />}
-          tooltipTitle="Delete task"
-        />
-        <SpeedDialAction
-          key="save-task"
-          icon={<SaveIcon />}
-          tooltipTitle="Save task"
-        />
-      </StyledSpeedDial>
     </div>
   );
 }

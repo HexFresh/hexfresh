@@ -1,6 +1,5 @@
 import React from 'react';
 import { Menu } from 'antd';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 import './phase-detail.css';
 import { useParams } from 'react-router-dom';
 import TaskContent from '../../components/mentor/task-content/TaskContent';
@@ -76,7 +75,6 @@ function PhaseDetail() {
   const [isChecklistModalVisible, setIsChecklistModalVisible] =
     React.useState(false);
   const [taskTitle, setTaskTitle] = React.useState<string>('');
-  const [taskPoint, setTaskPoint] = React.useState<number>(0);
   const [taskType, setTaskType] = React.useState<string>('1');
   const [checklistTitle, setChecklistTitle] = React.useState<string>('');
 
@@ -104,7 +102,7 @@ function PhaseDetail() {
         typeId: Number(taskType),
         title: taskTitle,
         index: Math.random() * 1000000,
-        point: taskPoint,
+        point: 0,
         isCompleted: false,
         isChecked: false,
         isActive: true,
@@ -150,10 +148,6 @@ function PhaseDetail() {
 
   const changeTaskTitle = (e: any) => {
     setTaskTitle(e.target.value);
-  };
-
-  const changeTaskPoint = (e: any) => {
-    setTaskPoint(e.target.value);
   };
 
   const changeTaskType = (value: any) => {
@@ -225,10 +219,14 @@ function PhaseDetail() {
         onOk={handleTaskOk}
         onCancel={handleTaskCancel}
         footer={[
-          <Button style={{ marginRight: '10px' }} onClick={handleTaskCancel}>
+          <Button
+            key="cancel"
+            style={{ marginRight: '10px' }}
+            onClick={handleTaskCancel}
+          >
             Cancel
           </Button>,
-          <Button type="primary" onClick={handleTaskOk}>
+          <Button key="create" type="primary" onClick={handleTaskOk}>
             Create
           </Button>,
         ]}
@@ -237,10 +235,6 @@ function PhaseDetail() {
           <div className="field">
             <label>Title</label>
             <Input value={taskTitle} onChange={changeTaskTitle} />
-          </div>
-          <div className="field">
-            <label>Point</label>
-            <Input type="number" value={taskPoint} onChange={changeTaskPoint} />
           </div>
           <div className="field">
             <label>Choose type of task</label>
@@ -268,12 +262,13 @@ function PhaseDetail() {
         onCancel={handleChecklistCancel}
         footer={[
           <Button
+            key="cancel"
             style={{ marginRight: '10px' }}
             onClick={handleChecklistCancel}
           >
             Cancel
           </Button>,
-          <Button type="primary" onClick={handleChecklistOk}>
+          <Button key="create" type="primary" onClick={handleChecklistOk}>
             Create
           </Button>,
         ]}
