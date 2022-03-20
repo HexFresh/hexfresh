@@ -1,5 +1,5 @@
 export function sortByField(arr: any, fieldName: string) {
-  return arr.sort(
+  return arr?.sort(
     (prev: any, current: any) => prev[fieldName] - current[fieldName]
   );
 }

@@ -3,8 +3,13 @@ import { Menu } from 'antd';
 import './phase-detail.css';
 import { useParams } from 'react-router-dom';
 import TaskContent from '../../components/mentor/task-content/TaskContent';
-import { Modal, Input, Select, Button } from 'antd';
+import { Modal, Input, Select, Button, message } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
+import {
+  createChecklist,
+  getAllChecklist,
+  createTask,
+} from '../../api/mentor/mentorApi';
 
 const { Option } = Select;
 
@@ -30,41 +35,6 @@ interface IChecklist {
   tasks: ITask[];
 }
 
-const data = [
-  {
-    id: 1,
-    phaseId: 1,
-    index: 1,
-    title: 'Checklist 1',
-    isCompleted: false,
-    isActive: true,
-    tasks: [
-      {
-        id: 2,
-        checklistId: 1,
-        typeId: 1,
-        title: 'Task 1',
-        index: 1,
-        point: 1,
-        isCompleted: false,
-        isChecked: false,
-        isActive: true,
-      },
-      {
-        id: 3,
-        checklistId: 1,
-        typeId: 2,
-        title: 'Task 2',
-        index: 2,
-        point: 1,
-        isCompleted: false,
-        isChecked: false,
-        isActive: true,
-      },
-    ],
-  },
-];
-
 const { SubMenu } = Menu;
 
 function PhaseDetail() {
@@ -80,8 +50,13 @@ function PhaseDetail() {
 
   const phaseId = useParams().phaseId;
 
+  const fetchChecklists = async () => {
+    const result = await getAllChecklist(Number(phaseId));
+    setChecklists(result);
+  };
+
   React.useEffect(() => {
-    setChecklists(data);
+    fetchChecklists();
   }, []);
 
   const showTaskModal = (checklistId: number) => {
@@ -93,48 +68,68 @@ function PhaseDetail() {
     setIsChecklistModalVisible(true);
   };
 
-  const handleTaskOk = () => {
-    if (taskTitle.length > 0) {
-      setIsTaskModalVisible(false);
-      const newTask = {
-        id: Math.random() * 1000000,
-        checklistId,
-        typeId: Number(taskType),
-        title: taskTitle,
-        index: Math.random() * 1000000,
-        point: 0,
-        isCompleted: false,
-        isChecked: false,
-        isActive: true,
-      };
-      setChecklists(
-        checklists.map((checklist: IChecklist) => {
-          if (checklist.id === checklistId) {
-            checklist.tasks.push(newTask);
-          }
-          return checklist;
-        })
-      );
-      setTaskTitle('');
-      setTaskType('1');
+  const findMaxIndexOfChecklist = (checklists: IChecklist[]) => {
+    let maxIndex = 0;
+    for (const checklist of checklists) {
+      if (checklist.index > maxIndex) {
+        maxIndex = checklist.index;
+      }
     }
+    return maxIndex;
+  };
+
+  const findMaxIndexOfTask = (tasks: ITask[]) => {
+    let maxIndex = 0;
+    for (const task of tasks) {
+      if (task.index > maxIndex) {
+        maxIndex = task.index;
+      }
+    }
+    return maxIndex;
   };
 
   const handleChecklistOk = () => {
     if (checklistTitle.length > 0) {
       setIsChecklistModalVisible(false);
       const newChecklist = {
-        id: Math.random() * 1000000,
-        phaseId: Number(phaseId),
-        index: Math.random() * 1000000,
+        index: findMaxIndexOfChecklist(checklists) + 1,
         title: checklistTitle,
-        isCompleted: false,
-        isActive: true,
-        tasks: [],
       };
-      setChecklists([...checklists, newChecklist]);
 
+      const handleCreateChecklist = async () => {
+        message.loading({ content: 'Creating...' }).then(async () => {
+          await createChecklist(Number(phaseId), newChecklist);
+          fetchChecklists();
+          message.success({ content: 'Created', key: 'success' });
+        });
+      };
+      handleCreateChecklist();
       setChecklistTitle('');
+    }
+  };
+
+  const handleTaskOk = () => {
+    if (taskTitle.length > 0) {
+      setIsTaskModalVisible(false);
+      const newTask = {
+        typeId: Number(taskType),
+        title: taskTitle,
+        index:
+          findMaxIndexOfTask(
+            checklists[checklists.findIndex((checklist) => checklist.id === checklistId)]
+              .tasks
+          ) + 1,
+      };
+      const handleCreateTask = async () => {
+        message.loading({ content: 'Creating...' }).then(async () => {
+          await createTask(Number(checklistId), newTask);
+          fetchChecklists();
+          message.success({ content: 'Created', key: 'success' });
+        });
+      };
+      handleCreateTask();
+      setTaskTitle('');
+      setTaskType('1');
     }
   };
 
@@ -166,7 +161,7 @@ function PhaseDetail() {
                     key={checklist.id}
                     title={<span>{checklist.title}</span>}
                   >
-                    {checklist.tasks.map((task) => {
+                    {checklist?.tasks?.map((task) => {
                       return (
                         <Menu.Item key={task.id} onClick={() => setTask(task)}>
                           <div className="task">

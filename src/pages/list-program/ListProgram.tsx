@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { CircularProgress } from '@mui/material';
 import AppsIcon from '@mui/icons-material/Apps';
 import SchoolIcon from '@mui/icons-material/School';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -11,13 +12,15 @@ import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import Pagination from '@mui/material/Pagination';
 import './list-program.css';
+import { getPrograms } from '../../api/mentor/mentorApi';
 
 interface IProgram {
   id: string;
-  name: string;
+  title: string;
 }
 
 export default function ListProgram() {
+  const [loading, setLoading] = useState(false);
   const [programs, setPrograms] = useState<IProgram[] | []>([]);
   const [page, setPage] = React.useState(1);
 
@@ -28,29 +31,22 @@ export default function ListProgram() {
     setPage(value);
   };
 
-  console.log({ programs, page });
-
   useEffect(() => {
     document.title = 'Programs';
-    const data = [
-      {
-        id: '1',
-        name: 'Program 1',
-      },
-      {
-        id: '2',
-        name: 'Program 2',
-      },
-      {
-        id: '3',
-        name: 'Program 3',
-      },
-      {
-        id: '4',
-        name: 'Program 4',
-      },
-    ];
-    setPrograms(data);
+    const fetchPrograms = async () => {
+      setLoading(true);
+      const result = await getPrograms();
+      setPrograms(
+        result || [
+          {
+            id: '1',
+            title: 'Program 1',
+          },
+        ]
+      );
+      setLoading(false);
+    };
+    fetchPrograms();
   }, []);
 
   return (
@@ -134,23 +130,29 @@ export default function ListProgram() {
           </div>
           <div className="programs">
             <div className="container">
-              {programs.map((program) => (
-                <Link
-                  key={program.id}
-                  to={`/mentor/programs/${program.id}/phases`}
-                >
-                  <div className="program">
-                    <div className="effect"></div>
-                    <div className="cover-photo">
-                      <img
-                        src="https://photo-net-production-images.s3.amazonaws.com/18577502-lg.jpg"
-                        alt="cover"
-                      />
-                      <div className="program-name">{program.name}</div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
+              {loading ? (
+                <CircularProgress className="circular-progress" />
+              ) : (
+                <div className="bao">
+                  {programs.map((program) => (
+                    <Link
+                      key={program.id}
+                      to={`/mentor/programs/${program.id}/phases`}
+                    >
+                      <div className="program">
+                        <div className="effect"></div>
+                        <div className="cover-photo">
+                          <img
+                            src="https://photo-net-production-images.s3.amazonaws.com/18577502-lg.jpg"
+                            alt="cover"
+                          />
+                          <div className="program-name">{program.title}</div>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
           <div className="pagination">

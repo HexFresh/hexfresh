@@ -126,7 +126,7 @@ class ItemClass extends React.Component<IItemProps, IItemStates> {
           }}
         >
           <span className="itemname">{program.name}</span>
-          <button onClick={() => { navigate(`/planets/${program.id}`) }} className="btn btn-5">Press to do</button>
+          <button onClick={() => { navigate(`/mentor/programs`) }} className="btn btn-5">Press to do</button>
         </div>
 
       </>

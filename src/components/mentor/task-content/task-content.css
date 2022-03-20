@@ -45,10 +45,19 @@
 }
 
 /* MULTIPLE CHOICE TASK */
+.multiple-choice-task-main {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .task-content .multiple-choice-task {
   position: relative;
   padding: 40px 100px;
+  width: 100%;
+  height: 100%;
 }
 
 .task-content .multiple-choice-task .task-point {

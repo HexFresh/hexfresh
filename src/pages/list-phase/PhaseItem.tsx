@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import './list-phase.css';
-import { Modal, Button } from 'antd';
+import { Modal, Button, message } from 'antd';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
@@ -9,6 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { deletePhase } from '../../api/mentor/mentorApi';
 
 interface Iphase {
   id: string;
@@ -27,7 +28,7 @@ export default function PhaseItem(props: any) {
     setAnchorEl(null);
   };
 
-  const { phase } = props;
+  const { phase, updatePhase } = props;
 
   const programId = useParams<{ programId: string }>().programId;
 
@@ -45,18 +46,23 @@ export default function PhaseItem(props: any) {
     setIsModalVisible(false);
   };
 
+  const handleDeletePhase = async () => {
+    message.loading({ content: 'Deleting...' }).then(async () => {
+      await deletePhase(Number(programId), Number(phase.id));
+      updatePhase();
+      message.success({ content: 'Deleted', duration: 2 });
+    });
+  };
+
   return (
     <div className="phase-item">
       <div className="phase">
         <div className="left">
           <div className="cover-photo">
-            <img
-              src="https://photo-net-production-images.s3.amazonaws.com/18577502-lg.jpg"
-              alt="cover"
-            />
+            <img src={phase?.image?.imageLink} alt="cover" />
           </div>
           <Link to={`/mentor/programs/${programId}/phases/${phase.id}`}>
-            <div className="phase-name">{phase.name}</div>
+            <div className="phase-name">{phase.title}</div>
           </Link>
         </div>
         <div className="right">
@@ -122,13 +128,13 @@ export default function PhaseItem(props: any) {
           <ListItemIcon>
             <EditIcon fontSize="small" />
           </ListItemIcon>
-          {`Edit ${phase.name}`}
+          {`Edit ${phase.title}`}
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={handleDeletePhase}>
           <ListItemIcon>
             <DeleteIcon fontSize="small" />
           </ListItemIcon>
-          {`Delete ${phase.name}`}
+          {`Delete ${phase.title}`}
         </MenuItem>
       </Menu>
     </div>

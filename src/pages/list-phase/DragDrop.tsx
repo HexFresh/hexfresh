@@ -69,27 +69,29 @@ export default function DragDrop(props: any) {
               {...provide.droppableProps}
               ref={provide.innerRef}
             >
-              {sortByField(phases, 'order').map((phase: any, index: number) => (
-                <Draggable
-                  draggableId={phase.id.toString()}
-                  index={index}
-                  key={phase.id}
-                >
-                  {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.dragHandleProps}
-                      {...provided.draggableProps}
-                      style={getItemStyle(
-                        snapshot.isDragging,
-                        provided.draggableProps.style
-                      )}
-                    >
-                      <PhaseItem phase={phase} />
-                    </div>
-                  )}
-                </Draggable>
-              ))}
+              {sortByField(phases, 'index')?.map(
+                (phase: any, index: number) => (
+                  <Draggable
+                    draggableId={phase.id.toString()}
+                    index={index}
+                    key={phase.id}
+                  >
+                    {(provided, snapshot) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.dragHandleProps}
+                        {...provided.draggableProps}
+                        style={getItemStyle(
+                          snapshot.isDragging,
+                          provided.draggableProps.style
+                        )}
+                      >
+                        <PhaseItem updatePhase={updatePhase} phase={phase} />
+                      </div>
+                    )}
+                  </Draggable>
+                )
+              )}
               {provide.placeholder}
             </div>
           )}

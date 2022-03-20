@@ -11,53 +11,23 @@ import Fade from '@mui/material/Fade';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import { PlusOutlined } from '@ant-design/icons';
+import { CircularProgress } from '@mui/material';
 import './list-phase.css';
 import DragDrop from './DragDrop';
-import { Modal, Input, Button, Select } from 'antd';
+import { Modal, Input, Button, Select, message } from 'antd';
+import { getPhasesOfProgram, createPhase } from '../../api/mentor/mentorApi';
 
 const { Option } = Select;
-
-const data = [
-  {
-    id: '1',
-    name: 'phase 1',
-    planet: '1',
-    order: 1,
-  },
-  {
-    id: '2',
-    name: 'phase 2',
-    planet: '1',
-    order: 2,
-  },
-  {
-    id: '3',
-    name: 'phase 3',
-    planet: '1',
-    order: 3,
-  },
-  {
-    id: '4',
-    name: 'phase 4',
-    planet: '1',
-    order: 4,
-  },
-  {
-    id: '5',
-    name: 'phase 5',
-    planet: '1',
-    order: 5,
-  },
-];
 
 interface IPhase {
   id: string;
   name: string;
-  planet: string;
-  order: number;
+  imageId: string;
+  index: number;
 }
 
 export default function ListPhase() {
+  const [loading, setLoading] = useState(false);
   const [phases, setphases] = useState<IPhase[] | []>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [name, setName] = useState<string>('');
@@ -65,16 +35,21 @@ export default function ListPhase() {
 
   const programId = useParams<{ programId: string }>().programId;
 
-  console.log({ phases, programId });
+  const fetchPhases = async () => {
+    setLoading(true);
+    const result = await getPhasesOfProgram(Number(programId));
+    setphases(result);
+    setLoading(false);
+  };
 
   useEffect(() => {
     document.title = 'Phases';
-    setphases(data);
+
+    fetchPhases();
   }, []);
 
-  const updatePhase = (phases: IPhase[]) => {
-    const newPhases = [...phases];
-    setphases(newPhases);
+  const updatePhase = () => {
+    fetchPhases();
   };
 
   const showModal = () => {
@@ -97,16 +72,31 @@ export default function ListPhase() {
     setPlanet(value);
   }
 
+  const findMaxIndex = (phases: IPhase[]) => {
+    let maxIndex = 0;
+    for (const phase of phases) {
+      if (phase.index > maxIndex) {
+        maxIndex = phase.index;
+      }
+    }
+    return maxIndex;
+  };
+
   const submitNewPhase = () => {
     if (name) {
       const newPhase = {
-        id: phases.length + 1 + '',
-        name: name,
-        planet: planet,
-        order: phases.length + 1,
+        title: name,
+        imageId: planet,
+        index: findMaxIndex(phases) + 1,
       };
-      const newPhases = [...phases, newPhase];
-      setphases(newPhases);
+      const handleCreatePhase = async () => {
+        message.loading({ content: 'Creating...' }).then(async () => {
+          await createPhase(Number(programId), newPhase);
+          fetchPhases();
+          message.success({ content: 'Created', key: 'success' });
+        });
+      };
+      handleCreatePhase();
       setIsModalVisible(false);
       setName('');
     }
@@ -206,11 +196,15 @@ export default function ListPhase() {
             </div>
             <div className="phases">
               <div className="container">
-                <DragDrop
-                  phases={phases}
-                  programId={programId}
-                  updatePhase={updatePhase}
-                />
+                {loading ? (
+                  <CircularProgress className="circular-progress" />
+                ) : (
+                  <DragDrop
+                    phases={phases}
+                    programId={programId}
+                    updatePhase={updatePhase}
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -246,6 +240,15 @@ export default function ListPhase() {
               <Option value="1">Planet 1</Option>
               <Option value="2">Planet 2</Option>
               <Option value="3">Planet 3</Option>
+              <Option value="4">Planet 4</Option>
+              <Option value="5">Planet 5</Option>
+              <Option value="6">Planet 6</Option>
+              <Option value="7">Planet 7</Option>
+              <Option value="8">Planet 8</Option>
+              <Option value="9">Planet 9</Option>
+              <Option value="10">Planet 10</Option>
+              <Option value="11">Planet 11</Option>
+              <Option value="12">Planet 12</Option>
             </Select>
           </div>
         </div>
