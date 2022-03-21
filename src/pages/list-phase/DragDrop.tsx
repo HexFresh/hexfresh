@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import React from 'react';
 import {
   Droppable,
   DragDropContext,
@@ -8,12 +7,6 @@ import {
 } from 'react-beautiful-dnd';
 import { sortByField } from '../../utils/common';
 import PhaseItem from './PhaseItem';
-
-interface Iphase {
-  id: string;
-  name: string;
-  order: number;
-}
 
 const getItemStyle = (isDragging: any, draggableStyle: any) => ({
   userSelect: 'none',
@@ -25,9 +18,7 @@ const getItemStyle = (isDragging: any, draggableStyle: any) => ({
 });
 
 export default function DragDrop(props: any) {
-  const { id } = useParams();
-
-  const { phases, programId, updatePhase } = props;
+  const { phases, updatePhase } = props;
 
   const onDragEnd = (result: DropResult) => {
     const { destination, source } = result;

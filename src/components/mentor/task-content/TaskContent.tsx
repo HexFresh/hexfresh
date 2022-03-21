@@ -1,6 +1,7 @@
 import React from 'react';
 import './task-content.css';
-import MultipleChoiceTask from './type/MultipleChoiceTask';
+import MultipleChoiceTask from './multiple-choice-task/MultipleChoiceTask';
+import TrueFalseTask from './true-false-task/TrueFalseTask';
 
 interface ITask {
   id: number;
@@ -21,6 +22,8 @@ function TaskContent(props: any) {
     switch (task.typeId) {
       case 1:
         return <MultipleChoiceTask task={task} />;
+      case 3:
+        return <TrueFalseTask task={task} />;
       default:
         return <div className="task-content-title">Chưa làm</div>;
     }

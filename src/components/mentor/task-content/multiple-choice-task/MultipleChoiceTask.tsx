@@ -13,9 +13,14 @@ import {
   getTask,
   updatePointOfTask,
 } from '../../../../api/mentor/taskApi';
+import {
+  getChoicesWithAnswer,
+  updateChoice,
+  addEmptyChoice,
+  deleteChoice,
+} from '../../../../api/mentor/SelectedChoiceTaskApi';
 import { CircularProgress } from '@mui/material';
-
-const key = 'updatable';
+import './multiple-choice-task.css';
 
 interface SelectedQuestionChoice {
   id: number;
@@ -37,20 +42,30 @@ function MultipleChoiceTask(props: any) {
     const result = await getTask(task.checklistId, id);
     setQuiz(result?.quiz?.question);
     setPoint(result?.point);
-    setChoices(result?.selected_question_choices || []);
     setQuestion(result?.quiz?.question);
     setIsLoading(false);
   };
 
+  const fecthChoices = async (id: number) => {
+    setIsLoading(true);
+    const result = await getChoicesWithAnswer(id);
+    setChoices(result || []);
+    setIsLoading(false);
+  };
+
   React.useEffect(() => {
+    fecthChoices(task.id);
     fetchTask(task.id);
   }, [task.id]);
 
-  const handleIsRightChange = (id: number) => {
-    const newChoices = [...choices];
-    const index = newChoices.findIndex((c) => c.id === id);
-    newChoices[index].isRight = !newChoices[index].isRight;
-    setChoices(newChoices);
+  const handleIsRightChange = (choice: SelectedQuestionChoice) => {
+    const handleUpdate = async () => {
+      await updateChoice(task.id, choice.id, {
+        isRight: !choice.isRight,
+      });
+      fecthChoices(task.id);
+    };
+    handleUpdate();
   };
 
   const handleContentChange = (id: number, content: string) => {
@@ -61,24 +76,38 @@ function MultipleChoiceTask(props: any) {
     setChoices(newChoices);
   };
 
+  const handleUpdate = (
+    choiceId: number,
+    newContent: string,
+    isRight: boolean
+  ) => {
+    const newIsRight = isRight === null || isRight === false ? false : true;
+
+    const handleUpdate = async () => {
+      await updateChoice(task.id, choiceId, {
+        content: newContent,
+        isRight: newIsRight,
+      });
+    };
+    handleUpdate();
+  };
+
   const handleRemoveChoice = (id: number) => {
-    const newChoices = [...choices];
-    const index = newChoices.findIndex((c) => c.id === id);
-    newChoices.splice(index, 1);
-    console.log(newChoices);
-    setChoices(newChoices);
+    const handleRemove = async () => {
+      await deleteChoice(task.id, id);
+      fecthChoices(task.id);
+    };
+    handleRemove();
   };
 
   const addNewChoice = () => {
-    if (choices.length < 5) {
-      const newChoice = {
-        id: choices.length + 1,
-        taskId: task.id,
-        content: '',
-        isRight: false,
-      };
-      setChoices([...choices, newChoice]);
-    }
+    const handleAddEmptyChoice = async () => {
+      const result = await addEmptyChoice(task.id);
+      if (result) {
+        fecthChoices(task.id);
+      }
+    };
+    handleAddEmptyChoice();
   };
 
   const handleUpdateQuestion = (taskId: number) => {
@@ -100,10 +129,6 @@ function MultipleChoiceTask(props: any) {
       await updatePointOfTask(checklistId, taskId, point);
     };
     handleUpdate();
-  };
-
-  const handleUpdateContent = (choiceId: number, newContent: string) => {
-    console.log({ taskId: task.id, choiceId, newContent });
   };
 
   return (
@@ -146,12 +171,12 @@ function MultipleChoiceTask(props: any) {
                       multiline
                       maxRows={10}
                       sx={{ width: '100%', fontSize: '18px' }}
-                      value={choice.content}
+                      value={choice.content || ''}
                       onChange={(e) =>
                         handleContentChange(choice.id, e.target.value)
                       }
                       onBlur={(e) =>
-                        handleUpdateContent(choice.id, e.target.value)
+                        handleUpdate(choice.id, e.target.value, choice.isRight)
                       }
                       placeholder="Fill answer"
                     />
@@ -164,12 +189,12 @@ function MultipleChoiceTask(props: any) {
                   {choice.isRight ? (
                     <CheckSquareOutlined
                       style={{ fontSize: '25px', color: 'green' }}
-                      onClick={() => handleIsRightChange(choice.id)}
+                      onClick={() => handleIsRightChange(choice)}
                     />
                   ) : (
                     <BorderOutlined
                       style={{ fontSize: '25px', color: 'gray' }}
-                      onClick={() => handleIsRightChange(choice.id)}
+                      onClick={() => handleIsRightChange(choice)}
                     />
                   )}
                 </div>
