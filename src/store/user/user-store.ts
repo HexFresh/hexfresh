@@ -76,10 +76,8 @@ export const user: any = {
 			this.signOut({ navigate });
 		},
 		signOut({ navigate }: { navigate: NavigateFunction }) {
-			localStorage.removeItem('token');
-			localStorage.removeItem('expirationTime');
 			dispatch.user.logout();
-			//navigate('/signin');
+			navigate('/signin');
 		},
 		checkAutoLogin({ dispatch, navigate, location }: { dispatch: IRootDispatch, navigate: NavigateFunction, location: any }) {
 			const tokenData = retrieveStoredToken();
@@ -119,6 +117,7 @@ export const user: any = {
 				}
 				
 			} catch (error) {
+			 this.signOut({navigate});
 				console.log(error, 'error');
 			}
 

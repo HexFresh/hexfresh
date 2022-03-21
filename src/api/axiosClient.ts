@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { IRootDispatch } from "../store/store";
 
 const axiosClient = axios.create({
@@ -20,10 +21,6 @@ axiosClient.interceptors.request.use(function (config) {
 axiosClient.interceptors.response.use(function (response) {
   // Any status code that lie within the range of 2xx cause this function to trigger
   // Do something with response data
-  if (response.status === 401) {
-    const dispatch = useDispatch<IRootDispatch>();
-    dispatch.user.logout();
-  }
 
   return response;
 }, function (error) {
