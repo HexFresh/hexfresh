@@ -5,7 +5,6 @@ export const getPrograms = async () => {
   try {
     const response = await axiosClient.get(endpoint);
     const { data } = response;
-    console.log(data);
     return data;
   } catch (error) {
     console.log(error);

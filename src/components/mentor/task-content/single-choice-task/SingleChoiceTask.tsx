@@ -1,12 +1,12 @@
 import React from 'react';
 import InputBase from '@mui/material/InputBase';
 import {
-  CheckSquareOutlined,
-  BorderOutlined,
+  CheckCircleOutlined,
   MinusCircleOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
 import { Button, message } from 'antd';
+import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 import {
   updateQuestion,
   createQuestion,
@@ -20,7 +20,7 @@ import {
   deleteChoice,
 } from '../../../../api/mentor/SelectedChoiceTaskApi';
 import { CircularProgress } from '@mui/material';
-import './multiple-choice-task.css';
+import './single-choice-task.css';
 
 interface SelectedQuestionChoice {
   id: number;
@@ -29,9 +29,10 @@ interface SelectedQuestionChoice {
   isRight: boolean;
 }
 
-function MultipleChoiceTask(props: any) {
+function SingleChoiceTask(props: any) {
   const { task } = props;
   const [choices, setChoices] = React.useState<SelectedQuestionChoice[]>([]);
+  const [idIsRight, setIdIsRight] = React.useState<number | null>(null);
   const [question, setQuestion] = React.useState('');
   const [quiz, setQuiz] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
@@ -46,9 +47,18 @@ function MultipleChoiceTask(props: any) {
     setIsLoading(false);
   };
 
+  const findIdIsRight = (choices: SelectedQuestionChoice[]) => {
+    const index = choices.findIndex((choice: SelectedQuestionChoice) => {
+      return choice.isRight;
+    });
+    return index === -1 ? null : choices[index].id;
+  };
+
   const fecthChoices = async (id: number) => {
     const result = await getChoicesWithAnswer(id);
+    setIdIsRight(findIdIsRight(result));
     setChoices(result || []);
+    setIsLoading(false);
   };
 
   React.useEffect(() => {
@@ -59,8 +69,13 @@ function MultipleChoiceTask(props: any) {
   const handleIsRightChange = (choice: SelectedQuestionChoice) => {
     const handleUpdate = async () => {
       await updateChoice(task.id, choice.id, {
-        isRight: choice.isRight === true ? '0' : true,
+        isRight: true,
       });
+      if (idIsRight !== null) {
+        await updateChoice(task.id, idIsRight, {
+          isRight: '0',
+        });
+      }
       fecthChoices(task.id);
     };
     handleUpdate();
@@ -68,6 +83,7 @@ function MultipleChoiceTask(props: any) {
 
   const handleContentChange = (id: number, content: string) => {
     const newChoices = [...choices];
+
     const index = newChoices.findIndex((c) => c.id === id);
     newChoices[index].content = content;
 
@@ -130,11 +146,11 @@ function MultipleChoiceTask(props: any) {
   };
 
   return (
-    <div className="multiple-choice-task-main">
+    <div className="single-choice-task-main">
       {isLoading ? (
         <CircularProgress />
       ) : (
-        <div className="multiple-choice-task">
+        <div className="single-choice-task">
           <InputBase
             multiline
             maxRows={10}
@@ -184,14 +200,17 @@ function MultipleChoiceTask(props: any) {
                     style={{ fontSize: '25px', color: 'gray' }}
                     onClick={() => handleRemoveChoice(choice.id)}
                   />
-                  {choice.isRight ? (
-                    <CheckSquareOutlined
+                  {choice.id === idIsRight ? (
+                    <CheckCircleOutlined
                       style={{ fontSize: '25px', color: 'green' }}
-                      onClick={() => handleIsRightChange(choice)}
                     />
                   ) : (
-                    <BorderOutlined
-                      style={{ fontSize: '25px', color: 'gray' }}
+                    <CircleOutlinedIcon
+                      style={{
+                        fontSize: '30px',
+                        color: 'gray',
+                        cursor: 'pointer',
+                      }}
                       onClick={() => handleIsRightChange(choice)}
                     />
                   )}
@@ -214,4 +233,4 @@ function MultipleChoiceTask(props: any) {
   );
 }
 
-export default MultipleChoiceTask;
+export default SingleChoiceTask;

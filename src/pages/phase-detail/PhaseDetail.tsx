@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Menu } from 'antd';
 import './phase-detail.css';
 import { useParams } from 'react-router-dom';
@@ -116,8 +117,9 @@ function PhaseDetail() {
         title: taskTitle,
         index:
           findMaxIndexOfTask(
-            checklists[checklists.findIndex((checklist) => checklist.id === checklistId)]
-              .tasks
+            checklists[
+              checklists.findIndex((checklist) => checklist.id === checklistId)
+            ].tasks
           ) + 1,
       };
       const handleCreateTask = async () => {
@@ -151,7 +153,14 @@ function PhaseDetail() {
 
   return (
     <div className="phase-detail">
-      <div className="container">
+      <div className="phase-detail-top">
+        <Link to="/mentor/programs">
+          <div className="logo">
+            <img src="/logo.svg" width="40px" alt="logo" />
+          </div>
+        </Link>
+      </div>
+      <div className="phase-container">
         <div className="sider">
           <div className="menu">
             <Menu mode="inline" style={{ height: '100%', borderRight: 0 }}>
@@ -238,13 +247,14 @@ function PhaseDetail() {
               style={{ width: '100%' }}
               onChange={changeTaskType}
             >
-              <Option value="1">Selected-Response Question</Option>
-              <Option value="2">Constructed-Response Question</Option>
-              <Option value="3">True-False Question</Option>
-              <Option value="4">Match Sequence</Option>
-              <Option value="5">Match Correcsponding</Option>
-              <Option value="6">Document</Option>
-              <Option value="7">Assignment</Option>
+              <Option value="1">Single-Choice Question</Option>
+              <Option value="2">Multiple-Choice Question</Option>
+              <Option value="3">Constructed-Response Question</Option>
+              <Option value="4">True-False Question</Option>
+              <Option value="5">Match Sequence</Option>
+              <Option value="6">Match Correcsponding</Option>
+              <Option value="7">Document</Option>
+              <Option value="8">Assignment</Option>
             </Select>
           </div>
         </div>
