@@ -1,12 +1,7 @@
 import React from 'react';
 import InputBase from '@mui/material/InputBase';
-import {
-  CheckCircleOutlined,
-  MinusCircleOutlined,
-  PlusOutlined,
-} from '@ant-design/icons';
-import { Button, message } from 'antd';
-import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Checkbox } from 'antd';
 import {
   updateQuestion,
   createQuestion,
@@ -14,25 +9,29 @@ import {
   updatePointOfTask,
 } from '../../../../api/mentor/taskApi';
 import {
-  getChoicesWithAnswer,
-  updateChoice,
-  addEmptyChoice,
-  deleteChoice,
-} from '../../../../api/mentor/SelectedChoiceTaskApi';
+  getAnswer,
+  createEmptyAnswer,
+  deleteAnswer,
+  updateAnswer,
+} from '../../../../api/mentor/ConstructedTaskApi';
 import { CircularProgress } from '@mui/material';
 import './constructed-task.css';
 
-interface SelectedQuestionChoice {
+interface ConstructedAnswer {
   id: number;
   taskId: number;
-  content: string;
-  isRight: boolean;
+  sampleAnswer: string;
+  isMatchingRequired: boolean;
 }
 
 function ConstructedTask(props: any) {
   const { task } = props;
-  const [choices, setChoices] = React.useState<SelectedQuestionChoice[]>([]);
-  const [idIsRight, setIdIsRight] = React.useState<number | null>(null);
+  const [answer, setAnswer] = React.useState<ConstructedAnswer>({
+    id: 0,
+    taskId: 0,
+    sampleAnswer: '',
+    isMatchingRequired: false,
+  });
   const [question, setQuestion] = React.useState('');
   const [quiz, setQuiz] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
@@ -47,80 +46,56 @@ function ConstructedTask(props: any) {
     setIsLoading(false);
   };
 
-  const findIdIsRight = (choices: SelectedQuestionChoice[]) => {
-    const index = choices.findIndex((choice: SelectedQuestionChoice) => {
-      return choice.isRight;
-    });
-    return index === -1 ? null : choices[index].id;
-  };
-
-  const fecthChoices = async (id: number) => {
-    const result = await getChoicesWithAnswer(id);
-    setIdIsRight(findIdIsRight(result));
-    setChoices(result || []);
+  const fecthAnswers = async (id: number) => {
+    const result = await getAnswer(id);
+    setAnswer(
+      result || {
+        id: 0,
+        taskId: 0,
+        sampleAnswer: '',
+        isMatchingRequired: false,
+      }
+    );
     setIsLoading(false);
   };
 
   React.useEffect(() => {
-    fecthChoices(task.id);
+    fecthAnswers(task.id);
     fetchTask(task.id);
   }, [task.id]);
 
-  const handleIsRightChange = (choice: SelectedQuestionChoice) => {
-    const handleUpdate = async () => {
-      await updateChoice(task.id, choice.id, {
-        isRight: true,
-      });
-      if (idIsRight !== null) {
-        await updateChoice(task.id, idIsRight, {
-          isRight: '0',
-        });
-      }
-      fecthChoices(task.id);
-    };
-    handleUpdate();
+  const handleSampleAnswerChange = (newSampleAnswer: string) => {
+    setAnswer({
+      ...answer,
+      sampleAnswer: newSampleAnswer,
+    });
   };
 
-  const handleContentChange = (id: number, content: string) => {
-    const newChoices = [...choices];
-    const index = newChoices.findIndex((c) => c.id === id);
-    newChoices[index].content = content;
-
-    setChoices(newChoices);
-  };
-
-  const handleUpdate = (
-    choiceId: number,
-    newContent: string,
-    isRight: boolean
-  ) => {
-    const newIsRight = isRight === null || isRight === false ? false : true;
-
+  const handleUpdateSampleAnswer = (newSampleAnswer: string) => {
     const handleUpdate = async () => {
-      await updateChoice(task.id, choiceId, {
-        content: newContent,
-        isRight: newIsRight,
+      await updateAnswer(task.id, answer.id, {
+        sampleAnswer: newSampleAnswer,
       });
     };
     handleUpdate();
   };
 
-  const handleRemoveChoice = (id: number) => {
+  const handleRemoveAnswer = () => {
     const handleRemove = async () => {
-      await deleteChoice(task.id, id);
-      fecthChoices(task.id);
+      await deleteAnswer(task.id, answer.id);
+      fecthAnswers(task.id);
     };
     handleRemove();
   };
 
-  const addNewChoice = () => {
-    const handleAddEmptyChoice = async () => {
-      const result = await addEmptyChoice(task.id);
+  const addNewAnswer = () => {
+    const handleAddEmptyAnswer = async () => {
+      const result = await createEmptyAnswer(task.id);
       if (result) {
-        fecthChoices(task.id);
+        fecthAnswers(task.id);
       }
     };
-    handleAddEmptyChoice();
+    handleAddEmptyAnswer();
   };
 
   const handleUpdateQuestion = (taskId: number) => {
@@ -143,6 +118,16 @@ function ConstructedTask(props: any) {
     };
     handleUpdate();
   };
+
+  function onCheckboxChange(e: any) {
+    const checked = e.target.checked;
+    const update = async () => {
+      await updateAnswer(task.id, answer.id, {
+        isMatchingRequired: checked ? true : '0',
+      });
+    };
+    update();
+  }
 
   return (
     <div className="constructed-task-main">
@@ -175,52 +160,41 @@ function ConstructedTask(props: any) {
             />
           </div>
           <div className="answer">
-            {choices.map((choice: SelectedQuestionChoice) => {
-              return (
-                <div key={choice.id} className="answer-item">
-                  <div className="answer-item-content">
-                    <InputBase
-                      className="input-base"
-                      multiline
-                      maxRows={10}
-                      sx={{ width: '100%', fontSize: '18px' }}
-                      value={choice.content || ''}
-                      onChange={(e) =>
-                        handleContentChange(choice.id, e.target.value)
-                      }
-                      onBlur={(e) =>
-                        handleUpdate(choice.id, e.target.value, choice.isRight)
-                      }
-                      placeholder="Fill answer"
-                    />
-                  </div>
-                  <MinusCircleOutlined
-                    className="remove-choice-btn"
-                    style={{ fontSize: '25px', color: 'gray' }}
-                    onClick={() => handleRemoveChoice(choice.id)}
+            {answer.id === 0 ? (
+              <></>
+            ) : (
+              <div className="answer-item">
+                <div className="answer-item-content">
+                  <InputBase
+                    className="input-base"
+                    multiline
+                    maxRows={12}
+                    sx={{ width: '100%', fontSize: '18px' }}
+                    value={answer.sampleAnswer || ''}
+                    onChange={(e) => handleSampleAnswerChange(e.target.value)}
+                    onBlur={(e) => handleUpdateSampleAnswer(e.target.value)}
+                    placeholder="Fill answer"
                   />
-                  {choice.id === idIsRight ? (
-                    <CheckCircleOutlined
-                      style={{ fontSize: '25px', color: 'green' }}
-                    />
-                  ) : (
-                    <CircleOutlinedIcon
-                      style={{
-                        fontSize: '30px',
-                        color: 'gray',
-                        cursor: 'pointer',
-                      }}
-                      onClick={() => handleIsRightChange(choice)}
-                    />
-                  )}
                 </div>
-              );
-            })}
+                <MinusCircleOutlined
+                  className="remove-choice-btn"
+                  style={{ fontSize: '25px', color: 'gray' }}
+                  onClick={handleRemoveAnswer}
+                />
+              </div>
+            )}
+            <Checkbox
+              className="checkbox"
+              onChange={onCheckboxChange}
+              defaultChecked={answer.isMatchingRequired}
+            >
+              Matching Required
+            </Checkbox>
             <div className="add-new-choice">
               <Button
-                onClick={addNewChoice}
+                onClick={addNewAnswer}
                 style={{ width: '100%', borderRadius: '5px' }}
-                disabled={choices.length >= 5}
+                disabled={answer.id !== 0}
               >
                 <PlusOutlined />
               </Button>
