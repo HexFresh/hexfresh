@@ -1,0 +1,99 @@
+/* single CHOICE TASK */
+.true-false-task-main {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.task-content .true-false-task {
+  position: relative;
+  padding: 40px 100px;
+  width: 100%;
+  height: 100%;
+}
+
+.task-content .true-false-task .task-point {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-gap: 20px;
+}
+
+.true-false-option {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  margin-bottom: 30px;
+  margin-top: 15px;
+  position: relative;
+}
+
+.true-false-option .choice-option {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #dcdfe3;
+  background-color: white;
+  border-radius: 5px;
+}
+
+.true-false-option .input-base {
+  width: 100%;
+  height: 100%;
+}
+
+.true-false-option .true-false-btn {
+  display: flex;
+  width: 100%;
+  margin-top: 15px;
+  grid-gap: 15px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.true-false-option .true-false-btn .true-btn,
+.true-false-option .true-false-btn .false-btn {
+  flex: 1;
+  height: 60px;
+  border-radius: 5px;
+  border: 1px solid #dcdfe3;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.true-false-option .true-false-btn .true-btn:hover,
+.true-false-option .true-false-btn .false-btn:hover {
+  background-color: #1890ff;
+  color: white;
+}
+
+.true-false-option .true-false-btn .true-btn.active,
+.true-false-option .true-false-btn .false-btn.active {
+  background-color: #00cfad;
+  color: white;
+}
+
+.true-false-option .remove-option-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: -40px;
+  opacity: 0;
+}
+
+.true-false-option:hover .remove-option-btn {
+  opacity: 1;
+}

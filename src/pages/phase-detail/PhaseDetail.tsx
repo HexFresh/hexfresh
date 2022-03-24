@@ -60,6 +60,11 @@ function PhaseDetail() {
     fetchChecklists();
   }, []);
 
+  const renderTask = (task: ITask) => {
+    setTask(null);
+    setTask(task);
+  };
+
   const showTaskModal = (checklistId: number) => {
     setIsTaskModalVisible(true);
     setChecklistId(checklistId);
@@ -172,7 +177,10 @@ function PhaseDetail() {
                   >
                     {checklist?.tasks?.map((task) => {
                       return (
-                        <Menu.Item key={task.id} onClick={() => setTask(task)}>
+                        <Menu.Item
+                          key={task.id}
+                          onClick={() => renderTask(task)}
+                        >
                           <div className="task">
                             <div className="task-title">{task.title}</div>
                           </div>

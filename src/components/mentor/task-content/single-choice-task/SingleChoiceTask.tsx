@@ -62,8 +62,10 @@ function SingleChoiceTask(props: any) {
   };
 
   React.useEffect(() => {
+    let controller = new AbortController();
     fecthChoices(task.id);
     fetchTask(task.id);
+    return () => controller?.abort();
   }, [task.id]);
 
   const handleIsRightChange = (choice: SelectedQuestionChoice) => {

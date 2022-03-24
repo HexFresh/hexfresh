@@ -36,6 +36,7 @@ function ConstructedTask(props: any) {
   const [quiz, setQuiz] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
   const [point, setPoint] = React.useState(0);
+  const [isMatchingRequired, setIsMatchingRequired] = React.useState();
 
   const fetchTask = async (id: number) => {
     setIsLoading(true);
@@ -56,12 +57,21 @@ function ConstructedTask(props: any) {
         isMatchingRequired: false,
       }
     );
+    setIsMatchingRequired(result?.isMatchingRequired);
     setIsLoading(false);
   };
 
   React.useEffect(() => {
+    let controller = new AbortController();
+    setAnswer({
+      id: 0,
+      taskId: 0,
+      sampleAnswer: '',
+      isMatchingRequired: false,
+    });
     fecthAnswers(task.id);
     fetchTask(task.id);
+    return () => controller?.abort();
   }, [task.id]);
 
   const handleSampleAnswerChange = (newSampleAnswer: string) => {
@@ -83,6 +93,12 @@ function ConstructedTask(props: any) {
   const handleRemoveAnswer = () => {
     const handleRemove = async () => {
       await deleteAnswer(task.id, answer.id);
+      setAnswer({
+        id: 0,
+        taskId: 0,
+        sampleAnswer: '',
+        isMatchingRequired: false,
+      });
       fecthAnswers(task.id);
     };
     handleRemove();
@@ -121,6 +137,7 @@ function ConstructedTask(props: any) {
 
   function onCheckboxChange(e: any) {
     const checked = e.target.checked;
+    setIsMatchingRequired(checked);
     const update = async () => {
       await updateAnswer(task.id, answer.id, {
         isMatchingRequired: checked ? true : '0',
@@ -186,7 +203,7 @@ function ConstructedTask(props: any) {
             <Checkbox
               className="checkbox"
               onChange={onCheckboxChange}
-              defaultChecked={answer.isMatchingRequired}
+              checked={isMatchingRequired}
             >
               Matching Required
             </Checkbox>
