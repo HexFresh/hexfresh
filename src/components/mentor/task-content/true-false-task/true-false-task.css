@@ -80,9 +80,13 @@
   color: white;
 }
 
-.true-false-option .true-false-btn .true-btn.active,
-.true-false-option .true-false-btn .false-btn.active {
+.true-false-option .true-false-btn .true-btn.active {
   background-color: #00cfad;
+  color: white;
+}
+
+.true-false-option .true-false-btn .false-btn.active {
+  background-color: #f5222d;
   color: white;
 }
 

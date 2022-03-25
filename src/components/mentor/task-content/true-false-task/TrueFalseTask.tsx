@@ -48,10 +48,9 @@ function TrueFalseTask(props: any) {
   };
 
   React.useEffect(() => {
-    let controller = new AbortController();
     fecthOptions(task.id);
     fetchTask(task.id);
-    return () => controller?.abort();
+    return () => setOptions([]);
   }, [task.id]);
 
   const addNewOption = () => {

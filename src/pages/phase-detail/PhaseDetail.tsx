@@ -58,6 +58,7 @@ function PhaseDetail() {
 
   React.useEffect(() => {
     fetchChecklists();
+    return () => setChecklists([]);
   }, []);
 
   const renderTask = (task: ITask) => {

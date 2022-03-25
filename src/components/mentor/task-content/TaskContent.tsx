@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './task-content.css';
 import SingleChoiceTask from './single-choice-task/SingleChoiceTask';
 import MultipleChoiceTask from './multiple-choice-task/MultipleChoiceTask';
@@ -19,27 +19,34 @@ interface ITask {
 
 function TaskContent(props: any) {
   const { task } = props;
+  const [renderTask, setRenderTask] = React.useState<JSX.Element | null>(null);
 
-  const renderTask = (task: ITask) => {
+  useEffect(() => {
     switch (task.typeId) {
       case 1:
-        return <SingleChoiceTask task={task} />;
+        setRenderTask(<SingleChoiceTask task={task} />);
+        break;
       case 2:
-        return <MultipleChoiceTask task={task} />;
+        setRenderTask(<MultipleChoiceTask task={task} />);
+        break;
       case 3:
-        return <ConstructedTask task={task} />;
+        setRenderTask(<ConstructedTask task={task} />);
+        break;
       case 4:
-        return <TrueFalseTask task={task} />;
+        setRenderTask(<TrueFalseTask task={task} />);
+        break;
       default:
-        return <div className="task-content-title">Chưa làm</div>;
+        setRenderTask(null);
+        break;
     }
-  };
+    return () => setRenderTask(null);
+  }, [task.id]);
 
   return (
     <div className="task-content">
       <div className="task-content-container">
         <div className="top">{task.title}</div>
-        <div className="bottom">{renderTask(task)}</div>
+        <div className="bottom">{renderTask}</div>
       </div>
     </div>
   );

@@ -47,3 +47,21 @@ export const deleteChoice = async (taskId: number, choiceId: number) => {
     console.log(error);
   }
 };
+
+export const updateBulkChoices = async (taskId: number, newChoices: any[]) => {
+  const endpoint = `task/${taskId}/quiz/selected-question/bulk/choice`;
+  const choices = newChoices.map((choice) => {
+    return {
+      ...choice,
+      choiceId: choice.id,
+    };
+  });
+
+  try {
+    const response = await axiosClient.put(endpoint, { choices });
+    const { data } = response;
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};

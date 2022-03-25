@@ -18,6 +18,7 @@ import {
   updateChoice,
   addEmptyChoice,
   deleteChoice,
+  updateBulkChoices,
 } from '../../../../api/mentor/SelectedChoiceTaskApi';
 import { CircularProgress } from '@mui/material';
 import './single-choice-task.css';
@@ -26,19 +27,16 @@ interface SelectedQuestionChoice {
   id: number;
   taskId: number;
   content: string;
-  isRight: boolean;
+  isRight: boolean | string;
 }
 
 function SingleChoiceTask(props: any) {
   const { task } = props;
   const [choices, setChoices] = React.useState<SelectedQuestionChoice[]>([]);
-  const [idIsRight, setIdIsRight] = React.useState<number | null>(null);
   const [question, setQuestion] = React.useState('');
   const [quiz, setQuiz] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
   const [point, setPoint] = React.useState(0);
-
-  console.log({ choices, idIsRight });
 
   const fetchTask = async (id: number) => {
     setIsLoading(true);
@@ -49,25 +47,16 @@ function SingleChoiceTask(props: any) {
     setIsLoading(false);
   };
 
-  const findIdIsRight = (choices: SelectedQuestionChoice[]) => {
-    const index = choices.findIndex((choice: SelectedQuestionChoice) => {
-      return choice.isRight;
-    });
-    return index === -1 ? null : choices[index].id;
-  };
-
   const fecthChoices = async (id: number) => {
     const result = await getChoicesWithAnswer(id);
-    setIdIsRight(findIdIsRight(result));
     setChoices(result || []);
     setIsLoading(false);
   };
 
   React.useEffect(() => {
-    let controller = new AbortController();
     fecthChoices(task.id);
     fetchTask(task.id);
-    return () => controller?.abort();
+    return () => setChoices([]);
   }, [task.id]);
 
   const handleIsRightChange = (choice: SelectedQuestionChoice) => {
@@ -75,26 +64,19 @@ function SingleChoiceTask(props: any) {
     const currentIsrightIndex = choices.findIndex(
       (item: SelectedQuestionChoice) => item.isRight
     );
-    newChoices[currentIsrightIndex].isRight = false;
+    if (currentIsrightIndex !== -1) {
+      newChoices[currentIsrightIndex].isRight = '0';
+    }
     const newIsRightIndex = choices.findIndex(
       (item: SelectedQuestionChoice) => item.id === choice.id
     );
     newChoices[newIsRightIndex].isRight = true;
-    setIdIsRight(choice.id);
-    setChoices(newChoices);
 
-    // const handleUpdate = async () => {
-    //   await updateChoice(task.id, choice.id, {
-    //     isRight: true,
-    //   });
-    //   if (idIsRight !== null) {
-    //     await updateChoice(task.id, idIsRight, {
-    //       isRight: '0',
-    //     });
-    //   }
-    //   fecthChoices(task.id);
-    // };
-    // handleUpdate();
+    const handleUpdate = async () => {
+      await updateBulkChoices(task.id, newChoices);
+      fecthChoices(task.id);
+    };
+    handleUpdate();
   };
 
   const handleContentChange = (id: number, content: string) => {
@@ -109,7 +91,7 @@ function SingleChoiceTask(props: any) {
   const handleUpdate = (
     choiceId: number,
     newContent: string,
-    isRight: boolean
+    isRight: boolean | string
   ) => {
     const newIsRight = isRight === null || isRight === false ? false : true;
 

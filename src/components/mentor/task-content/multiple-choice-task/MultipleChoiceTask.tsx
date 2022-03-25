@@ -52,10 +52,9 @@ function MultipleChoiceTask(props: any) {
   };
 
   React.useEffect(() => {
-    let controller = new AbortController();
     fecthChoices(task.id);
     fetchTask(task.id);
-    return () => controller?.abort();
+    return () => setChoices([]);
   }, [task.id]);
 
   const handleIsRightChange = (choice: SelectedQuestionChoice) => {
