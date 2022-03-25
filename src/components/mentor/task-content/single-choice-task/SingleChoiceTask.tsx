@@ -38,6 +38,8 @@ function SingleChoiceTask(props: any) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [point, setPoint] = React.useState(0);
 
+  console.log({ choices, idIsRight });
+
   const fetchTask = async (id: number) => {
     setIsLoading(true);
     const result = await getTask(task.checklistId, id);
@@ -69,18 +71,30 @@ function SingleChoiceTask(props: any) {
   }, [task.id]);
 
   const handleIsRightChange = (choice: SelectedQuestionChoice) => {
-    const handleUpdate = async () => {
-      await updateChoice(task.id, choice.id, {
-        isRight: true,
-      });
-      if (idIsRight !== null) {
-        await updateChoice(task.id, idIsRight, {
-          isRight: '0',
-        });
-      }
-      fecthChoices(task.id);
-    };
-    handleUpdate();
+    const newChoices = [...choices];
+    const currentIsrightIndex = choices.findIndex(
+      (item: SelectedQuestionChoice) => item.isRight
+    );
+    newChoices[currentIsrightIndex].isRight = false;
+    const newIsRightIndex = choices.findIndex(
+      (item: SelectedQuestionChoice) => item.id === choice.id
+    );
+    newChoices[newIsRightIndex].isRight = true;
+    setIdIsRight(choice.id);
+    setChoices(newChoices);
+
+    // const handleUpdate = async () => {
+    //   await updateChoice(task.id, choice.id, {
+    //     isRight: true,
+    //   });
+    //   if (idIsRight !== null) {
+    //     await updateChoice(task.id, idIsRight, {
+    //       isRight: '0',
+    //     });
+    //   }
+    //   fecthChoices(task.id);
+    // };
+    // handleUpdate();
   };
 
   const handleContentChange = (id: number, content: string) => {
@@ -202,7 +216,7 @@ function SingleChoiceTask(props: any) {
                     style={{ fontSize: '25px', color: 'gray' }}
                     onClick={() => handleRemoveChoice(choice.id)}
                   />
-                  {choice.id === idIsRight ? (
+                  {choice.isRight === true ? (
                     <CheckCircleOutlined
                       style={{ fontSize: '25px', color: 'green' }}
                     />
