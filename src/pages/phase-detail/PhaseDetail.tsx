@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Menu } from 'antd';
 import './phase-detail.css';
+import { sortByField } from '../../utils/common';
 import { useParams } from 'react-router-dom';
 import TaskContent from '../../components/mentor/task-content/TaskContent';
 import { Modal, Input, Select, Button, message } from 'antd';
@@ -176,7 +177,7 @@ function PhaseDetail() {
                     key={checklist.id}
                     title={<span>{checklist.title}</span>}
                   >
-                    {checklist?.tasks?.map((task) => {
+                    {sortByField(checklist?.tasks, 'index').map((task: any) => {
                       return (
                         <Menu.Item
                           key={task.id}
