@@ -11,6 +11,7 @@ import Fade from '@mui/material/Fade';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import Pagination from '@mui/material/Pagination';
+import Grid from '@mui/material/Grid';
 import './list-program.css';
 import { getPrograms } from '../../api/mentor/mentorApi';
 
@@ -18,6 +19,8 @@ interface IProgram {
   id: string;
   title: string;
 }
+
+const programPerPage = 4;
 
 export default function ListProgram() {
   const [loading, setLoading] = useState(false);
@@ -29,6 +32,12 @@ export default function ListProgram() {
     value: number
   ) => {
     setPage(value);
+  };
+
+  const getArrProgramsWithPagination = (page: number, programs: any) => {
+    const start = (page - 1) * programPerPage;
+    const end = page * programPerPage;
+    return programs.slice(start, end);
   };
 
   useEffect(() => {
@@ -129,35 +138,37 @@ export default function ListProgram() {
             </div>
           </div>
           <div className="programs">
-            <div className="container">
-              {loading ? (
-                <CircularProgress className="circular-progress" />
-              ) : (
-                <div className="bao">
-                  {programs.map((program) => (
-                    <Link
-                      key={program.id}
-                      to={`/mentor/programs/${program.id}/phases`}
-                    >
-                      <div className="program">
-                        <div className="effect"></div>
-                        <div className="cover-photo">
-                          <img
-                            src="https://photo-net-production-images.s3.amazonaws.com/18577502-lg.jpg"
-                            alt="cover"
-                          />
-                          <div className="program-name">{program.title}</div>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
+            {loading ? (
+              <CircularProgress />
+            ) : (
+              <div className="programs__container">
+                <Grid container spacing={2}>
+                  {getArrProgramsWithPagination(page, programs).map(
+                    (program: any) => {
+                      return (
+                        <Grid key={program.id} item xs={12} sm={6} lg={3}>
+                          <Link
+                            key={program.id}
+                            to={`/mentor/programs/${program.id}/phases`}
+                          >
+                            <div className="program">
+                              <div className="cover-photo"></div>
+                              <div className="program-name">
+                                {program.title}
+                              </div>
+                            </div>
+                          </Link>
+                        </Grid>
+                      );
+                    }
+                  )}
+                </Grid>
+              </div>
+            )}
           </div>
           <div className="pagination">
             <Pagination
-              count={10}
+              count={Math.ceil(programs.length / 4)}
               shape="rounded"
               color="primary"
               page={page}
