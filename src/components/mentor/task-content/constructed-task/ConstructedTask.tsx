@@ -96,15 +96,18 @@ function ConstructedTask(props: any) {
     if (answer) {
       handleUpdateSampleAnswer('');
       fecthAnswers();
+      message.success('Deleted', 0.5);
     }
   };
 
   const handleUpdateQuestion = (taskId: number) => {
     const handleUpdate = async () => {
       await updateQuestion(taskId, question);
+      message.success('Updated', 0.5);
     };
     const handlecreate = async () => {
       await createQuestion(taskId, question);
+      message.success('Updated', 0.5);
     };
     if (quiz === undefined) {
       handlecreate();
@@ -116,6 +119,7 @@ function ConstructedTask(props: any) {
   const handleUpdatePoint = (checklistId: number, taskId: number) => {
     const handleUpdate = async () => {
       await updatePointOfTask(checklistId, taskId, point);
+      message.success('Updated', 0.5);
     };
     handleUpdate();
   };
