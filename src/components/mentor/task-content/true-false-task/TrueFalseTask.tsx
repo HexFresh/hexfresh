@@ -1,7 +1,7 @@
 import React from 'react';
 import InputBase from '@mui/material/InputBase';
 import { PlusOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import {
   updateQuestion,
   createQuestion,
@@ -59,6 +59,7 @@ function TrueFalseTask(props: any) {
       if (result) {
         fecthOptions(task.id);
       }
+      message.success('Created', 0.5);
     };
     handleAddEmptyChoice();
   };
@@ -66,9 +67,11 @@ function TrueFalseTask(props: any) {
   const handleUpdateQuestion = (taskId: number) => {
     const handleUpdate = async () => {
       await updateQuestion(taskId, question);
+      message.success('Updated', 0.5);
     };
     const handlecreate = async () => {
       await createQuestion(taskId, question);
+      message.success('Updated', 0.5);
     };
     if (quiz === undefined) {
       handlecreate();
@@ -80,6 +83,7 @@ function TrueFalseTask(props: any) {
   const handleUpdatePoint = (checklistId: number, taskId: number) => {
     const handleUpdate = async () => {
       await updatePointOfTask(checklistId, taskId, point);
+      message.success('Updated', 0.5);
     };
     handleUpdate();
   };

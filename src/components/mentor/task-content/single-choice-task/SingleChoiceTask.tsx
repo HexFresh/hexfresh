@@ -20,7 +20,7 @@ import {
   deleteChoice,
   updateBulkChoices,
 } from '../../../../api/mentor/SelectedChoiceTaskApi';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, duration } from '@mui/material';
 import './single-choice-task.css';
 
 interface SelectedQuestionChoice {
@@ -75,6 +75,7 @@ function SingleChoiceTask(props: any) {
     const handleUpdate = async () => {
       await updateBulkChoices(task.id, newChoices);
       fecthChoices(task.id);
+      message.success('Updated', 0.5);
     };
     handleUpdate();
   };
@@ -100,6 +101,7 @@ function SingleChoiceTask(props: any) {
         content: newContent,
         isRight: newIsRight,
       });
+      message.success('Updated', 0.5);
     };
     handleUpdate();
   };
@@ -108,6 +110,7 @@ function SingleChoiceTask(props: any) {
     const handleRemove = async () => {
       await deleteChoice(task.id, id);
       fecthChoices(task.id);
+      message.success('Deleted', 0.5);
     };
     handleRemove();
   };
@@ -118,6 +121,7 @@ function SingleChoiceTask(props: any) {
       if (result) {
         fecthChoices(task.id);
       }
+      message.success('Created', 0.5);
     };
     handleAddEmptyChoice();
   };
@@ -125,9 +129,11 @@ function SingleChoiceTask(props: any) {
   const handleUpdateQuestion = (taskId: number) => {
     const handleUpdate = async () => {
       await updateQuestion(taskId, question);
+      message.success('Updated', 0.5);
     };
     const handlecreate = async () => {
       await createQuestion(taskId, question);
+      message.success('Updated', 0.5);
     };
     if (quiz === undefined) {
       handlecreate();
@@ -139,6 +145,7 @@ function SingleChoiceTask(props: any) {
   const handleUpdatePoint = (checklistId: number, taskId: number) => {
     const handleUpdate = async () => {
       await updatePointOfTask(checklistId, taskId, point);
+      message.success('Updated', 0.5);
     };
     handleUpdate();
   };

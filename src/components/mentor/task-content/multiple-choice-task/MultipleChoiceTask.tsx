@@ -63,6 +63,7 @@ function MultipleChoiceTask(props: any) {
         isRight: choice.isRight === true ? '0' : true,
       });
       fecthChoices(task.id);
+      message.success('Updated', 0.5);
     };
     handleUpdate();
   };
@@ -87,6 +88,7 @@ function MultipleChoiceTask(props: any) {
         content: newContent,
         isRight: newIsRight,
       });
+      message.success('Updated', 0.5);
     };
     handleUpdate();
   };
@@ -95,6 +97,7 @@ function MultipleChoiceTask(props: any) {
     const handleRemove = async () => {
       await deleteChoice(task.id, id);
       fecthChoices(task.id);
+      message.success('Deleted', 0.5);
     };
     handleRemove();
   };
@@ -105,6 +108,7 @@ function MultipleChoiceTask(props: any) {
       if (result) {
         fecthChoices(task.id);
       }
+      message.success('Created', 0.5);
     };
     handleAddEmptyChoice();
   };
@@ -112,9 +116,11 @@ function MultipleChoiceTask(props: any) {
   const handleUpdateQuestion = (taskId: number) => {
     const handleUpdate = async () => {
       await updateQuestion(taskId, question);
+      message.success('Updated', 0.5);
     };
     const handlecreate = async () => {
       await createQuestion(taskId, question);
+      message.success('Updated', 0.5);
     };
     if (quiz === undefined) {
       handlecreate();
@@ -126,6 +132,7 @@ function MultipleChoiceTask(props: any) {
   const handleUpdatePoint = (checklistId: number, taskId: number) => {
     const handleUpdate = async () => {
       await updatePointOfTask(checklistId, taskId, point);
+      message.success('Updated', 0.5);
     };
     handleUpdate();
   };

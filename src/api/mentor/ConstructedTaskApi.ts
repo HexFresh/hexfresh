@@ -2,9 +2,14 @@ import axiosClient from '../axiosClient';
 
 export const getAnswer = async (taskId: number) => {
   const endpoint = `task/${taskId}/quiz/constructed-question/answer`;
-  const response = await axiosClient.get(endpoint);
-  console.log(response);
-  return response;
+  try {
+    const response = await axiosClient.get(endpoint);
+    const { data } = response;
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
 };
 
 export const createEmptyAnswer = async (taskId: number) => {
@@ -27,6 +32,7 @@ export const updateAnswer = async (
   try {
     const response = await axiosClient.put(endpoint, answer);
     const { data } = response;
+    console.log(data);
     return data;
   } catch (error) {
     console.log(error);

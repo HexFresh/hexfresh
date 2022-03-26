@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { message } from 'antd';
 import InputBase from '@mui/material/InputBase';
 import {
   deleteOption,
@@ -22,6 +23,7 @@ function TrueFalseChoice(props: any) {
     await updateOption(taskId, option.id, {
       isRight: true,
     });
+    message.success('Updated', 0.5);
     setCurrentOption({ ...currentOption, isRight: true });
   };
 
@@ -32,6 +34,8 @@ function TrueFalseChoice(props: any) {
     await updateOption(taskId, option.id, {
       isRight: '0',
     });
+
+    message.success('Updated', 0.5);
     setCurrentOption({ ...currentOption, isRight: false });
   };
 
@@ -39,11 +43,13 @@ function TrueFalseChoice(props: any) {
     await updateOption(taskId, option.id, {
       content: e.target.value,
     });
+    message.success('Updated', 0.5);
   };
 
   const handleRemoveOption = async () => {
     console.log({ taskId, option });
     await deleteOption(taskId, option.id);
+    message.success('Deleted', 0.5);
     resetOptions();
   };
 

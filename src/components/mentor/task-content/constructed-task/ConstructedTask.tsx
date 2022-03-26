@@ -1,5 +1,6 @@
 import React from 'react';
 import InputBase from '@mui/material/InputBase';
+import { message } from 'antd';
 import { MinusCircleOutlined } from '@ant-design/icons';
 import { Checkbox } from 'antd';
 import {
@@ -44,16 +45,20 @@ function ConstructedTask(props: any) {
     setIsLoading(false);
   };
 
+  const fecthAnswers = async () => {
+    const result = await getAnswer(task.id);
+    const real = result || null;
+    if (real !== null) {
+      setAnswer(real);
+      setIsMatchingRequired(real.isMatchingRequired);
+    } else {
+      addNewAnswer();
+      fecthAnswers();
+    }
+  };
+
   React.useEffect(() => {
     fetchTask(task.id);
-    const fecthAnswers = async () => {
-      console.log('Chạy vô dda');
-
-      const result = await getAnswer(task.id);
-      console.log({ result });
-
-      setIsLoading(false);
-    };
     fecthAnswers();
     return () => setAnswer(null);
   }, [task.id]);
@@ -72,32 +77,25 @@ function ConstructedTask(props: any) {
     } as ConstructedAnswer);
   };
 
-  const handleUpdateSampleAnswer = () => {
+  const handleUpdateSampleAnswer = (newSampleAnswer: string) => {
     if (answer) {
+      if (newSampleAnswer === '') {
+        newSampleAnswer = ' ';
+      }
       const handleUpdate = async () => {
-        await updateAnswer(task.id, answer.id, answer);
+        await updateAnswer(task.id, answer.id, {
+          sampleAnswer: newSampleAnswer,
+        });
+        message.success('Updated', 0.5);
       };
       handleUpdate();
-    } else {
-      addNewAnswer();
     }
   };
 
   const handleRemoveAnswer = () => {
     if (answer) {
-      const handleRemove = async () => {
-        await deleteAnswer(task.id, answer.id);
-        const fecthAnswers = async () => {
-          console.log('Chạy vô dda');
-
-          const result = await getAnswer(task.id);
-          console.log({ result });
-
-          setIsLoading(false);
-        };
-        fecthAnswers();
-      };
-      handleRemove();
+      handleUpdateSampleAnswer('');
+      fecthAnswers();
     }
   };
 
@@ -173,9 +171,9 @@ function ConstructedTask(props: any) {
                   multiline
                   maxRows={12}
                   sx={{ width: '100%', fontSize: '18px' }}
-                  value={answer?.sampleAnswer}
+                  value={answer?.sampleAnswer || ''}
                   onChange={(e) => handleSampleAnswerChange(e.target.value)}
-                  onBlur={() => handleUpdateSampleAnswer()}
+                  onBlur={(e) => handleUpdateSampleAnswer(e.target.value)}
                   placeholder="Fill answer"
                 />
               </div>
