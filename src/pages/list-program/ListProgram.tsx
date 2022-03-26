@@ -56,7 +56,7 @@ export default function ListProgram() {
       setLoading(false);
     };
     fetchPrograms();
-  }, []);
+  }, [page]);
 
   return (
     <div className="list-program">
@@ -147,17 +147,17 @@ export default function ListProgram() {
                     (program: any) => {
                       return (
                         <Grid key={program.id} item xs={12} sm={6} lg={3}>
-                          <Link
-                            key={program.id}
-                            to={`/mentor/programs/${program.id}/phases`}
-                          >
-                            <div className="program">
-                              <div className="cover-photo"></div>
-                              <div className="program-name">
+                          <div className="program">
+                            <div className="cover-photo"></div>
+                            <div className="program-name">
+                              <Link
+                                className="link"
+                                to={`/mentor/programs/${program.id}/phases`}
+                              >
                                 {program.title}
-                              </div>
+                              </Link>
                             </div>
-                          </Link>
+                          </div>
                         </Grid>
                       );
                     }
