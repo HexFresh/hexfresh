@@ -8,7 +8,7 @@ import {
   CircularProgress,
   FormHelperText,
 } from '@mui/material';
-import {Button} from 'antd';
+import { Button } from 'antd';
 import { Box } from '@mui/system';
 import useInput from '../../hooks/use-input';
 import { nameValidate, passwordValidate } from '../../utils/inputValidate';
@@ -20,7 +20,7 @@ import { ILocationStore } from '../../store/location/location-store';
 const SignIn = () => {
   const dispatch = useDispatch<IRootDispatch>()
   const navigate = useNavigate();
-  const preLocation:ILocationStore = useSelector<IRootStore>((state) => state.location);
+  const preLocation: ILocationStore = useSelector<IRootStore>((state) => state.location);
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const {
@@ -47,7 +47,11 @@ const SignIn = () => {
     if (!formIsValid) {
       return;
     }
-    dispatch.user.signIn({email, password,navigate, preLocation: preLocation.location});
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000)
+    dispatch.user.signIn({ email, password, navigate, preLocation: preLocation.location });
     //dispatch(signIn({ username: email, password }, history, preLocation));
   };
 
@@ -76,7 +80,7 @@ const SignIn = () => {
           padding: '2rem',
           margin: 'auto',
           border: '2px solid #f1f1f1',
-          borderRadius:1.5,
+          borderRadius: 1.5,
         }}
         alignItems="center"
       >
@@ -133,7 +137,7 @@ const SignIn = () => {
               '& > :not(style)': { m: 2 },
             }}
           >
-            
+
             <Grid container>
               <Grid item xs>
                 <div
@@ -143,7 +147,6 @@ const SignIn = () => {
                 >
                   Forgot password?
                   {' '}
-                  {isLoading ? <CircularProgress size={15} /> : ''}
                 </div>
               </Grid>
               <Grid item>
@@ -152,13 +155,13 @@ const SignIn = () => {
             </Grid>
 
             <Button
-            type="primary"
-            loading={isLoading}
-            size='large'
-            onClick={submitHandler}
-          >
-            Sign In
-          </Button>
+              type="primary"
+              loading={isLoading}
+              size='large'
+              onClick={submitHandler}
+            >
+              Sign In
+            </Button>
 
             <Divider>
               <Typography

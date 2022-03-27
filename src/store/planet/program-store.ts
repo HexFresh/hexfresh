@@ -1,1669 +1,32 @@
 import { createModel } from '@rematch/core';
+import _ from 'lodash';
 import axiosClient from '../../api/axiosClient';
-import { IPhase } from '../../interface/program-interface';
-import { TaskCategory, TaskStatus } from '../../utilities/enum-utils';
-import { IRootDispatch, IRootStore } from '../store';
+import { ICheckList, IImage, IPhase, ITask } from '../../interface/program-interface';
+import rootStore, { IRootDispatch, IRootStore } from '../store';
 
 type IProgramStore = {
-  selectedProgram: IPhase;
-  programs: IPhase[];
+  selectedPhase: IPhase;
+  programs: IPhase;
+  checklists: ICheckList[];
+  selectedTask: ITask;
+  imageList: IImage[];
 }
 
 
-export const programStore:any = createModel<IRootStore>()( {
+export const programStore: any = createModel<IRootStore>()({
   state: {
-    programs: [
-      {
-        id: 'abcd1',
-        name: 'First onboarding',
-        imageSrc: 'https://res.cloudinary.com/droruloek/image/upload/v1643119224/hexfresh/planet-01_f7oul0.png',
-        checklists: [
-          {
-            id: 'ck1',
-            name: "Update your profile",
-            tasks: [
-              {
-                id: 'tks1',
-                name: 'Update your profile picture',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks2',
-                name: 'What are the e wallets?',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: 'ZaloPay',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: 'Momo',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Shopee',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: 'Paypall',
-                  //isRight: true,
-                }],
-              },
-              {
-                id: 'tks3',
-                name: 'What is the University of Science\'s main campus adderss?',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: '22 Nuyen Van Cu, D.5.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: '227 Nguyen Van Cu Street, D.5',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Linh Trung, Thu Duc City.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: '546 Ngo Gia TU Street, D.5',
-                  //isRight: true,
-                }],
-              }
-            ]
-          },
-          {
-            id: 'ck2',
-            name: "Update your detail information",
-            tasks: [
-              {
-                id: 'tks11',
-                name: 'Upload your Household Booklet ',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks12',
-                name: 'Upload your crime record',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-              },
-              {
-                id: 'tks13',
-                name: 'Provide your banking infor',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-              }
-            ]
-          },
-        ]
-      },
-      {
-        id: 'abcd2',
-        name: 'Second onboarding',
-        imageSrc: 'https://res.cloudinary.com/droruloek/image/upload/v1643119226/hexfresh/planet-02_qjswvd.png',
-        checklists: [
-          {
-            id: 'ck1',
-            name: "Update your profile",
-            tasks: [
-              {
-                id: 'tks1',
-                name: 'Update your profile picture',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks2',
-                name: 'What are the e wallets?',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: 'ZaloPay',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: 'Momo',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Shopee',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: 'Paypall',
-                  //isRight: true,
-                }],
-              },
-              {
-                id: 'tks3',
-                name: 'What is the University of Science\'s main campus adderss?',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: '22 Nuyen Van Cu, D.5.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: '227 Nguyen Van Cu Street, D.5',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Linh Trung, Thu Duc City.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: '546 Ngo Gia TU Street, D.5',
-                  //isRight: true,
-                }],
-              }
-            ]
-          },
-          {
-            id: 'ck2',
-            name: "Update your detail information",
-            tasks: [
-              {
-                id: 'tks11',
-                name: 'Upload your Household Booklet ',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks12',
-                name: 'Upload your crime record',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-              },
-              {
-                id: 'tks13',
-                name: 'Provide your banking infor',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-              }
-            ]
-          },
-        ]
-      },
-      {
-        id: 'abcd3',
-        name: 'Third onboarding',
-        imageSrc: 'https://res.cloudinary.com/droruloek/image/upload/v1643119221/hexfresh/planet-03_wfwlsb.png',
-        checklists: [
-          {
-            id: 'ck1',
-            name: "Update your profile",
-            tasks: [
-              {
-                id: 'tks1',
-                name: 'Update your profile picture',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks2',
-                name: 'What are the e wallets?',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: 'ZaloPay',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: 'Momo',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Shopee',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: 'Paypall',
-                  //isRight: true,
-                }],
-              },
-              {
-                id: 'tks3',
-                name: 'What is the University of Science\'s main campus adderss?',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: '22 Nuyen Van Cu, D.5.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: '227 Nguyen Van Cu Street, D.5',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Linh Trung, Thu Duc City.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: '546 Ngo Gia TU Street, D.5',
-                  //isRight: true,
-                }],
-              }
-            ]
-          },
-          {
-            id: 'ck2',
-            name: "Update your detail information",
-            tasks: [
-              {
-                id: 'tks11',
-                name: 'Upload your Household Booklet ',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks12',
-                name: 'Upload your crime record',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-              },
-              {
-                id: 'tks13',
-                name: 'Provide your banking infor',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-              }
-            ]
-          },
-        ]
-      },
-      {
-        id: 'abcd4',
-        name: 'Fourth onboarding',
-        imageSrc: 'https://res.cloudinary.com/droruloek/image/upload/v1643119273/hexfresh/planet-10_gge1rp.png',
-        checklists: [
-          {
-            id: 'ck1',
-            name: "Update your profile",
-            tasks: [
-              {
-                id: 'tks1',
-                name: 'Update your profile picture',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks2',
-                name: 'What are the e wallets?',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: 'ZaloPay',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: 'Momo',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Shopee',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: 'Paypall',
-                  //isRight: true,
-                }],
-              },
-              {
-                id: 'tks3',
-                name: 'What is the University of Science\'s main campus adderss?',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: '22 Nuyen Van Cu, D.5.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: '227 Nguyen Van Cu Street, D.5',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Linh Trung, Thu Duc City.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: '546 Ngo Gia TU Street, D.5',
-                  //isRight: true,
-                }],
-              }
-            ]
-          },
-          {
-            id: 'ck2',
-            name: "Update your detail information",
-            tasks: [
-              {
-                id: 'tks11',
-                name: 'Upload your Household Booklet ',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks12',
-                name: 'Upload your crime record',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-              },
-              {
-                id: 'tks13',
-                name: 'Provide your banking infor',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-              }
-            ]
-          },
-        ]
-      },
-      {
-        id: 'abcd5',
-        name: 'Fifth onboarding',
-        imageSrc: 'https://res.cloudinary.com/droruloek/image/upload/v1643119273/hexfresh/planet-11_elryxm.png',
-        checklists: [
-          {
-            id: 'ck1',
-            name: "Update your profile",
-            tasks: [
-              {
-                id: 'tks1',
-                name: 'Update your profile picture',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks2',
-                name: 'What are the e wallets?',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: 'ZaloPay',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: 'Momo',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Shopee',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: 'Paypall',
-                  //isRight: true,
-                }],
-              },
-              {
-                id: 'tks3',
-                name: 'What is the University of Science\'s main campus adderss?',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: '22 Nuyen Van Cu, D.5.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: '227 Nguyen Van Cu Street, D.5',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Linh Trung, Thu Duc City.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: '546 Ngo Gia TU Street, D.5',
-                  //isRight: true,
-                }],
-              }
-            ]
-          },
-          {
-            id: 'ck2',
-            name: "Update your detail information",
-            tasks: [
-              {
-                id: 'tks11',
-                name: 'Upload your Household Booklet ',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks12',
-                name: 'Upload your crime record',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-              },
-              {
-                id: 'tks13',
-                name: 'Provide your banking infor',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-              }
-            ]
-          },
-        ]
-      },
-      {
-        id: 'abcd6',
-        name: 'Six onboarding',
-        imageSrc: 'https://res.cloudinary.com/droruloek/image/upload/v1643119273/hexfresh/planet-09_jvied4.png',
-        checklists: [
-          {
-            id: 'ck1',
-            name: "Update your profile",
-            tasks: [
-              {
-                id: 'tks1',
-                name: 'Update your profile picture',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks2',
-                name: 'What are the e wallets?',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: 'ZaloPay',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: 'Momo',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Shopee',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: 'Paypall',
-                  //isRight: true,
-                }],
-              },
-              {
-                id: 'tks3',
-                name: 'What is the University of Science\'s main campus adderss?',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: '22 Nuyen Van Cu, D.5.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: '227 Nguyen Van Cu Street, D.5',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Linh Trung, Thu Duc City.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: '546 Ngo Gia TU Street, D.5',
-                  //isRight: true,
-                }],
-              }
-            ]
-          },
-          {
-            id: 'ck2',
-            name: "Update your detail information",
-            tasks: [
-              {
-                id: 'tks11',
-                name: 'Upload your Household Booklet ',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks12',
-                name: 'Upload your crime record',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-              },
-              {
-                id: 'tks13',
-                name: 'Provide your banking infor',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-              }
-            ]
-          },
-        ]
-      },
-      {
-        id: 'abcd7',
-        name: 'Seven onboarding',
-        imageSrc: 'https://res.cloudinary.com/droruloek/image/upload/v1643119273/hexfresh/planet-07_luxrbe.png',
-        checklists: [
-          {
-            id: 'ck1',
-            name: "Update your profile",
-            tasks: [
-              {
-                id: 'tks1',
-                name: 'Update your profile picture',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks2',
-                name: 'What are the e wallets?',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: 'ZaloPay',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: 'Momo',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Shopee',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: 'Paypall',
-                  //isRight: true,
-                }],
-              },
-              {
-                id: 'tks3',
-                name: 'What is the University of Science\'s main campus adderss?',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: '22 Nuyen Van Cu, D.5.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: '227 Nguyen Van Cu Street, D.5',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Linh Trung, Thu Duc City.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: '546 Ngo Gia TU Street, D.5',
-                  //isRight: true,
-                }],
-              }
-            ]
-          },
-          {
-            id: 'ck2',
-            name: "Update your detail information",
-            tasks: [
-              {
-                id: 'tks11',
-                name: 'Upload your Household Booklet ',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks12',
-                name: 'Upload your crime record',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-              },
-              {
-                id: 'tks13',
-                name: 'Provide your banking infor',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-              }
-            ]
-          },
-        ]
-      },
-      {
-        id: 'abcd8',
-        name: 'Eight onboarding',
-        imageSrc: 'https://res.cloudinary.com/droruloek/image/upload/v1643119273/hexfresh/planet-05_rfn7ee.png',
-        checklists: [
-          {
-            id: 'ck1',
-            name: "Update your profile",
-            tasks: [
-              {
-                id: 'tks1',
-                name: 'Update your profile picture',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks2',
-                name: 'What are the e wallets?',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: 'ZaloPay',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: 'Momo',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Shopee',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: 'Paypall',
-                  //isRight: true,
-                }],
-              },
-              {
-                id: 'tks3',
-                name: 'What is the University of Science\'s main campus adderss?',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: '22 Nuyen Van Cu, D.5.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: '227 Nguyen Van Cu Street, D.5',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Linh Trung, Thu Duc City.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: '546 Ngo Gia TU Street, D.5',
-                  //isRight: true,
-                }],
-              }
-            ]
-          },
-          {
-            id: 'ck2',
-            name: "Update your detail information",
-            tasks: [
-              {
-                id: 'tks11',
-                name: 'Upload your Household Booklet ',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks12',
-                name: 'Upload your crime record',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-              },
-              {
-                id: 'tks13',
-                name: 'Provide your banking infor',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-              }
-            ]
-          },
-        ]
-      },
-      {
-        id: 'abcd9',
-        name: 'Nine onboarding',
-        imageSrc: 'https://res.cloudinary.com/droruloek/image/upload/v1643119273/hexfresh/planet-06_vu4km7.png',
-        checklists: [
-          {
-            id: 'ck1',
-            name: "Update your profile",
-            tasks: [
-              {
-                id: 'tks1',
-                name: 'Update your profile picture',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks2',
-                name: 'What are the e wallets?',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: 'ZaloPay',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: 'Momo',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Shopee',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: 'Paypall',
-                  //isRight: true,
-                }],
-              },
-              {
-                id: 'tks3',
-                name: 'What is the University of Science\'s main campus adderss?',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: '22 Nuyen Van Cu, D.5.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: '227 Nguyen Van Cu Street, D.5',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Linh Trung, Thu Duc City.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: '546 Ngo Gia TU Street, D.5',
-                  //isRight: true,
-                }],
-              }
-            ]
-          },
-          {
-            id: 'ck2',
-            name: "Update your detail information",
-            tasks: [
-              {
-                id: 'tks11',
-                name: 'Upload your Household Booklet ',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks12',
-                name: 'Upload your crime record',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-              },
-              {
-                id: 'tks13',
-                name: 'Provide your banking infor',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-              }
-            ]
-          },
-        ]
-      },
-      {
-        id: 'abcd10',
-        name: 'Tenth onboarding',
-        imageSrc: 'https://res.cloudinary.com/droruloek/image/upload/v1643119226/hexfresh/planet-02_qjswvd.png',
-        checklists: [
-          {
-            id: 'ck1',
-            name: "Update your profile",
-            tasks: [
-              {
-                id: 'tks1',
-                name: 'Update your profile picture',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks2',
-                name: 'What are the e wallets?',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: 'ZaloPay',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: 'Momo',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Shopee',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: 'Paypall',
-                  //isRight: true,
-                }],
-              },
-              {
-                id: 'tks3',
-                name: 'What is the University of Science\'s main campus adderss?',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: '22 Nuyen Van Cu, D.5.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: '227 Nguyen Van Cu Street, D.5',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Linh Trung, Thu Duc City.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: '546 Ngo Gia TU Street, D.5',
-                  //isRight: true,
-                }],
-              }
-            ]
-          },
-          {
-            id: 'ck2',
-            name: "Update your detail information",
-            tasks: [
-              {
-                id: 'tks11',
-                name: 'Upload your Household Booklet ',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks12',
-                name: 'Upload your crime record',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-              },
-              {
-                id: 'tks13',
-                name: 'Provide your banking infor',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-              }
-            ]
-          },
-        ]
-      },
-      {
-        id: 'abcd11',
-        name: 'Eleven onboarding',
-        imageSrc: 'https://res.cloudinary.com/droruloek/image/upload/v1643119225/hexfresh/planet-14_grmwxo.png',
-        checklists: [
-          {
-            id: 'ck1',
-            name: "Update your profile",
-            tasks: [
-              {
-                id: 'tks1',
-                name: 'Update your profile picture',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks2',
-                name: 'What are the e wallets?',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: 'ZaloPay',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: 'Momo',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Shopee',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: 'Paypall',
-                  //isRight: true,
-                }],
-              },
-              {
-                id: 'tks3',
-                name: 'What is the University of Science\'s main campus adderss?',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: '22 Nuyen Van Cu, D.5.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: '227 Nguyen Van Cu Street, D.5',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Linh Trung, Thu Duc City.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: '546 Ngo Gia TU Street, D.5',
-                  //isRight: true,
-                }],
-              }
-            ]
-          },
-          {
-            id: 'ck2',
-            name: "Update your detail information",
-            tasks: [
-              {
-                id: 'tks11',
-                name: 'Upload your Household Booklet ',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks12',
-                name: 'Upload your crime record',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-              },
-              {
-                id: 'tks13',
-                name: 'Provide your banking infor',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-              }
-            ]
-          },
-        ]
-      },
-      {
-        id: 'abcd12',
-        name: 'Twelfth onboarding',
-        imageSrc: 'https://res.cloudinary.com/droruloek/image/upload/v1643119222/hexfresh/planet-15_v6ehro.png',
-        checklists: [
-          {
-            id: 'ck1',
-            name: "Update your profile",
-            tasks: [
-              {
-                id: 'tks1',
-                name: 'Update your profile picture',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks2',
-                name: 'What are the e wallets?',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: 'ZaloPay',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: 'Momo',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Shopee',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: 'Paypall',
-                  //isRight: true,
-                }],
-              },
-              {
-                id: 'tks3',
-                name: 'What is the University of Science\'s main campus adderss?',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: '22 Nuyen Van Cu, D.5.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: '227 Nguyen Van Cu Street, D.5',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Linh Trung, Thu Duc City.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: '546 Ngo Gia TU Street, D.5',
-                  //isRight: true,
-                }],
-              }
-            ]
-          },
-          {
-            id: 'ck2',
-            name: "Update your detail information",
-            tasks: [
-              {
-                id: 'tks11',
-                name: 'Upload your Household Booklet ',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks12',
-                name: 'Upload your crime record',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-              },
-              {
-                id: 'tks13',
-                name: 'Provide your banking infor',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-              }
-            ]
-          },
-        ]
-      },
-      {
-        id: 'abcd13',
-        name: 'Thirteen onboarding',
-        imageSrc: 'https://res.cloudinary.com/droruloek/image/upload/v1643119222/hexfresh/planet-04_wnbcyx.png',
-        checklists: [
-          {
-            id: 'ck1',
-            name: "Update your profile",
-            tasks: [
-              {
-                id: 'tks1',
-                name: 'Update your profile picture',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks2',
-                name: 'What are the e wallets?',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: 'ZaloPay',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: 'Momo',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Shopee',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: 'Paypall',
-                  //isRight: true,
-                }],
-              },
-              {
-                id: 'tks3',
-                name: 'What is the University of Science\'s main campus adderss?',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: '22 Nuyen Van Cu, D.5.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: '227 Nguyen Van Cu Street, D.5',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Linh Trung, Thu Duc City.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: '546 Ngo Gia TU Street, D.5',
-                  //isRight: true,
-                }],
-              }
-            ]
-          },
-          {
-            id: 'ck2',
-            name: "Update your detail information",
-            tasks: [
-              {
-                id: 'tks11',
-                name: 'Upload your Household Booklet ',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks12',
-                name: 'Upload your crime record',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-              },
-              {
-                id: 'tks13',
-                name: 'Provide your banking infor',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-              }
-            ]
-          },
-        ]
-      },
-      {
-        id: 'abcd14',
-        name: 'Fourteen onboarding',
-        imageSrc: 'https://res.cloudinary.com/droruloek/image/upload/v1643119222/hexfresh/planet-12_qsd428.png',
-        checklists: [
-          {
-            id: 'ck1',
-            name: "Update your profile",
-            tasks: [
-              {
-                id: 'tks1',
-                name: 'Update your profile picture',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks2',
-                name: 'What are the e wallets?',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: 'ZaloPay',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: 'Momo',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Shopee',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: 'Paypall',
-                  //isRight: true,
-                }],
-              },
-              {
-                id: 'tks3',
-                name: 'What is the University of Science\'s main campus adderss?',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: '22 Nuyen Van Cu, D.5.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: '227 Nguyen Van Cu Street, D.5',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Linh Trung, Thu Duc City.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: '546 Ngo Gia TU Street, D.5',
-                  //isRight: true,
-                }],
-              }
-            ]
-          },
-          {
-            id: 'ck2',
-            name: "Update your detail information",
-            tasks: [
-              {
-                id: 'tks11',
-                name: 'Upload your Household Booklet ',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks12',
-                name: 'Upload your crime record',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-              },
-              {
-                id: 'tks13',
-                name: 'Provide your banking infor',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-              }
-            ]
-          },
-        ]
-      },
-      {
-        id: 'abcd15',
-        name: 'Fifteen onboarding',
-        imageSrc: 'https://res.cloudinary.com/droruloek/image/upload/v1643119222/hexfresh/planet-13_kg6vpd.png',
-        checklists: [
-          {
-            id: 'ck1',
-            name: "Update your profile",
-            tasks: [
-              {
-                id: 'tks1',
-                name: 'Update your profile picture',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks2',
-                name: 'What are the e wallets?',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: 'ZaloPay',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: 'Momo',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Shopee',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: 'Paypall',
-                  //isRight: true,
-                }],
-              },
-              {
-                id: 'tks3',
-                name: 'What is the University of Science\'s main campus adderss?',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: '22 Nuyen Van Cu, D.5.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: '227 Nguyen Van Cu Street, D.5',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Linh Trung, Thu Duc City.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: '546 Ngo Gia TU Street, D.5',
-                  //isRight: true,
-                }],
-              }
-            ]
-          },
-          {
-            id: 'ck2',
-            name: "Update your detail information",
-            tasks: [
-              {
-                id: 'tks1',
-                name: 'Update your profile picture',
-                type: TaskCategory.ASSIGNMENT,
-                taskStatus: TaskStatus.DONE,
-              },
-              {
-                id: 'tks2',
-                name: 'What are the e wallets?',
-                type: TaskCategory.MULTIPLE_CHOICES,
-                taskStatus: TaskStatus.DOING,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: 'ZaloPay',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: 'Momo',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Shopee',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: 'Paypall',
-                  //isRight: true,
-                }],
-              },
-              {
-                id: 'tks3',
-                name: 'What is the University of Science\'s main campus adderss?',
-                type: TaskCategory.SINGLE_CHOICE,
-                taskStatus: TaskStatus.TODO,
-                choices: [{
-                  choiceId: 'choice1',
-                  content: '22 Nuyen Van Cu, D.5.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice2',
-                  content: '227 Nguyen Van Cu Street, D.5',
-                  //isRight: true,
-                },
-                {
-                  choiceId: 'choice3',
-                  content: 'Linh Trung, Thu Duc City.',
-                  //isRight: false,
-                },
-                {
-                  choiceId: 'choice4',
-                  content: '546 Ngo Gia TU Street, D.5',
-                  //isRight: true,
-                }],
-              }
-            ]
-          },
-        ]
-      },
-    ],
-    selectedProgram:
-    {
-      id: 'abcd',
-      name: 'First onboarding',
-      imageSrc:'https://res.cloudinary.com/droruloek/image/upload/v1643119224/hexfresh/planet-01_f7oul0.png',
-      checklists: [
-        {
-          id: 'ck1',
-          name: "Update your profile",
-          tasks: [
-            {
-              id: 'tks1',
-              name: 'Update your profile picture',
-              type: TaskCategory.ASSIGNMENT,
-              taskStatus: TaskStatus.DONE,
-              choices:[],
-            },
-            {
-              id: 'tks2',
-              name: 'What are the e wallets?',
-              type: TaskCategory.MULTIPLE_CHOICES,
-              taskStatus: TaskStatus.DOING,
-              choices: [{
-                choiceId: 'choice1',
-                content: 'ZaloPay',
-                //isRight: true,
-              },
-              {
-                choiceId: 'choice2',
-                content: 'Momo',
-                //isRight: true,
-              },
-              {
-                choiceId: 'choice3',
-                content: 'Shopee',
-                //isRight: false,
-              },
-              {
-                choiceId: 'choice4',
-                content: 'Paypall',
-                //isRight: true,
-              }],
-            },
-            {
-              id: 'tks3',
-              name: 'What is the University of Science\'s main campus adderss?',
-              type: TaskCategory.SINGLE_CHOICE,
-              taskStatus: TaskStatus.TODO,
-              choices: [{
-                choiceId: 'choice1',
-                content: '22 Nuyen Van Cu, D.5.',
-                //isRight: false,
-              },
-              {
-                choiceId: 'choice2',
-                content: '227 Nguyen Van Cu Street, D.5',
-                //isRight: true,
-              },
-              {
-                choiceId: 'choice3',
-                content: 'Linh Trung, Thu Duc City.',
-                //isRight: false,
-              },
-              {
-                choiceId: 'choice4',
-                content: '546 Ngo Gia TU Street, D.5',
-                //isRight: true,
-              }],
-            }
-          ]
-        },
-        {
-          id: 'ck2',
-          name: "Update your detail information",
-          tasks: [
-            {
-              id: 'tks11',
-              name: 'Upload your Household Booklet ',
-              type: TaskCategory.ASSIGNMENT,
-              taskStatus: TaskStatus.DONE,
-              choices: [{
-                choiceId: 'choice1',
-                content: '22 Nuyen Van Cu, D.5.',
-                //isRight: false,
-              },
-              {
-                choiceId: 'choice2',
-                content: '227 Nguyen Van Cu Street, D.5',
-                //isRight: true,
-              },
-              {
-                choiceId: 'choice3',
-                content: 'Linh Trung, Thu Duc City.',
-                //isRight: false,
-              },
-              {
-                choiceId: 'choice4',
-                content: '546 Ngo Gia TU Street, D.5',
-                //isRight: true,
-              }],
-            },
-            {
-              id: 'tks12',
-              name: 'Upload your crime record',
-              type: TaskCategory.MULTIPLE_CHOICES,
-              taskStatus: TaskStatus.DOING,
-              choices: [{
-                choiceId: 'choice1',
-                content: '22 Nuyen Van Cu, D.5.',
-                //isRight: false,
-              },
-              {
-                choiceId: 'choice2',
-                content: '227 Nguyen Van Cu Street, D.5',
-                //isRight: true,
-              },
-              {
-                choiceId: 'choice3',
-                content: 'Linh Trung, Thu Duc City.',
-                //isRight: false,
-              },
-              {
-                choiceId: 'choice4',
-                content: '546 Ngo Gia TU Street, D.5',
-                //isRight: true,
-              }],
-            },
-            {
-              id: 'tks13',
-              name: 'Provide your banking infor',
-              type: TaskCategory.SINGLE_CHOICE,
-              taskStatus: TaskStatus.TODO,
-              choices: [{
-                choiceId: 'choice1',
-                content: '22 Nuyen Van Cu, D.5.',
-                //isRight: false,
-              },
-              {
-                choiceId: 'choice2',
-                content: '227 Nguyen Van Cu Street, D.5',
-                //isRight: true,
-              },
-              {
-                choiceId: 'choice3',
-                content: 'Linh Trung, Thu Duc City.',
-                //isRight: false,
-              },
-              {
-                choiceId: 'choice4',
-                content: '546 Ngo Gia TU Street, D.5',
-                //isRight: true,
-              }],
-            },
-            {
-              id: 'tks15',
-              name: 'Provide your interests',
-              type: TaskCategory.WRITTING,
-              taskStatus: TaskStatus.TODO,
-              content: "",
-              choices: [],
-            },
-            {
-              id: 'tks16',
-              name: 'Your gender',
-              type: TaskCategory.BINARY,
-              taskStatus: TaskStatus.TODO,
-              binarylist:[
-                {
-                  id:'1',
-                  content:'Hexfresh has 6 members.'
-                },
-                {
-                  id:'2',
-                  content:'Hexfresh is all of young boys.',
-                }
-              ],
-              choices: [],
-            }
-          ]
-        },
-      ]
-    } ,
-  }as IProgramStore,
+    program: {},
+    selectedPhase: {},
+    checklists: [],
+    selectedTask: {},
+    imageList: [],
+  } as unknown as IProgramStore,
   reducers: {
-    setSelectedProgram: (state: IProgramStore, payload: IPhase) => ({ ...state, selectedProgram: payload }),
+    setSelectedPhase: (state, payload) => ({ ...state, selectedPhase: payload }),
+    setProgram: (state, payload) => ({ ...state, program: payload }),
+    setChecklists: (state, payload) => ({ ...state, checklists: payload }),
+    setSeletedTask: (state, payload) => ({ ...state, selectedTask: payload }),
+    setListImages: (state, payload) => ({ ...state, imageList: payload }),
   },
   effects: (dispatch: IRootDispatch) => ({
     /* async doFetchProgram(payload: IPhase) {
@@ -1671,20 +34,198 @@ export const programStore:any = createModel<IRootStore>()( {
       dispatch.setSelectedProgram({});
     }, */
 
-    async doSubmitTask(payload:{
-      checklistId: string;
-      taskId: string;
-    }){
+    async doFetchProgram({ id }) {
+      const endpoint = `program/${id}`;
 
-      const {checklistId, taskId} = payload;
+      try {
+        const response = await axiosClient.get(endpoint);
+        console.log(response.data);
+        dispatch.programStore.setProgram(response.data);
+      } catch (error) {
+        throw new Error('Failed to fetch program.');
+      }
+    },
+
+    async doFetchImageList() {
+      const endpoint = `image`;
+
+      try {
+        const response = await axiosClient.get(endpoint);
+        dispatch.programStore.setListImages(response.data);
+      } catch (error) {
+        throw new Error('Failed to fetch list images.');
+      }
+    },
+
+    async doFetchDetailsPhase({ programId, phaseId }) {
+      const endpoint = `program/${programId}/phase/${phaseId}`;
+
+      try {
+        const response = await axiosClient.get(endpoint);
+        dispatch.programStore.setSelectedPhase(response.data);
+      } catch (error) {
+        throw new Error('Failed to fetch phase.');
+      }
+    },
+
+    async doFetchChecklists({ phaseId }) {
+      const endpoint = `phase/${phaseId}/checklist`;
+
+      try {
+        const response = await axiosClient.get(endpoint);
+        dispatch.programStore.setChecklists(response.data);
+      } catch (error) {
+        throw new Error('Failed to fetch checklists.');
+      }
+    },
+
+    async doFetchTasks({ checklistId }) {
+      const endpoint = `checklist/${checklistId}/task`;
+
+      try {
+        const response = await axiosClient.get(endpoint);
+        let selectedPhase = _.cloneDeep(rootStore.getState().programStore.selectedPhase);
+        let checklists = selectedPhase.checklists;
+        let newChecklist = _.find(checklists, item => item.id === checklistId);
+        newChecklist.tasks = response.data;
+        let newChecklists = [..._.filter(checklists, item => item.id !== checklistId), newChecklist];
+        selectedPhase.checklists = newChecklists;
+
+        console.log(selectedPhase);
+        dispatch.programStore.setSelectedPhase(selectedPhase);
+      } catch (error) {
+        throw new Error('Failed to fetch detail task.');
+      }
+    },
+
+    async doFetchDetailsTask({ checklistId, taskId }) {
       const endpoint = `checklist/${checklistId}/task/${taskId}`;
 
-      //const reponse = await axiosClient.post(endpoint,payload);
-      // update new repnose task and insert into selected program and set it to state.
-      //..
-      //dispatch.programStore.setSelectedProgram();
-     // return reponse.data;
-    }
+      try {
+        const response = await axiosClient.get(endpoint);
+        dispatch.programStore.setSeletedTask(response.data);
+      } catch (error) {
+        throw new Error('Failed to fetch detail task.');
+      }
+    },
+    /* Selected question effects */
+    async doSubmitSelectedQuestionAnswer({ answers, taskId }) {
+      const endpoint = `user/task/${taskId}/quiz/selected-question/answer`;
+      try {
+
+        await axiosClient.post(endpoint, answers);
+
+      } catch (error) {
+        throw new Error('Failed to submit answer.');
+      }
+
+    },
+
+    async doUpdateSubmitSelectedQuestionAnswer({ answers, taskId }) {
+      const endpoint = `user/task/${taskId}/quiz/selected-question/answer`;
+      try {
+
+        await axiosClient.put(endpoint, answers);
+
+      } catch (error) {
+        throw new Error('Failed to submit answer.');
+      }
+
+    },
+
+    async doFetchSelectedQuestionAnswer({ taskId }) {
+      const endpoint = `user/task/${taskId}/quiz/selected-question/answer`;
+      try {
+
+        const response = await axiosClient.get(endpoint);
+        let task = _.cloneDeep(rootStore.getState().programStore.selectedTask);
+        task.answersSelectedQuestion = response.data;
+
+        dispatch.programStore.setSeletedTask(task);
+      } catch (error) {
+        throw new Error('Failed to fetch answer.');
+
+      }
+    },
+
+    /* Constructed question effects */
+    async doSubmitContructedQuestion({ answer, taskId }: { answer: { question: string }, taskId: number }) {
+      const endpoint = `user/task/${taskId}/quiz/constructed-question/answer`;
+
+      try {
+        await axiosClient.post(endpoint, answer);
+      } catch (error) {
+        throw new Error('Failed to submit answer.');
+
+      }
+    },
+
+    async doUpdateSubmitContructedQuestion({ answer, taskId }: { answer: { question: string }, taskId: number }) {
+      const endpoint = `user/task/${taskId}/quiz/constructed-question/answer`;
+
+      try {
+        await axiosClient.put(endpoint, answer);
+
+      } catch (error) {
+        throw new Error('Failed to submit answer.');
+
+      }
+    },
+
+    async doFetchContructedQuestionAnswer({taskId}){
+      const endpoint = `user/task/${taskId}/quiz/constructed-question/answer`;
+
+      try {
+        const response = await axiosClient.get(endpoint);
+        let task = _.cloneDeep(rootStore.getState().programStore.selectedTask);
+        task.answerConstructedQuestion = response.data;
+
+        dispatch.programStore.setSeletedTask(task);
+      } catch (error) {
+        throw new Error('Failed to fetch answers.');
+
+      }
+    },
+
+    /* Binary question effects */
+    async doSubmitBinaryQuestion({taskId, answers}){
+      const endpoint = `user/task/${taskId}/quiz/true-false-question/answer`;
+
+      try {
+        await axiosClient.post(endpoint, answers);
+        
+      } catch (error) {
+        throw new Error('Failed to submit answers.');
+
+      }
+    },
+
+    async doUpdateSubmitBinaryQuestion({taskId, answers}){
+      const endpoint = `user/task/${taskId}/quiz/true-false-question/answer`;
+
+      try {
+        await axiosClient.put(endpoint, answers);
+        
+      } catch (error) {
+        throw new Error('Failed to submit answers.');
+
+      }
+    },
+
+    async doFetchBinaryQuestion({taskId}){
+      const endpoint = `user/task/${taskId}/quiz/true-false-question/answer`;
+
+      try {
+        const response = await axiosClient.get(endpoint);
+        let task = _.cloneDeep(rootStore.getState().programStore.selectedTask);
+        task.answerBinaryQuestion = response.data;
+
+        dispatch.programStore.setSeletedTask(task);
+      } catch (error) {
+        throw new Error('Failed to fetch answers.');
+
+      }
+    },
   }),
 
 });

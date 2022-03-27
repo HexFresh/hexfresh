@@ -63,9 +63,9 @@ function App() {
 
   const routerWithSignIn = (
     <Routes>
-      <Route path="/" element={<Navigate to="/planets" />} />
+      <Route  path="/" element={<Navigate to="/planets" />} />
       <Route path="planets" element={<Home />} />
-      <Route path="planets/:planetId" element={<PlanetView />} />
+      <Route  path="planets/:planetId" element={<PlanetView />} />
       <Route path="/mentor/programs" element={<ListProgram />} />
       <Route
         path="/mentor/programs/:programId/phases"
