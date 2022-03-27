@@ -52,7 +52,7 @@ function ConstructedTask(props: any) {
       setAnswer(real);
       setIsMatchingRequired(real.isMatchingRequired);
     } else {
-      addNewAnswer();
+      await addNewAnswer();
       fecthAnswers();
     }
   };

@@ -76,12 +76,11 @@
 
 .true-false-option .true-false-btn .true-btn:hover,
 .true-false-option .true-false-btn .false-btn:hover {
-  background-color: #1890ff;
-  color: white;
+  border: 2px solid black;
 }
 
 .true-false-option .true-false-btn .true-btn.active {
-  background-color: #00cfad;
+  background-color: #52c41a;
   color: white;
 }
 
