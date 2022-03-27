@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import 'antd/dist/antd.css';
 //import './index.css';
-import { Layout, Menu, Breadcrumb, notification, Spin } from 'antd';
+import { Layout, Menu, Breadcrumb, notification, Spin, Card } from 'antd';
 import {
-  UserOutlined,
-  LaptopOutlined,
   NotificationOutlined,
 } from '@ant-design/icons';
 import FooterFresher from '../../components/layouts/footer/FooterFresher';
@@ -16,6 +14,8 @@ import { ITask } from '../../interface/program-interface';
 import HeaderInternal from '../../components/layouts/Header/HeaderInternal';
 import { EmptyResult } from '../../components/results';
 import { TaskCategory } from '../../utilities/enum-utils';
+
+import './planetview.scss';
 
 const { SubMenu } = Menu;
 const { Header, Content, Footer, Sider } = Layout;
@@ -38,18 +38,18 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
     const { doFetchDetailsPhase } = this.props;
     const id = _.replace(window.location.pathname, '/planets/', '');
     //do fetch phase with programId
-    this.setState({isLoading: true});
+    this.setState({ isLoading: true });
     try {
       doFetchDetailsPhase({ programId: 1, phaseId: id });
     } catch (error) {
       notification.error({ message: 'Failed to fetch this phase.' });
     }
-    this.setState({isLoading: false});
+    this.setState({ isLoading: false });
   };
 
   componentDidUpdate(preProps: PlanViewProps, preState: IPlanetViewStates) {
     if (!_.isEqual(preProps, this.props)) {
-      
+
     }
     console.log(this.state.isLoading);
   }
@@ -111,9 +111,9 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
     const { isLoading } = this.state;
     const { defaultOpenKeys, defaultSelectedKeys } = this.state;
 
-    let content = <Content style={{ padding: '0 50px' }}>
+    let content = <Content className='centered' style={{ padding: '0 50px' }}>
       <Breadcrumb style={{ margin: '16px 0' }}>
-        <Breadcrumb.Item>Home</Breadcrumb.Item>
+        <Breadcrumb.Item href='/'>Home</Breadcrumb.Item>
         <Breadcrumb.Item>{selectedPhase.title}</Breadcrumb.Item>
       </Breadcrumb>
       <Layout
@@ -147,19 +147,21 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
           </Menu>
         </Sider>
         <Content style={{ padding: '0 24px', minHeight: 280 }}>
-          <TaskItem
-            task={this.props.selectedTask}
-            doSubmitBinaryQuestion={doSubmitBinaryQuestion}
-            doSubmitContructedQuestion={doSubmitContructedQuestion}
-            doSubmitSelectedQuestionAnswer={doSubmitSelectedQuestionAnswer}
+          <Card>
+            <TaskItem
+              task={this.props.selectedTask}
+              doSubmitBinaryQuestion={doSubmitBinaryQuestion}
+              doSubmitContructedQuestion={doSubmitContructedQuestion}
+              doSubmitSelectedQuestionAnswer={doSubmitSelectedQuestionAnswer}
 
-            doUpdateSubmitBinaryQuestion={doUpdateSubmitBinaryQuestion}
-            doUpdateSubmitContructedQuestion={doUpdateSubmitContructedQuestion}
-            doUpdateSubmitSelectedQuestionAnswer={doUpdateSubmitSelectedQuestionAnswer}
+              doUpdateSubmitBinaryQuestion={doUpdateSubmitBinaryQuestion}
+              doUpdateSubmitContructedQuestion={doUpdateSubmitContructedQuestion}
+              doUpdateSubmitSelectedQuestionAnswer={doUpdateSubmitSelectedQuestionAnswer}
 
-            onFetchQuestionAnswer={this._onFetchFetchQuestionAnswer}
-            isLoading={isLoading}
-          />
+              onFetchQuestionAnswer={this._onFetchFetchQuestionAnswer}
+              isLoading={isLoading}
+            />
+          </Card>
         </Content>
       </Layout>
     </Content>;

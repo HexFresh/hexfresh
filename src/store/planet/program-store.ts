@@ -89,6 +89,7 @@ export const programStore: any = createModel<IRootStore>()({
         let newChecklist = _.find(checklists, item => item.id === checklistId);
         newChecklist.tasks = response.data;
         let newChecklists = [..._.filter(checklists, item => item.id !== checklistId), newChecklist];
+        newChecklists = _.sortBy(newChecklists,['index']);
         selectedPhase.checklists = newChecklists;
 
         console.log(selectedPhase);
