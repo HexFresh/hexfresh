@@ -60,3 +60,14 @@ export const updatePointOfTask = async (
     console.log(error);
   }
 };
+
+export const deleteTask = async (checklistId: number, taskId: number) => {
+  const endpoint = `checklist/${checklistId}/task/${taskId}`;
+  try {
+    const response = await axiosClient.delete(endpoint);
+    const { data } = response;
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};

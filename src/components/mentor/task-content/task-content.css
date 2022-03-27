@@ -17,21 +17,27 @@
 
 .task-content .task-content-container .top {
   display: flex;
-  justify-content: center;
   align-items: center;
   width: 100%;
   font-weight: bold;
-  font-size: 24px;
+  font-size: 20px;
   margin-bottom: 20px;
-  padding: 0 40px;
+  padding: 0 20px;
+}
+
+.task-content .task-content-container .top .task-type {
+  flex: 1;
+  font-weight: lighter;
+  font-size: 16px;
 }
 
 .task-content .task-content-container .top .task-title {
-  flex: 8;
+  flex: 1;
+  text-align: center;
 }
 
-.task-content .task-content-container .top .task-point {
-  flex: 2;
+.task-content .task-content-container .top .remove-task-btn {
+  flex: 1;
   display: flex;
   justify-content: flex-end;
 }

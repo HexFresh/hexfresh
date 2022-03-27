@@ -132,6 +132,7 @@ function ConstructedTask(props: any) {
         await updateAnswer(task.id, answer.id, {
           isMatchingRequired: checked ? true : '0',
         });
+        message.success('Updated', 0.5);
       };
       update();
     }

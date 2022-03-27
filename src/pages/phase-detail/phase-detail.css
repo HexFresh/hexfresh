@@ -30,6 +30,9 @@
   overflow-y: scroll;
   overflow-x: hidden;
   padding-bottom: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .phase-detail .phase-container .page-content {

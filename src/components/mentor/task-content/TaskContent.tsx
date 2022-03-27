@@ -4,21 +4,12 @@ import SingleChoiceTask from './single-choice-task/SingleChoiceTask';
 import MultipleChoiceTask from './multiple-choice-task/MultipleChoiceTask';
 import ConstructedTask from './constructed-task/ConstructedTask';
 import TrueFalseTask from './true-false-task/TrueFalseTask';
-
-interface ITask {
-  id: number;
-  checklistId: number;
-  typeId: number;
-  title: string;
-  index: number;
-  point: number;
-  isCompleted: boolean;
-  isChecked: boolean;
-  isActive: boolean;
-}
+import { Menu, Dropdown, Button, Popconfirm, message } from 'antd';
+import { EllipsisOutlined } from '@ant-design/icons';
+import { deleteTask } from '../../../api/mentor/taskApi';
 
 function TaskContent(props: any) {
-  const { task } = props;
+  const { task, fetchChecklists, setTaskNull } = props;
   const [renderTask, setRenderTask] = React.useState<JSX.Element | null>(null);
 
   useEffect(() => {
@@ -42,10 +33,63 @@ function TaskContent(props: any) {
     return () => setRenderTask(null);
   }, [task.id]);
 
+  const renderType = () => {
+    switch (task.typeId) {
+      case 1:
+        return <div className="task-type">Single Choice</div>;
+      case 2:
+        return <div className="task-type">Multiple Choice</div>;
+      case 3:
+        return <div className="task-type">Constructed-Response</div>;
+      case 4:
+        return <div className="task-type">True-False</div>;
+      default:
+        return <div className="task-type">Chưa làm</div>;
+    }
+  };
+
+  const handleDeleteTask = async () => {
+    const result = await deleteTask(task.checklistId, task.id);
+    if (result === '') {
+      message.success('Delete task success');
+      fetchChecklists();
+      setTaskNull();
+    } else {
+      message.error('Delete failed');
+    }
+  };
+
+  console.log({ task });
+
   return (
     <div className="task-content">
       <div className="task-content-container">
-        <div className="top">{task.title}</div>
+        <div className="top">
+          {renderType()}
+          <div className="task-title">{task.title}</div>
+          <div className="remove-task-btn">
+            <Dropdown
+              overlay={
+                <Menu>
+                  <Popconfirm
+                    placement="topLeft"
+                    title="Are you sure to delete this task?"
+                    okText="Yes"
+                    onConfirm={handleDeleteTask}
+                    cancelText="No"
+                  >
+                    <Menu.Item key="1">Remove task</Menu.Item>
+                  </Popconfirm>
+                  <Menu.Item key="2">Add to Resource</Menu.Item>
+                </Menu>
+              }
+              placement="bottomRight"
+              arrow
+            >
+              <Button shape="circle" icon={<EllipsisOutlined />} />
+            </Dropdown>
+          </div>
+        </div>
         <div className="bottom">{renderTask}</div>
       </div>
     </div>

@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import TaskContent from '../../components/mentor/task-content/TaskContent';
 import { Modal, Input, Select, Button, message } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
+import { CircularProgress } from '@mui/material';
 import {
   createChecklist,
   getAllChecklist,
@@ -49,12 +50,19 @@ function PhaseDetail() {
   const [taskTitle, setTaskTitle] = React.useState<string>('');
   const [taskType, setTaskType] = React.useState<string>('1');
   const [checklistTitle, setChecklistTitle] = React.useState<string>('');
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const phaseId = useParams().phaseId;
 
   const fetchChecklists = async () => {
+    setIsLoading(true);
     const result = await getAllChecklist(Number(phaseId));
     setChecklists(result);
+    setIsLoading(false);
+  };
+
+  const setTaskNull = () => {
+    setTask(null);
   };
 
   React.useEffect(() => {
@@ -205,6 +213,7 @@ function PhaseDetail() {
               })}
             </Menu>
           </div>
+
           <div className="add-btn">
             <Button
               type="primary"
@@ -218,7 +227,11 @@ function PhaseDetail() {
         </div>
         <div className="page-content">
           {task ? (
-            <TaskContent task={task} />
+            <TaskContent
+              setTaskNull={setTaskNull}
+              fetchChecklists={fetchChecklists}
+              task={task}
+            />
           ) : (
             <div className="no-task">
               <p>No Task Selected</p>
@@ -257,10 +270,10 @@ function PhaseDetail() {
               style={{ width: '100%' }}
               onChange={changeTaskType}
             >
-              <Option value="1">Single-Choice Question</Option>
-              <Option value="2">Multiple-Choice Question</Option>
-              <Option value="3">Constructed-Response Question</Option>
-              <Option value="4">True-False Question</Option>
+              <Option value="1">Single-Choice</Option>
+              <Option value="2">Multiple-Choice</Option>
+              <Option value="3">Constructed-Response</Option>
+              <Option value="4">True-False</Option>
               <Option value="5">Match Sequence</Option>
               <Option value="6">Match Correcsponding</Option>
               <Option value="7">Document</Option>
