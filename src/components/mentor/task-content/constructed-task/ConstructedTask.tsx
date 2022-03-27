@@ -86,6 +86,7 @@ function ConstructedTask(props: any) {
         await updateAnswer(task.id, answer.id, {
           sampleAnswer: newSampleAnswer,
         });
+        fecthAnswers();
         message.success('Updated', 0.5);
       };
       handleUpdate();
@@ -95,8 +96,12 @@ function ConstructedTask(props: any) {
   const handleRemoveAnswer = () => {
     if (answer) {
       handleUpdateSampleAnswer('');
-      fecthAnswers();
-      message.success('Deleted', 0.5);
+      const update = async () => {
+        await updateAnswer(task.id, answer.id, {
+          isMatchingRequired: '0',
+        });
+      };
+      update();
     }
   };
 
@@ -176,7 +181,11 @@ function ConstructedTask(props: any) {
                   multiline
                   maxRows={12}
                   sx={{ width: '100%', fontSize: '18px' }}
-                  value={answer?.sampleAnswer || ''}
+                  value={
+                    (answer?.sampleAnswer === ' '
+                      ? ''
+                      : answer?.sampleAnswer) || ''
+                  }
                   onChange={(e) => handleSampleAnswerChange(e.target.value)}
                   onBlur={(e) => handleUpdateSampleAnswer(e.target.value)}
                   placeholder="Fill answer"
