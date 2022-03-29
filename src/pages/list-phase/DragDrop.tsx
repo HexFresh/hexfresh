@@ -12,13 +12,13 @@ const getItemStyle = (isDragging: any, draggableStyle: any) => ({
   userSelect: 'none',
   width: '100%',
   backgroundColor: 'white',
-  marginBottom: '20px',
+  marginBottom: '10px',
   color: 'black',
   ...draggableStyle,
 });
 
 export default function DragDrop(props: any) {
-  const { phases, updatePhase } = props;
+  const { phases, updatePhases } = props;
 
   const onDragEnd = (result: DropResult) => {
     const { destination, source } = result;
@@ -36,17 +36,17 @@ export default function DragDrop(props: any) {
     if (destination.index > source.index) {
       const changeItems = newItems.slice(source.index, destination.index + 1);
       changeItems.forEach((item, index) => {
-        changeItems[index].order = item.order - 1;
+        changeItems[index].index = item.index - 1;
       });
-      changeItems[0].order = changeItems[changeItems.length - 1].order + 1;
+      changeItems[0].index = changeItems[changeItems.length - 1].index + 1;
     } else {
       const changeItems = newItems.slice(destination.index, source.index + 1);
       changeItems.forEach((item, index) => {
-        changeItems[index].order = item.order + 1;
+        changeItems[index].index = item.index + 1;
       });
-      changeItems[changeItems.length - 1].order = changeItems[0].order - 1;
+      changeItems[changeItems.length - 1].index = changeItems[0].index - 1;
     }
-    updatePhase(newItems);
+    console.log({ newItems });
   };
 
   return (
@@ -77,7 +77,7 @@ export default function DragDrop(props: any) {
                           provided.draggableProps.style
                         )}
                       >
-                        <PhaseItem updatePhase={updatePhase} phase={phase} />
+                        <PhaseItem updatePhases={updatePhases} phase={phase} />
                       </div>
                     )}
                   </Draggable>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import './list-phase.css';
-import { Modal, Button, message } from 'antd';
+import { Modal, Button, message, Select, Input } from 'antd';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
@@ -9,17 +9,26 @@ import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { deletePhase } from '../../api/mentor/mentorApi';
+import { deletePhase, updatePhase } from '../../api/mentor/mentorApi';
+
+const { Option } = Select;
 
 interface Iphase {
   id: string;
-  name: string;
-  order: number;
+  title: string;
+  index: number;
+  imageId: string;
 }
 
 export default function PhaseItem(props: any) {
+  const { phase, updatePhases } = props;
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [updatedPhase, setUpdatedPhase] = useState<Iphase>(phase);
+  const [disableTitle, setDisableTitle] = useState(true);
+  const [disableImage, setDisableImage] = useState(true);
+
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -27,8 +36,6 @@ export default function PhaseItem(props: any) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const { phase, updatePhase } = props;
 
   const programId = useParams<{ programId: string }>().programId;
 
@@ -39,7 +46,18 @@ export default function PhaseItem(props: any) {
   };
 
   const handleOk = () => {
-    setIsModalVisible(false);
+    const data = { ...updatedPhase, imageId: Number(updatedPhase.imageId) };
+    const handleUpdatePhase = async () => {
+      message
+        .loading({ content: 'Updating...', key: 'update' })
+        .then(async () => {
+          await updatePhase(Number(programId), Number(phase.id), data);
+          message.success({ content: 'Updated', key: 'update' });
+          updatePhases();
+          setIsModalVisible(false);
+        });
+    };
+    handleUpdatePhase();
   };
 
   const handleCancel = () => {
@@ -49,7 +67,7 @@ export default function PhaseItem(props: any) {
   const handleDeletePhase = async () => {
     message.loading({ content: 'Deleting...' }).then(async () => {
       await deletePhase(Number(programId), Number(phase.id));
-      updatePhase();
+      updatePhases();
       message.success({ content: 'Deleted', duration: 2 });
     });
   };
@@ -72,7 +90,7 @@ export default function PhaseItem(props: any) {
         </div>
       </div>
       <Modal
-        title="Create new phase"
+        title={`Update ${phase.title}`}
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -80,14 +98,53 @@ export default function PhaseItem(props: any) {
           <Button key="back" onClick={handleCancel}>
             Cancel
           </Button>,
-          <Button key="submit" type="primary" onClick={handleOk}>
-            Create
+          <Button
+            key="submit"
+            type="primary"
+            onClick={handleOk}
+            disabled={disableTitle && disableImage}
+          >
+            Save
           </Button>,
         ]}
       >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <div className="form">
+          <div className="field">
+            <label>Title</label>
+            <Input
+              value={updatedPhase.title}
+              style={{ marginBottom: '25px', marginTop: '6px' }}
+              onChange={(e) => {
+                setDisableTitle(phase.title === e.target.value);
+                setUpdatedPhase({ ...updatedPhase, title: e.target.value });
+              }}
+            />
+          </div>
+          <div className="field">
+            <label>Choose planet</label>
+            <Select
+              value={updatedPhase.imageId.toString()}
+              style={{ width: '100%', marginBottom: '25px', marginTop: '6px' }}
+              onChange={(value) => {
+                setDisableImage(phase.imageId === Number(value));
+                setUpdatedPhase({ ...updatedPhase, imageId: value });
+              }}
+            >
+              <Option value="1">Planet 1</Option>
+              <Option value="2">Planet 2</Option>
+              <Option value="3">Planet 3</Option>
+              <Option value="4">Planet 4</Option>
+              <Option value="5">Planet 5</Option>
+              <Option value="6">Planet 6</Option>
+              <Option value="7">Planet 7</Option>
+              <Option value="8">Planet 8</Option>
+              <Option value="9">Planet 9</Option>
+              <Option value="10">Planet 10</Option>
+              <Option value="11">Planet 11</Option>
+              <Option value="12">Planet 12</Option>
+            </Select>
+          </div>
+        </div>
       </Modal>
       <Menu
         anchorEl={anchorEl}

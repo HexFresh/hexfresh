@@ -122,22 +122,25 @@ export default function ListProgram() {
           </div>
           <div className="filter-search">
             <div className="container">
-              <div className="filter"></div>
               <div className="search">
                 <SearchIcon style={{ width: '20px', height: '20px' }} />
                 <InputBase
                   value={keyword}
-                  onChange={(e) => setKeyword(e.target.value)}
+                  onChange={(e) => {
+                    setPage(1);
+                    setKeyword(e.target.value);
+                  }}
                   placeholder="Search"
-                  style={{ fontSize: '14px' }}
+                  style={{ fontSize: '14px', width: '100%' }}
                 />
               </div>
+              <div className="filter"></div>
             </div>
           </div>
           <div className="programs">
             {loading ? (
               <CircularProgress />
-            ) : (
+            ) : count > 0 ? (
               <div className="programs__container">
                 <Grid container spacing={2}>
                   {programs.map((program: any) => {
@@ -164,14 +167,19 @@ export default function ListProgram() {
                   })}
                 </Grid>
               </div>
+            ) : (
+              <div className="img-404">
+                <img style={{ height: '200px' }} src="/no-records.png" />
+              </div>
             )}
           </div>
           <div className="pagination">
             <Pagination
-              current={page}
+              current={count === 0 ? undefined : page}
               total={count}
               pageSize={4}
               onChange={handleChangePage}
+              hideOnSinglePage
             />
           </div>
         </div>

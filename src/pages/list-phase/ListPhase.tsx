@@ -32,12 +32,13 @@ export default function ListPhase() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [name, setName] = useState<string>('');
   const [planet, setPlanet] = useState<string>('1');
+  const [keyword, setKeyword] = useState('');
 
   const programId = useParams<{ programId: string }>().programId;
 
   const fetchPhases = async () => {
     setLoading(true);
-    const result = await getPhasesOfProgram(Number(programId));
+    const result = await getPhasesOfProgram(Number(programId), keyword);
     setphases(result);
     setLoading(false);
   };
@@ -46,9 +47,9 @@ export default function ListPhase() {
     document.title = 'HexF - Phases';
 
     fetchPhases();
-  }, []);
+  }, [keyword]);
 
-  const updatePhase = () => {
+  const updatePhases = () => {
     fetchPhases();
   };
 
@@ -187,25 +188,31 @@ export default function ListPhase() {
           <div className="bottom">
             <div className="filter-search">
               <div className="container">
-                <div className="filter"></div>
                 <div className="search">
                   <SearchIcon style={{ width: '20px', height: '20px' }} />
                   <InputBase
-                    style={{ fontSize: '14px' }}
+                    style={{ fontSize: '14px', width: '100%' }}
                     placeholder="Search"
+                    value={keyword}
+                    onChange={(e) => setKeyword(e.target.value)}
                   />
                 </div>
+                <div className="filter"></div>
               </div>
             </div>
             <div className="phases">
               <div className="container">
                 {loading ? (
                   <CircularProgress className="circular-progress" />
+                ) : phases.length === 0 ? (
+                  <div className="img-404">
+                    <img style={{ height: '200px' }} src="/no-records.png" />
+                  </div>
                 ) : (
                   <DragDrop
                     phases={phases}
                     programId={programId}
-                    updatePhase={updatePhase}
+                    updatePhases={updatePhases}
                   />
                 )}
               </div>
@@ -230,7 +237,7 @@ export default function ListPhase() {
       >
         <div className="form">
           <div className="field">
-            <label>Name</label>
+            <label>Title</label>
             <Input value={name} onChange={changeNewName} />
           </div>
           <div className="field">

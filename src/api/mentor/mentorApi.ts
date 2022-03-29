@@ -25,10 +25,15 @@ export const getProgramById = async (id: number) => {
   }
 };
 
-export const getPhasesOfProgram = async (programId: number) => {
+export const getPhasesOfProgram = async (
+  programId: number,
+  keyword: string
+) => {
   const endpoint = `program/${programId}/phase`;
   try {
-    const response = await axiosClient.get(endpoint);
+    const response = await axiosClient.get(endpoint, {
+      params: { keyword },
+    });
     const { data } = response;
     return data;
   } catch (error) {
@@ -40,6 +45,21 @@ export const createPhase = async (programId: number, phase: any) => {
   const endpoint = `program/${programId}/phase`;
   try {
     const response = await axiosClient.post(endpoint, phase);
+    const { data } = response;
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updatePhase = async (
+  programId: number,
+  phaseId: number,
+  phase: any
+) => {
+  const endpoint = `program/${programId}/phase/${phaseId}`;
+  try {
+    const response = await axiosClient.put(endpoint, phase);
     const { data } = response;
     return data;
   } catch (error) {

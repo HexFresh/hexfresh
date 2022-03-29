@@ -90,9 +90,10 @@
 }
 
 .list-program .container .page-content {
-  width: calc(100% - 70px);
-  min-height: 100vh;
+  width: calc(100vw - 70px);
+  height: 100vh;
   background-color: #f6f7f8;
+  overflow-y: hidden;
 }
 
 .list-program .container .page-content .topbar {
@@ -125,7 +126,7 @@
 }
 
 .list-program .container .page-content .name-page .container {
-  width: 80%;
+  padding: 0 130px;
 }
 
 .list-program .container .page-content .filter-search {
@@ -140,8 +141,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 0;
-  width: 80%;
+  padding: 10px 130px;
 }
 
 .list-program .container .page-content .filter-search .container .search {
@@ -155,18 +155,30 @@
 }
 
 .list-program .container .page-content .programs {
-  margin-top: 25px;
-  width: 100%;
-  min-height: 380px;
+  margin-top: 20px;
+  height: calc(100vh - 350px);
+  padding: 0 130px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0 80px;
+}
+
+.list-program .container .page-content .programs .img-404 {
+  height: 350px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.list-program .container .page-content .programs .img-404 img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .list-program .container .page-content .programs .programs__container {
-  width: 90%;
-  height: auto;
+  width: 100%;
+  height: 100%;
 }
 
 .list-program .container .page-content .program {
