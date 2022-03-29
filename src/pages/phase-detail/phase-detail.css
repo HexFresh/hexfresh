@@ -12,7 +12,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 5px;
+  padding: 8px;
 }
 
 .phase-detail .phase-container {
@@ -39,7 +39,6 @@
   flex: 10;
   height: 100vh;
   padding: 0;
-  overflow-y: scroll;
 }
 
 .phase-detail .add-btn {

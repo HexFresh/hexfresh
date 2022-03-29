@@ -135,7 +135,7 @@
 }
 
 .list-phase .container .page-content .name-page .container .add-phase-btn {
-  border-radius: 40px;
+  border-radius: 4px;
 }
 
 .list-phase .container .page-content .bottom {
@@ -148,6 +148,8 @@
   justify-content: center;
   align-items: center;
   width: 100%;
+  background-color: white;
+  margin-bottom: 30px;
 }
 
 .list-phase .container .page-content .filter-search .container {
@@ -162,9 +164,10 @@
   display: flex;
   align-items: center;
   grid-gap: 5px;
-  border-radius: 20px;
+  border-radius: 4px;
   border: 1px solid #dcdfe3;
   padding: 0 10px;
+  width: 350px;
 }
 
 .list-phase .container .page-content .phases {

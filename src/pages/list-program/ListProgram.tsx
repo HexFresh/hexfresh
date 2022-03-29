@@ -10,8 +10,8 @@ import Tooltip from '@mui/material/Tooltip';
 import Fade from '@mui/material/Fade';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
-import Pagination from '@mui/material/Pagination';
 import Grid from '@mui/material/Grid';
+import { Pagination } from 'antd';
 import './list-program.css';
 import { getPrograms } from '../../api/mentor/mentorApi';
 
@@ -20,43 +20,35 @@ interface IProgram {
   title: string;
 }
 
-const programPerPage = 4;
+const nPerPage = 4;
 
 export default function ListProgram() {
   const [loading, setLoading] = useState(false);
   const [programs, setPrograms] = useState<IProgram[] | []>([]);
+  const [count, setCount] = useState(0);
+  const [keyword, setKeyword] = useState('');
   const [page, setPage] = React.useState(1);
 
-  const handleChangePage = (
-    event: React.ChangeEvent<unknown>,
-    value: number
-  ) => {
-    setPage(value);
+  const handleChangePage = (page: number) => {
+    setPage(page);
   };
 
-  const getArrProgramsWithPagination = (page: number, programs: any) => {
-    const start = (page - 1) * programPerPage;
-    const end = page * programPerPage;
-    return programs.slice(start, end);
+  const fetchPrograms = async (
+    keyword: string,
+    limit: number,
+    offset: number
+  ) => {
+    setLoading(true);
+    const result = await getPrograms({ keyword, limit, offset });
+    setPrograms(result.rows || []);
+    setCount(result.count);
+    setLoading(false);
   };
 
   useEffect(() => {
-    document.title = 'Programs';
-    const fetchPrograms = async () => {
-      setLoading(true);
-      const result = await getPrograms();
-      setPrograms(
-        result || [
-          {
-            id: '1',
-            title: 'Program 1',
-          },
-        ]
-      );
-      setLoading(false);
-    };
-    fetchPrograms();
-  }, [page]);
+    document.title = 'HexF - List Program';
+    fetchPrograms(keyword, nPerPage, (page - 1) * nPerPage);
+  }, [page, keyword]);
 
   return (
     <div className="list-program">
@@ -130,10 +122,15 @@ export default function ListProgram() {
           </div>
           <div className="filter-search">
             <div className="container">
-              <div className="filter">Filter</div>
+              <div className="filter"></div>
               <div className="search">
-                <SearchIcon />
-                <InputBase placeholder="Search" />
+                <SearchIcon style={{ width: '20px', height: '20px' }} />
+                <InputBase
+                  value={keyword}
+                  onChange={(e) => setKeyword(e.target.value)}
+                  placeholder="Search"
+                  style={{ fontSize: '14px' }}
+                />
               </div>
             </div>
           </div>
@@ -143,35 +140,37 @@ export default function ListProgram() {
             ) : (
               <div className="programs__container">
                 <Grid container spacing={2}>
-                  {getArrProgramsWithPagination(page, programs).map(
-                    (program: any) => {
-                      return (
-                        <Grid key={program.id} item xs={12} sm={6} lg={3}>
-                          <div className="program">
-                            <div className="cover-photo"></div>
-                            <div className="program-name">
-                              <Link
-                                className="link"
-                                to={`/mentor/programs/${program.id}/phases`}
-                              >
-                                {program.title}
-                              </Link>
-                            </div>
+                  {programs.map((program: any) => {
+                    return (
+                      <Grid key={program.id} item xs={12} sm={6} lg={3}>
+                        <div className="program">
+                          <div className="cover-photo">
+                            <img
+                              src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/80a9d98d-327f-4bb2-b173-4298d710e51c/derkflv-9f975f3d-791f-4e16-8d9d-fb0a9e5e0554.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzgwYTlkOThkLTMyN2YtNGJiMi1iMTczLTQyOThkNzEwZTUxY1wvZGVya2Zsdi05Zjk3NWYzZC03OTFmLTRlMTYtOGQ5ZC1mYjBhOWU1ZTA1NTQucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.eEDVAlJGBqXo6OeZEORXWk1veGSHFL-ZTUMz43Jtr3Q"
+                              alt="img"
+                            />
                           </div>
-                        </Grid>
-                      );
-                    }
-                  )}
+                          <div className="program-name">
+                            <Link
+                              className="link"
+                              to={`/mentor/programs/${program.id}/phases`}
+                            >
+                              {program.title}
+                            </Link>
+                          </div>
+                        </div>
+                      </Grid>
+                    );
+                  })}
                 </Grid>
               </div>
             )}
           </div>
           <div className="pagination">
             <Pagination
-              count={Math.ceil(programs.length / 4)}
-              shape="rounded"
-              color="primary"
-              page={page}
+              current={page}
+              total={count}
+              pageSize={4}
               onChange={handleChangePage}
             />
           </div>

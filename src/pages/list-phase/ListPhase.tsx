@@ -43,7 +43,7 @@ export default function ListPhase() {
   };
 
   useEffect(() => {
-    document.title = 'Phases';
+    document.title = 'HexF - Phases';
 
     fetchPhases();
   }, []);
@@ -187,10 +187,13 @@ export default function ListPhase() {
           <div className="bottom">
             <div className="filter-search">
               <div className="container">
-                <div className="filter">Filter</div>
+                <div className="filter"></div>
                 <div className="search">
-                  <SearchIcon />
-                  <InputBase placeholder="Search" />
+                  <SearchIcon style={{ width: '20px', height: '20px' }} />
+                  <InputBase
+                    style={{ fontSize: '14px' }}
+                    placeholder="Search"
+                  />
                 </div>
               </div>
             </div>
