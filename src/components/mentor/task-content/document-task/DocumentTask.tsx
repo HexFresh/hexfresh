@@ -24,7 +24,7 @@ function DocumentTask(props: any) {
   };
 
   const handleUpdate = () => {
-    console.log('handleUpdate');
+    console.log(html);
   };
 
   return (
