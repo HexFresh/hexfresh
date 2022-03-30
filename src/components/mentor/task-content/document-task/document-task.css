@@ -1,0 +1,16 @@
+.document-task {
+  height: 100%;
+}
+
+.document-task__container {
+  padding: 10px 50px;
+  height: 100%;
+  box-shadow: var(--shadow);
+}
+
+.demo-editor.rdw-editor-main {
+  border: 1px solid black;
+  min-height: 480px;
+  max-height: 480px;
+  overflow-y: scroll;
+}
