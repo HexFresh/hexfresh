@@ -146,7 +146,12 @@ function MultipleChoiceTask(props: any) {
           <InputBase
             multiline
             maxRows={10}
-            sx={{ width: '100%', fontSize: '20px', fontWeight: 'bold' }}
+            sx={{
+              width: '100%',
+              fontSize: '20px',
+              fontWeight: 'bold',
+              marginTop: '20px',
+            }}
             placeholder="Untitled"
             value={question || ''}
             onChange={(e) => setQuestion(e.target.value)}
