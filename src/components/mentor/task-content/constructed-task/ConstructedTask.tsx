@@ -152,7 +152,7 @@ function ConstructedTask(props: any) {
           <InputBase
             multiline
             maxRows={10}
-            sx={{ width: '100%', fontSize: '30px', fontWeight: 'bold' }}
+            sx={{ width: '100%', fontSize: '20px', fontWeight: 'bold' }}
             placeholder="Untitled"
             value={question || ''}
             onChange={(e) => setQuestion(e.target.value)}
@@ -164,8 +164,8 @@ function ConstructedTask(props: any) {
               type="number"
               sx={{
                 width: '100px',
-                padding: '5px',
-                fontSize: '20px',
+                padding: '0 5px',
+                fontSize: '18px',
                 border: '1px solid #ccc',
               }}
               value={point ? point : 0}

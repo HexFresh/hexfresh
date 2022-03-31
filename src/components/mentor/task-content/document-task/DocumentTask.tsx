@@ -1,31 +1,50 @@
 import React, { useEffect } from 'react';
-import { EditorState, convertToRaw } from 'draft-js';
-import { Editor } from 'react-draft-wysiwyg';
-import draftToHtml from 'draftjs-to-html';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import JoditReact from 'jodit-react-ts';
+import 'jodit/build/jodit.min.css';
 import { CircularProgress } from '@mui/material';
 import './document-task.css';
 
 function DocumentTask(props: any) {
   const { task } = props;
-  const [editorState, setEditorState] = React.useState<EditorState>();
+  const [value, setValue] = React.useState<string>();
   const [isLoading, setIsLoading] = React.useState(false);
-  const [html, setHtml] = React.useState('');
 
-  useEffect(() => {
-    if (editorState) {
-      const html = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-      setHtml(html);
-    }
-  }, [editorState]);
-
-  const onEditorStateChange = (editorState: EditorState) => {
-    setEditorState(editorState);
+  const config = {
+    zIndex: 0,
+    readonly: false,
+    activeButtonsInReadOnly: ['source', 'fullsize', 'print', 'about'],
+    toolbarButtonSize: 'middle',
+    theme: 'default',
+    enableDragAndDropFileToEditor: true,
+    saveModeInCookie: false,
+    spellcheck: true,
+    editorCssClass: true,
+    triggerChangeEvent: true,
+    height: '100%',
+    direction: 'ltr',
+    language: 'en',
+    debugLanguage: false,
+    i18n: 'en',
+    tabIndex: -1,
+    toolbar: true,
+    enter: 'P',
+    useSplitMode: true,
+    colorPickerDefaultTab: 'background',
+    imageDefaultWidth: 100,
+    removeButtons: ['source', 'print', 'about'],
+    disablePlugins: ['paste', 'stat'],
+    events: {},
+    textIcons: false,
+    uploader: {
+      insertImageAsBase64URI: true,
+    },
+    placeholder: '',
+    showXPathInStatusbar: true,
   };
 
-  const handleUpdate = () => {
-    console.log(html);
-  };
+  console.log(value);
+
+  useEffect(() => {}, []);
 
   return (
     <div className="document-task">
@@ -33,12 +52,10 @@ function DocumentTask(props: any) {
         <CircularProgress className="circular-progress" />
       ) : (
         <div className="document-task__container">
-          <Editor
-            editorState={editorState}
-            wrapperClassName="demo-wrapper"
-            editorClassName="demo-editor"
-            onEditorStateChange={onEditorStateChange}
-            onBlur={handleUpdate}
+          <JoditReact
+            config={config}
+            defaultValue={'<a>Hello</a>'}
+            onChange={(content: string) => setValue(content)}
           />
         </div>
       )}
