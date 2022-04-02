@@ -2,12 +2,29 @@ import React, { useEffect } from 'react';
 import JoditReact from 'jodit-react-ts';
 import 'jodit/build/jodit.min.css';
 import { CircularProgress } from '@mui/material';
+import {
+  getDocument,
+  createEmptyDocument,
+} from '../../../../api/mentor/DocumentTaskApi';
 import './document-task.css';
 
 function DocumentTask(props: any) {
   const { task } = props;
   const [value, setValue] = React.useState<string>();
   const [isLoading, setIsLoading] = React.useState(false);
+
+  console.log(value);
+
+  const fetchDocument = async () => {
+    setIsLoading(true);
+    const document = await getDocument(task.id);
+    console.log({ document });
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    fetchDocument();
+  }, []);
 
   const config = {
     zIndex: 0,
@@ -41,10 +58,6 @@ function DocumentTask(props: any) {
     placeholder: '',
     showXPathInStatusbar: true,
   };
-
-  console.log(value);
-
-  useEffect(() => {}, []);
 
   return (
     <div className="document-task">
