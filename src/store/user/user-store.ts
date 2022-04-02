@@ -41,7 +41,6 @@ export const user: any = {
 			}
 		) {
 			const endpoint = `/auth/login`;
-			console.log(email, password);
 			try {
 				const response = await axiosClient.post(endpoint, `username=admin&password=123`);
 				const { data } = response;
@@ -96,18 +95,14 @@ export const user: any = {
 				dispatch.user.retrieveToken(token);
 			}
 
-			console.log(rootStore.getState());
-
 			try {
 				const response = await axiosClient.get(endpoint);
-				console.log(response,'response');
 				if (response.status === 200) {
 					dispatch.user.loginSucces({
 					 token: response.data.token||'qưertyuiopasdfghjkl'
 					});
 
 					const preLocation = rootStore.getState().location.location;
-					console.log(preLocation);
 
 					if(preLocation){
 						navigate(`${rootStore.getState().location.location}`)
