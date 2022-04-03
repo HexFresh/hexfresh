@@ -7,6 +7,7 @@ import TrueFalseTask from './true-false-task/TrueFalseTask';
 import { Menu, Dropdown, Button, Popconfirm, message } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
 import { deleteTask } from '../../../api/mentor/taskApi';
+import DocumentTask from './document-task/DocumentTask';
 
 function TaskContent(props: any) {
   const { task, fetchChecklists, setTaskNull } = props;
@@ -26,6 +27,9 @@ function TaskContent(props: any) {
       case 4:
         setRenderTask(<TrueFalseTask task={task} />);
         break;
+      case 7:
+        setRenderTask(<DocumentTask task={task} />);
+        break;
       default:
         setRenderTask(null);
         break;
@@ -43,6 +47,8 @@ function TaskContent(props: any) {
         return <div className="task-type">Constructed-Response</div>;
       case 4:
         return <div className="task-type">True-False</div>;
+      case 7:
+        return <div className="task-type">Document</div>;
       default:
         return <div className="task-type">Chưa làm</div>;
     }

@@ -1,26 +1,32 @@
 import React from "react";
 import { TransitionGroup } from "react-transition-group";
 import "./Carousel.scss";
-import { IRootStore } from "../../../store/store";
-import { IPhase } from "../../../interface/program-interface";
+import { IRootDispatch, IRootStore } from "../../../store/store";
+import { IImage, IPhase } from "../../../interface/program-interface";
 import { connect } from "react-redux";
 import { Link, NavigateFunction, useNavigate } from "react-router-dom";
 import { programStore } from "../../../store/planet/program-store";
-interface ICarouselProps {
-  programs?: typeof programStore.program;
-}
+import { RematchDispatch, RematchDispatcher } from "@rematch/core";
+import { message, notification, Spin } from "antd";
+import _ from "lodash";
+
+type ICarouselProps = StateProps & DispatchProps;
+
 interface ICarouselStates {
   items: IPhase[];
   active: number;
   direction: string;
+  isLoading: boolean;
 }
+
 class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
   constructor(props: ICarouselProps) {
     super(props);
     this.state = {
-      items: this.props.programs,
+      items: this.props.program?.phases||[],
       active: 0,
       direction: "",
+      isLoading:false,
     };
     this.rightClick = this.moveRight.bind(this);
     this.leftClick = this.moveLeft.bind(this);
@@ -29,6 +35,9 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
   private leftClick() { };
 
   generateItems() {
+    const {imageList} = this.props;
+    const {isLoading} = this.state;
+    if(isLoading || _.isEmpty(this.state.items)) return <></>;
     const items = [];
     let level;
     console.log(this.state.active);
@@ -40,8 +49,9 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
         index = i % this.state.items.length;
       }
       level = this.state.active - i;
+      const image = _.find(imageList,{id: this.state.items[index]?.imageId })
       items.push(
-        <Item key={index} /* id={this.state.items[index]} */ level={level} program={this.state.items[index]} />
+        <Item key={index} level={level} program={this.state.items[index]} image ={image} />
       );
     }
     return items;
@@ -65,10 +75,37 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
   }
 
   componentDidMount(): void {
+    const { doFetchProgram, doFetchImageList } = this.props;
 
+    try {
+      this.setState({isLoading:true});
+      doFetchProgram({
+        id: 1
+      });
+      
+      doFetchImageList();
+
+    } catch (error) {
+      notification.error({message:'Failed to fetch list of phases.'});
+    }
+
+    this.setState({isLoading: false});
+  }
+
+  componentDidUpdate(prevProps:ICarouselProps, prevState: ICarouselStates){
+    if(!_.isEqual(prevProps, this.props)){
+      console.log(this.props, this.state);
+      this.setState({items: this.props.program.phases});
+    }
   }
 
   render() {
+    const {program, imageList} = this.props;
+    const {isLoading} = this.state;
+
+    if(_.isEmpty(program)||_.isEmpty(imageList) || isLoading){
+      return <Spin size="large"/>
+    }
     return (
       <div id="carousel" className="noselect">
         <div className="arrow arrow-left" onClick={this.leftClick}>
@@ -86,10 +123,25 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
   }
 }
 
+const mapStateToProps = (state: IRootStore) => ({
+  program: state.programStore.program,
+  imageList: state.programStore.imageList,
+});
+
+const mapDispatchToPprops = (dispatch: IRootDispatch) => ({
+  doFetchProgram: dispatch.programStore.doFetchProgram,
+  doFetchImageList: dispatch.programStore.doFetchImageList,
+});
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = ReturnType<typeof mapDispatchToPprops>;
+
+export default connect(mapStateToProps, mapDispatchToPprops)(Carousel);
+
 interface IItemProps {
   level: number;
   program: IPhase;
   navigate: NavigateFunction;
+  image: IImage;
 }
 
 interface IItemStates {
@@ -113,29 +165,24 @@ class ItemClass extends React.Component<IItemProps, IItemStates> {
   render() {
     const className = "item level" + this.props.level;
     const backgroundSize = this.props.level === 0 ? '400px' : 'auto';
-    const { program, navigate } = this.props;
+    const { program, navigate, image } = this.props;
+
     return (
       <>
         <div
           className={className}
           style={{
-            backgroundImage: `url(${program.imageSrc})`,
+            backgroundImage: `url(${image?.imageLink})`,
             backgroundSize: backgroundSize/* "cover" */,
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center center",
           }}
         >
-          <span className="itemname">{program.name}</span>
-          <button onClick={() => { navigate(`/mentor/programs`) }} className="btn btn-5">Press to do</button>
+          <span className="itemname">{program.title}</span>
+          <button onClick={() => { navigate(`/planets/${program.id}`) }} className="btn btn-5">Press to do</button>
         </div>
 
       </>
     );
   }
 }
-
-const mapStateToProps = (state: IRootStore) => ({
-  programs: state.programStore.programs,
-})
-
-export default connect(mapStateToProps, null)(Carousel);

@@ -25,6 +25,8 @@
     "axios": "^0.26.1",
     "firebase": "^9.6.10",
     "formik": "^2.2.9",
+    "jodit": "^3.16.5",
+    "jodit-react-ts": "^0.9.0",
     "lodash": "^4.17.21",
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.1.0",

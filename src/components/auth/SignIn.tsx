@@ -47,6 +47,10 @@ const SignIn = () => {
     if (!formIsValid) {
       return;
     }
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000)
     dispatch.user.signIn({ email, password, navigate, preLocation: preLocation.location });
     //dispatch(signIn({ username: email, password }, history, preLocation));
   };
@@ -143,7 +147,6 @@ const SignIn = () => {
                 >
                   Forgot password?
                   {' '}
-                  {isLoading ? <CircularProgress size={15} /> : ''}
                 </div>
               </Grid>
               <Grid item>

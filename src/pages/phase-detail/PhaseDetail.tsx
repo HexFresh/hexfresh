@@ -171,7 +171,7 @@ function PhaseDetail() {
       <div className="phase-detail-top">
         <Link to="/mentor/programs">
           <div className="logo">
-            <img src="/logo.svg" width="40px" alt="logo" />
+            <img src="/logo.svg" width="36px" alt="logo" />
           </div>
         </Link>
       </div>

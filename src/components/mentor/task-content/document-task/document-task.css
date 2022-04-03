@@ -1,0 +1,11 @@
+.document-task {
+  height: 100%;
+}
+
+.document-task__container {
+  height: 100%;
+}
+
+.jodit-wysiwyg {
+  overflow-y: scroll;
+}

@@ -1,0 +1,11 @@
+.centered{
+  margin: 0 auto;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  width: -webkit-calc(100% - 2*1.5rem);
+  width: calc(100% - 2*1.5rem);
+  max-width: 76.5rem;
+}
