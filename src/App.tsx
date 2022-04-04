@@ -13,6 +13,7 @@ import {
 } from 'react-router-dom';
 import SignIn from './components/auth/SignIn';
 import ListProgram from './pages/list-program/ListProgram';
+import ListFresher from './pages/list-fresher/ListFresher';
 import PlanetView from './pages/planet/PlanetView';
 import ListPhase from './pages/list-phase/ListPhase';
 import PhaseDetail from './pages/phase-detail/PhaseDetail';
@@ -42,10 +43,12 @@ function App() {
   const dispatch = useDispatch<IRootDispatch>();
   const auth: IUserStore = useSelector<IRootStore>((state) => state.user);
 
-  if (!auth.token && (
-    location.pathname !== '/signin' 
-    && location.pathname !== '/planets'
-    && location.pathname !== '/')) {
+  if (
+    !auth.token &&
+    location.pathname !== '/signin' &&
+    location.pathname !== '/planets' &&
+    location.pathname !== '/'
+  ) {
     console.log(location.pathname + location.search, 'inititate...');
     dispatch.location.startAt(location.pathname + location.search);
   }
@@ -63,10 +66,11 @@ function App() {
 
   const routerWithSignIn = (
     <Routes>
-      <Route  path="/" element={<Navigate to="/planets" />} />
+      <Route path="/" element={<Navigate to="/planets" />} />
       <Route path="planets" element={<Home />} />
-      <Route  path="planets/:planetId" element={<PlanetView />} />
+      <Route path="planets/:planetId" element={<PlanetView />} />
       <Route path="/mentor/programs" element={<ListProgram />} />
+      <Route path="/mentor/freshers" element={<ListFresher />} />
       <Route
         path="/mentor/programs/:programId/phases"
         element={<ListPhase />}

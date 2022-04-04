@@ -133,7 +133,9 @@ export default function ListPhase() {
               placement="right"
               arrow
             >
-              <SchoolIcon sx={{ width: 40, height: 40 }} />
+              <Link className="link apps" to="/mentor/freshers">
+                <SchoolIcon sx={{ width: 40, height: 40 }} />
+              </Link>
             </Tooltip>
           </div>
 

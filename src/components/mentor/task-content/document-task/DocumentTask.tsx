@@ -23,8 +23,8 @@ function DocumentTask(props: any) {
   };
 
   useEffect(() => {
-    fetchDocument();
-  }, []);
+    // fetchDocument();
+  }, [task.id]);
 
   const config = {
     zIndex: 0,
