@@ -69,6 +69,7 @@ export default function ListProgram() {
       key: 'status',
       render: (status: string, fresher: IFresher) => (
         <div
+          key={fresher.id}
           className="action"
           style={{
             display: 'flex',
@@ -201,7 +202,7 @@ export default function ListProgram() {
                 <Table className="table" columns={columns} dataSource={freshers} pagination={false} />
                 <div className="pagination">
                   <Pagination
-                    current={count === 0 ? undefined : page}
+                    current={page}
                     total={count}
                     pageSize={nPerPage}
                     onChange={handleChangePage}
