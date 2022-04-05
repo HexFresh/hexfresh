@@ -176,12 +176,7 @@ export default function ListPhase() {
             <div className="container">
               <div className="name">Phases</div>
               <div className="add-phase">
-                <Button
-                  icon={<PlusOutlined />}
-                  className="add-phase-btn"
-                  type="primary"
-                  onClick={showModal}
-                >
+                <Button icon={<PlusOutlined />} className="add-phase-btn" type="primary" onClick={showModal}>
                   Create a new phase
                 </Button>
               </div>
@@ -211,11 +206,7 @@ export default function ListPhase() {
                     <img style={{ height: '200px' }} src="/no-records.png" />
                   </div>
                 ) : (
-                  <DragDrop
-                    phases={phases}
-                    programId={programId}
-                    updatePhases={updatePhases}
-                  />
+                  <DragDrop phases={phases} programId={programId} updatePhases={updatePhases} />
                 )}
               </div>
             </div>
@@ -244,11 +235,7 @@ export default function ListPhase() {
           </div>
           <div className="field">
             <label>Choose planet</label>
-            <Select
-              value={planet}
-              style={{ width: '100%' }}
-              onChange={changePlanet}
-            >
+            <Select value={planet} style={{ width: '100%' }} onChange={changePlanet}>
               <Option value="1">Planet 1</Option>
               <Option value="2">Planet 2</Option>
               <Option value="3">Planet 3</Option>

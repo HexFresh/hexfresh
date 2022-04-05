@@ -181,3 +181,7 @@
   justify-content: center;
   align-items: center;
 }
+
+.list-fresher .ant-table-cell {
+  padding: 14px;
+}

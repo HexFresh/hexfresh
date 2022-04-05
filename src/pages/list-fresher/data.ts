@@ -74,15 +74,8 @@ export const listFresher: IFresher[] = [
   },
 ];
 
-export const getFreshers = async (
-  keyword: string,
-  limit: number,
-  offset: number
-) => {
-  const result = listFresher.filter(
-    (fresher) =>
-      fresher.username.toLowerCase().indexOf(keyword.toLowerCase()) !== -1
-  );
+export const getFreshers = async (keyword: string, limit: number, offset: number) => {
+  const result = listFresher.filter((fresher) => fresher.username.toLowerCase().indexOf(keyword.toLowerCase()) !== -1);
   const data = result.slice(offset, offset + limit);
   const count = result.length;
   return {

@@ -1,17 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CircularProgress } from '@mui/material';
-import AppsIcon from '@mui/icons-material/Apps';
-import SchoolIcon from '@mui/icons-material/School';
-import SettingsIcon from '@mui/icons-material/Settings';
-import FolderIcon from '@mui/icons-material/Folder';
-import Avatar from '@mui/material/Avatar';
-import Tooltip from '@mui/material/Tooltip';
-import Fade from '@mui/material/Fade';
-import InputBase from '@mui/material/InputBase';
-import SearchIcon from '@mui/icons-material/Search';
+import { Apps, School, Settings, Folder, Search } from '@mui/icons-material';
+import { InputBase, Avatar, CircularProgress } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { Pagination } from 'antd';
+import { Pagination, Tooltip } from 'antd';
 import './list-program.css';
 import { getPrograms } from '../../api/mentor/mentorApi';
 
@@ -33,11 +25,7 @@ export default function ListProgram() {
     setPage(page);
   };
 
-  const fetchPrograms = async (
-    keyword: string,
-    limit: number,
-    offset: number
-  ) => {
+  const fetchPrograms = async (keyword: string, limit: number, offset: number) => {
     setLoading(true);
     const result = await getPrograms({ keyword, limit, offset });
     setPrograms(result.rows || []);
@@ -60,53 +48,29 @@ export default function ListProgram() {
             </Link>
           </div>
           <div className="menu-item active">
-            <Tooltip
-              TransitionComponent={Fade}
-              TransitionProps={{ timeout: 600 }}
-              title="Programs"
-              placement="right"
-              arrow
-            >
+            <Tooltip color="#3751FF" title="Programs" placement="right">
               <Link className="link apps" to="/mentor/programs">
-                <AppsIcon sx={{ width: 40, height: 40 }} />
+                <Apps sx={{ width: 40, height: 40 }} />
               </Link>
             </Tooltip>
           </div>
           <div className="menu-item">
-            <Tooltip
-              TransitionComponent={Fade}
-              TransitionProps={{ timeout: 600 }}
-              title="Freshers"
-              placement="right"
-              arrow
-            >
+            <Tooltip color="#3751FF" title="Freshers" placement="right">
               <Link className="link apps" to="/mentor/freshers">
-                <SchoolIcon sx={{ width: 40, height: 40 }} />
+                <School sx={{ width: 40, height: 40 }} />
               </Link>
             </Tooltip>
           </div>
 
           <div className="bottom">
             <div className="folder">
-              <Tooltip
-                TransitionComponent={Fade}
-                TransitionProps={{ timeout: 600 }}
-                title="Resources"
-                placement="right"
-                arrow
-              >
-                <FolderIcon sx={{ width: 30, height: 30 }} />
+              <Tooltip color="#3751FF" title="Resources" placement="right">
+                <Folder sx={{ width: 30, height: 30 }} />
               </Tooltip>
             </div>
             <div className="settings">
-              <Tooltip
-                TransitionComponent={Fade}
-                TransitionProps={{ timeout: 600 }}
-                title="Settings"
-                placement="right"
-                arrow
-              >
-                <SettingsIcon sx={{ width: 30, height: 30 }} />
+              <Tooltip color="#3751FF" title="Settings" placement="right">
+                <Settings sx={{ width: 30, height: 30 }} />
               </Tooltip>
             </div>
             <div className="avatar">
@@ -125,7 +89,7 @@ export default function ListProgram() {
           <div className="filter-search">
             <div className="container">
               <div className="search">
-                <SearchIcon style={{ width: '20px', height: '20px' }} />
+                <Search style={{ width: '20px', height: '20px' }} />
                 <InputBase
                   value={keyword}
                   onChange={(e) => {
@@ -156,10 +120,7 @@ export default function ListProgram() {
                             />
                           </div>
                           <div className="program-name">
-                            <Link
-                              className="link"
-                              to={`/mentor/programs/${program.id}/phases`}
-                            >
+                            <Link className="link" to={`/mentor/programs/${program.id}/phases`}>
                               {program.title}
                             </Link>
                           </div>

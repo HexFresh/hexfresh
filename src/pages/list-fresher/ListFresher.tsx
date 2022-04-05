@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Apps, School, Settings, Folder, Search } from '@mui/icons-material';
-import {
-  Tooltip,
-  Fade,
-  InputBase,
-  Avatar,
-  CircularProgress,
-} from '@mui/material';
-import { Pagination, Table } from 'antd';
+import { InputBase, Avatar, CircularProgress } from '@mui/material';
+import { Pagination, Table, Button, Tooltip, Modal, Select, message } from 'antd';
+import { AuditOutlined } from '@ant-design/icons';
 import { getFreshers } from './data';
+import { getPrograms } from '../../api/mentor/mentorApi';
 import './list-fresher.css';
 
 interface IFresher {
@@ -21,54 +17,82 @@ interface IFresher {
   status: string;
 }
 
+interface IProgram {
+  id: string;
+  title: string;
+}
+
 const nPerPage = 6;
 
-const columns = [
-  {
-    title: 'Username',
-    dataIndex: 'username',
-    key: 'username',
-    sorter: (a: IFresher, b: IFresher) =>
-      ('' + a.username).localeCompare(b.username),
-    render: (username: string, fresher: IFresher) => (
-      <Link key={fresher.id} to={`/mentor/freshers/${fresher.id}`}>
-        {username}
-      </Link>
-    ),
-  },
-  {
-    title: 'Program',
-    dataIndex: 'program',
-    key: 'program',
-  },
-  {
-    title: 'Completion percentage (%)',
-    dataIndex: 'percent',
-    key: 'percent',
-  },
-  {
-    title: 'Date',
-    dataIndex: 'date',
-    key: 'date',
-  },
-];
+const { Option } = Select;
 
 export default function ListProgram() {
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [freshers, setFreshers] = useState<IFresher[] | []>([]);
+  const [programs, setPrograms] = useState<IProgram[] | []>([]);
+  const [selectProgram, setSelectProgram] = useState<string>('');
+  const [userId, setUserId] = useState<string>('');
   const [count, setCount] = useState(0);
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = React.useState(1);
+
+  const columns = [
+    {
+      title: 'Username',
+      dataIndex: 'username',
+      key: 'username',
+      render: (username: string, fresher: IFresher) => (
+        <Link key={fresher.id} to={`/mentor/freshers/${fresher.id}`}>
+          {username}
+        </Link>
+      ),
+    },
+    {
+      title: 'Program',
+      dataIndex: 'program',
+      key: 'program',
+    },
+    {
+      title: 'Completion percentage (%)',
+      dataIndex: 'percent',
+      key: 'percent',
+    },
+    {
+      title: 'Program start time',
+      dataIndex: 'date',
+      key: 'date',
+    },
+    {
+      title: 'Assign Program',
+      dataIndex: 'status',
+      key: 'status',
+      render: (status: string, fresher: IFresher) => (
+        <div
+          className="action"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            width: '100%',
+            justifyContent: 'center',
+          }}
+        >
+          <Button
+            onClick={() => showModal(fresher.id)}
+            disabled={status !== 'completed'}
+            shape="circle"
+            icon={<AuditOutlined />}
+          />
+        </div>
+      ),
+    },
+  ];
 
   const handleChangePage = (page: number) => {
     setPage(page);
   };
 
-  const fetchFreshers = async (
-    keyword: string,
-    limit: number,
-    offset: number
-  ) => {
+  const fetchFreshers = async (keyword: string, limit: number, offset: number) => {
     setLoading(true);
     const freshers = await getFreshers(keyword, limit, offset);
     setFreshers(freshers.data);
@@ -76,15 +100,35 @@ export default function ListProgram() {
     setLoading(false);
   };
 
+  const fetchPrograms = async () => {
+    const programs = await getPrograms({ keyword: '', limit: null, offset: 0 });
+    setPrograms(programs.rows);
+  };
+
   useEffect(() => {
     document.title = 'HexF - List Fresher';
     fetchFreshers(keyword, nPerPage, (page - 1) * nPerPage);
-
+    fetchPrograms();
     return () => {
       setFreshers([]);
       setCount(0);
     };
   }, [page, keyword]);
+
+  const showModal = (id: string) => {
+    setUserId(id);
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    console.log(`Assign program ${selectProgram} to user: ${userId}`);
+    handleCancel();
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    setSelectProgram('');
+  };
 
   return (
     <div className="list-fresher">
@@ -96,50 +140,26 @@ export default function ListProgram() {
             </Link>
           </div>
           <div className="menu-item">
-            <Tooltip
-              TransitionComponent={Fade}
-              TransitionProps={{ timeout: 600 }}
-              title="Programs"
-              placement="right"
-              arrow
-            >
+            <Tooltip color="#3751FF" title="Programs" placement="right">
               <Link className="link apps" to="/mentor/programs">
                 <Apps sx={{ width: 40, height: 40 }} />
               </Link>
             </Tooltip>
           </div>
           <div className="menu-item active">
-            <Tooltip
-              TransitionComponent={Fade}
-              TransitionProps={{ timeout: 600 }}
-              title="Freshers"
-              placement="right"
-              arrow
-            >
+            <Tooltip color="#3751FF" title="Freshers" placement="right">
               <School sx={{ width: 40, height: 40 }} />
             </Tooltip>
           </div>
 
           <div className="bottom">
             <div className="folder">
-              <Tooltip
-                TransitionComponent={Fade}
-                TransitionProps={{ timeout: 600 }}
-                title="Resources"
-                placement="right"
-                arrow
-              >
+              <Tooltip color="#3751FF" title="Resources" placement="right">
                 <Folder sx={{ width: 30, height: 30 }} />
               </Tooltip>
             </div>
             <div className="settings">
-              <Tooltip
-                TransitionComponent={Fade}
-                TransitionProps={{ timeout: 600 }}
-                title="Settings"
-                placement="right"
-                arrow
-              >
+              <Tooltip color="#3751FF" title="Settings" placement="right">
                 <Settings sx={{ width: 30, height: 30 }} />
               </Tooltip>
             </div>
@@ -178,12 +198,7 @@ export default function ListProgram() {
               <CircularProgress />
             ) : (
               <div className="freshers__container">
-                <Table
-                  className="table"
-                  columns={columns}
-                  dataSource={freshers}
-                  pagination={false}
-                />
+                <Table className="table" columns={columns} dataSource={freshers} pagination={false} />
                 <div className="pagination">
                   <Pagination
                     current={count === 0 ? undefined : page}
@@ -198,6 +213,39 @@ export default function ListProgram() {
           </div>
         </div>
       </div>
+      <Modal
+        className="modal"
+        title="Create new phase"
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={[
+          <Button key="back" onClick={handleCancel}>
+            Cancel
+          </Button>,
+          <Button disabled={selectProgram === ''} key="submit" type="primary" onClick={handleOk}>
+            Assign
+          </Button>,
+        ]}
+      >
+        <div className="form">
+          <div className="field">
+            <label>Choose program to assign</label>
+            <Select
+              value={selectProgram}
+              onChange={(value: string) => setSelectProgram(value)}
+              placeholder="Select program"
+              style={{ width: '100%', marginTop: '10px' }}
+            >
+              {programs.map((program: any) => (
+                <Option key={program.id} value={program.id}>
+                  {program.title}
+                </Option>
+              ))}
+            </Select>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
