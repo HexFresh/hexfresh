@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
 import './task-content.css';
+import { Menu, Dropdown, Button, Popconfirm, message } from 'antd';
+import { EllipsisOutlined } from '@ant-design/icons';
+import { deleteTask } from '../../../api/mentor/taskApi';
 import SingleChoiceTask from './single-choice-task/SingleChoiceTask';
 import MultipleChoiceTask from './multiple-choice-task/MultipleChoiceTask';
 import ConstructedTask from './constructed-task/ConstructedTask';
 import TrueFalseTask from './true-false-task/TrueFalseTask';
-import { Menu, Dropdown, Button, Popconfirm, message } from 'antd';
-import { EllipsisOutlined } from '@ant-design/icons';
-import { deleteTask } from '../../../api/mentor/taskApi';
+import MatchSequence from './match-sequence/MatchSequence';
 import DocumentTask from './document-task/DocumentTask';
 
 function TaskContent(props: any) {
@@ -26,6 +27,9 @@ function TaskContent(props: any) {
         break;
       case 4:
         setRenderTask(<TrueFalseTask task={task} />);
+        break;
+      case 5:
+        setRenderTask(<MatchSequence task={task} />);
         break;
       case 7:
         setRenderTask(<DocumentTask task={task} />);
@@ -47,6 +51,8 @@ function TaskContent(props: any) {
         return <div className="task-type">Constructed-Response</div>;
       case 4:
         return <div className="task-type">True-False</div>;
+      case 5:
+        return <div className="task-type">Match Sequence</div>;
       case 7:
         return <div className="task-type">Document</div>;
       default:

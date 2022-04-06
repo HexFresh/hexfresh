@@ -8,11 +8,7 @@ import TaskContent from '../../components/mentor/task-content/TaskContent';
 import { Modal, Input, Select, Button, message } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { CircularProgress } from '@mui/material';
-import {
-  createChecklist,
-  getAllChecklist,
-  createTask,
-} from '../../api/mentor/mentorApi';
+import { createChecklist, getAllChecklist, createTask } from '../../api/mentor/mentorApi';
 
 const { Option } = Select;
 
@@ -45,20 +41,16 @@ function PhaseDetail() {
   const [task, setTask] = React.useState<ITask | null>(null);
   const [checklistId, setChecklistId] = React.useState<number>(0);
   const [isTaskModalVisible, setIsTaskModalVisible] = React.useState(false);
-  const [isChecklistModalVisible, setIsChecklistModalVisible] =
-    React.useState(false);
+  const [isChecklistModalVisible, setIsChecklistModalVisible] = React.useState(false);
   const [taskTitle, setTaskTitle] = React.useState<string>('');
   const [taskType, setTaskType] = React.useState<string>('1');
   const [checklistTitle, setChecklistTitle] = React.useState<string>('');
-  const [isLoading, setIsLoading] = React.useState(false);
 
   const phaseId = useParams().phaseId;
 
   const fetchChecklists = async () => {
-    setIsLoading(true);
     const result = await getAllChecklist(Number(phaseId));
     setChecklists(result);
-    setIsLoading(false);
   };
 
   const setTaskNull = () => {
@@ -66,6 +58,7 @@ function PhaseDetail() {
   };
 
   React.useEffect(() => {
+    document.title = 'HexF - Phase Detail';
     fetchChecklists();
     return () => setChecklists([]);
   }, []);
@@ -131,11 +124,7 @@ function PhaseDetail() {
         typeId: Number(taskType),
         title: taskTitle,
         index:
-          findMaxIndexOfTask(
-            checklists[
-              checklists.findIndex((checklist) => checklist.id === checklistId)
-            ].tasks
-          ) + 1,
+          findMaxIndexOfTask(checklists[checklists.findIndex((checklist) => checklist.id === checklistId)].tasks) + 1,
       };
       const handleCreateTask = async () => {
         message.loading({ content: 'Creating...' }).then(async () => {
@@ -181,16 +170,10 @@ function PhaseDetail() {
             <Menu mode="inline" style={{ height: '100%', borderRight: 0 }}>
               {checklists.map((checklist) => {
                 return (
-                  <SubMenu
-                    key={checklist.id}
-                    title={<span>{checklist.title}</span>}
-                  >
+                  <SubMenu key={checklist.id} title={<span>{checklist.title}</span>}>
                     {sortByField(checklist?.tasks, 'index').map((task: any) => {
                       return (
-                        <Menu.Item
-                          key={task.id}
-                          onClick={() => renderTask(task)}
-                        >
+                        <Menu.Item key={task.id} onClick={() => renderTask(task)}>
                           <div className="task">
                             <div className="task-title">{task.title}</div>
                           </div>
@@ -227,11 +210,7 @@ function PhaseDetail() {
         </div>
         <div className="page-content">
           {task ? (
-            <TaskContent
-              setTaskNull={setTaskNull}
-              fetchChecklists={fetchChecklists}
-              task={task}
-            />
+            <TaskContent setTaskNull={setTaskNull} fetchChecklists={fetchChecklists} task={task} />
           ) : (
             <div className="no-task">
               <p>No Task Selected</p>
@@ -246,11 +225,7 @@ function PhaseDetail() {
         onOk={handleTaskOk}
         onCancel={handleTaskCancel}
         footer={[
-          <Button
-            key="cancel"
-            style={{ marginRight: '10px' }}
-            onClick={handleTaskCancel}
-          >
+          <Button key="cancel" style={{ marginRight: '10px' }} onClick={handleTaskCancel}>
             Cancel
           </Button>,
           <Button key="create" type="primary" onClick={handleTaskOk}>
@@ -265,11 +240,7 @@ function PhaseDetail() {
           </div>
           <div className="field">
             <label>Choose type of task</label>
-            <Select
-              value={taskType}
-              style={{ width: '100%' }}
-              onChange={changeTaskType}
-            >
+            <Select value={taskType} style={{ width: '100%' }} onChange={changeTaskType}>
               <Option value="1">Single-Choice</Option>
               <Option value="2">Multiple-Choice</Option>
               <Option value="3">Constructed-Response</Option>
@@ -289,11 +260,7 @@ function PhaseDetail() {
         onOk={handleChecklistOk}
         onCancel={handleChecklistCancel}
         footer={[
-          <Button
-            key="cancel"
-            style={{ marginRight: '10px' }}
-            onClick={handleChecklistCancel}
-          >
+          <Button key="cancel" style={{ marginRight: '10px' }} onClick={handleChecklistCancel}>
             Cancel
           </Button>,
           <Button key="create" type="primary" onClick={handleChecklistOk}>
@@ -304,10 +271,7 @@ function PhaseDetail() {
         <div className="form">
           <div className="field">
             <label>Title</label>
-            <Input
-              value={checklistTitle}
-              onChange={(e) => setChecklistTitle(e.target.value)}
-            />
+            <Input value={checklistTitle} onChange={(e) => setChecklistTitle(e.target.value)} />
           </div>
         </div>
       </Modal>

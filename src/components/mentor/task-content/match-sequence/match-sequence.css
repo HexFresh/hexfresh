@@ -1,0 +1,72 @@
+.match-sequence-main {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.match-sequence {
+  position: relative;
+  padding: 100px;
+  padding-top: 40px;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+}
+
+.match-sequence .task-point {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-gap: 20px;
+}
+
+.match-sequence .answer .add-new-choice {
+  width: 100%;
+}
+
+.match-sequence .option {
+  display: flex;
+  background-color: transparent;
+  grid-gap: 20px;
+}
+
+.match-sequence .option .input-base {
+  min-height: 40px;
+}
+
+.match-sequence .option .option-index {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 70px;
+  width: 70px;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #dcdfe3;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.match-sequence .option .option-content {
+  flex: 9;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #dcdfe3;
+  border-radius: 5px;
+}
+
+.match-sequence .DragDrop {
+  margin-top: 25px;
+}
