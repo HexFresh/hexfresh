@@ -4,20 +4,18 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Button, message } from 'antd';
 import { updateQuestion, createQuestion, getTask, updatePointOfTask } from '../../../../api/mentor/taskApi';
 import { CircularProgress } from '@mui/material';
-import './match-sequence.css';
-import DragDrop from './DragDrop';
-import { getAllOption, createOption, updateBulkOption } from '../../../../api/mentor/MatchSequenceApi';
+import './match-corresponding.css';
 
-interface MatchSequenceOption {
+interface MatchCorrespondingOption {
   id: number;
   taskId: number;
   content: string;
   index: number;
 }
 
-function MatchSequence(props: any) {
+function MatchCorresponding(props: any) {
   const { task } = props;
-  const [options, setOptions] = React.useState<MatchSequenceOption[]>([]);
+  const [options, setOptions] = React.useState<MatchCorrespondingOption[]>([]);
   const [question, setQuestion] = React.useState('');
   const [quiz, setQuiz] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
@@ -34,8 +32,8 @@ function MatchSequence(props: any) {
 
   const fecthOptions = async () => {
     console.log('Fetch Match Sequence Options');
-    const result = await getAllOption(task.id);
-    setOptions(result || []);
+    // const result = await getAllOption(task.id);
+    // setOptions(result || []);
   };
 
   React.useEffect(() => {
@@ -45,14 +43,14 @@ function MatchSequence(props: any) {
   }, [task.id]);
 
   const addNewOption = () => {
-    const handleAddEmptyChoice = async () => {
-      const result = await createOption(task.id);
-      if (result) {
-        fecthOptions();
-      }
-      message.success('Created', 0.5);
-    };
-    handleAddEmptyChoice();
+    // const handleAddEmptyChoice = async () => {
+    //   const result = await createOption(task.id);
+    //   if (result) {
+    //     fecthOptions();
+    //   }
+    //   message.success('Created', 0.5);
+    // };
+    // handleAddEmptyChoice();
   };
 
   const handleUpdateQuestion = (taskId: number) => {
@@ -79,21 +77,21 @@ function MatchSequence(props: any) {
     handleUpdate();
   };
 
-  const updateOptions = (options: MatchSequenceOption[]) => {
-    const handleUpdate = async () => {
-      await updateBulkOption(task.id, options);
-      fecthOptions();
-      message.success('Updated', 0.5);
-    };
-    handleUpdate();
+  const updateOptions = (options: MatchCorrespondingOption[]) => {
+    // const handleUpdate = async () => {
+    //   await updateBulkOption(task.id, options);
+    //   fecthOptions();
+    //   message.success('Updated', 0.5);
+    // };
+    // handleUpdate();
   };
 
   return (
-    <div className="match-sequence-main">
+    <div className="match-corresponding-main">
       {isLoading ? (
         <CircularProgress />
       ) : (
-        <div className="match-sequence">
+        <div className="match-corresponding">
           <InputBase
             multiline
             maxRows={10}
@@ -124,7 +122,6 @@ function MatchSequence(props: any) {
             />
           </div>
           <div className="answer">
-            <DragDrop updateOptions={updateOptions} options={options} />
             <div className="add-new-choice">
               <Button
                 onClick={addNewOption}
@@ -141,4 +138,4 @@ function MatchSequence(props: any) {
   );
 }
 
-export default MatchSequence;
+export default MatchCorresponding;

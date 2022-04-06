@@ -35,10 +35,10 @@ export const updateOption = async (taskId: number, optionId: number, option: any
 };
 
 export const updateBulkOption = async (taskId: number, options: any) => {
-  console.log({ options });
+  console.log(options);
   const endpoint = `task/${taskId}/quiz/match-sequence/bulk/option`;
   try {
-    const response = await axiosClient.put(endpoint, options);
+    const response = await axiosClient.put(endpoint, { options });
     const { data } = response;
     return data;
   } catch (error) {

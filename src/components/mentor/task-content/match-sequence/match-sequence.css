@@ -40,6 +40,7 @@
 
 .match-sequence .option .input-base {
   min-height: 40px;
+  background-color: white;
 }
 
 .match-sequence .option .option-index {
@@ -54,6 +55,7 @@
   border-radius: 5px;
   font-size: 18px;
   font-weight: bold;
+  background-color: white;
 }
 
 .match-sequence .option .option-content {
@@ -65,6 +67,7 @@
   padding: 15px;
   border: 1px solid #dcdfe3;
   border-radius: 5px;
+  background-color: white;
 }
 
 .match-sequence .DragDrop {
