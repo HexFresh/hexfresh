@@ -10,6 +10,11 @@ type IProgramStore = {
   checklists: ICheckList[];
   selectedTask: ITask;
   imageList: IImage[];
+  isFetchingProgram: boolean;
+  isFetchingPhase: boolean;
+  isFetchingTask: boolean;
+  isFetchingChecklist: boolean;
+  isFetchAnswer: boolean;
 }
 
 
@@ -20,6 +25,12 @@ export const programStore: any = createModel<IRootStore>()({
     checklists: [],
     selectedTask: {},
     imageList: [],
+    isFetchingProgram: false,
+    isFetchingPhase: false,
+    isFetchingTask: false,
+    isFetchingChecklist: false,
+    isFetchingAnswer: false,
+
   } as unknown as IProgramStore,
   reducers: {
     setSelectedPhase: (state, payload) => ({ ...state, selectedPhase: payload }),
@@ -27,23 +38,25 @@ export const programStore: any = createModel<IRootStore>()({
     setChecklists: (state, payload) => ({ ...state, checklists: payload }),
     setSeletedTask: (state, payload) => ({ ...state, selectedTask: payload }),
     setListImages: (state, payload) => ({ ...state, imageList: payload }),
+    setIsFetchingProgram: (state, payload) => ({ ...state, isFetchingProgram: payload }),
+    setIsFetchingPhase: (state, payload) => ({ ...state, isFetchingPhase: payload }),
+    setIsFetchingTask: (state, payload) => ({ ...state, isFetchingTask: payload }),
+    setIsFetchingChecklist: (state, payload)=>({...state, isFetchingChecklist: payload}),
+    setIsFetchingAnswer:(state, payload)=>({...state, isFetchingAnswer: payload}),
   },
   effects: (dispatch: IRootDispatch) => ({
-    /* async doFetchProgram(payload: IPhase) {
-      console.log(payload,)
-      dispatch.setSelectedProgram({});
-    }, */
 
     async doFetchProgram({ id }) {
       const endpoint = `program/${id}`;
-
+      dispatch.programStore.setIsFetchingProgram(true);
       try {
         const response = await axiosClient.get(endpoint);
-        console.log(response.data);
         dispatch.programStore.setProgram(response.data);
       } catch (error) {
         throw new Error('Failed to fetch program.');
       }
+      dispatch.programStore.setIsFetchingProgram(false);
+
     },
 
     async doFetchImageList() {
@@ -59,13 +72,14 @@ export const programStore: any = createModel<IRootStore>()({
 
     async doFetchDetailsPhase({ programId, phaseId }) {
       const endpoint = `program/${programId}/phase/${phaseId}`;
-
+      dispatch.programStore.setIsFetchingPhase(true);
       try {
         const response = await axiosClient.get(endpoint);
         dispatch.programStore.setSelectedPhase(response.data);
       } catch (error) {
         throw new Error('Failed to fetch phase.');
       }
+      dispatch.programStore.setIsFetchingPhase(false);
     },
 
     async doFetchChecklists({ phaseId }) {
@@ -81,7 +95,7 @@ export const programStore: any = createModel<IRootStore>()({
 
     async doFetchTasks({ checklistId }) {
       const endpoint = `checklist/${checklistId}/task`;
-
+      dispatch.programStore.setIsFetchingChecklist(true);
       try {
         const response = await axiosClient.get(endpoint);
         let selectedPhase = _.cloneDeep(rootStore.getState().programStore.selectedPhase);
@@ -89,7 +103,7 @@ export const programStore: any = createModel<IRootStore>()({
         let newChecklist = _.find(checklists, item => item.id === checklistId);
         newChecklist.tasks = response.data;
         let newChecklists = [..._.filter(checklists, item => item.id !== checklistId), newChecklist];
-        newChecklists = _.sortBy(newChecklists,['index']);
+        newChecklists = _.sortBy(newChecklists, ['index']);
         selectedPhase.checklists = newChecklists;
 
         console.log(selectedPhase);
@@ -97,10 +111,12 @@ export const programStore: any = createModel<IRootStore>()({
       } catch (error) {
         throw new Error('Failed to fetch detail task.');
       }
+      dispatch.programStore.setIsFetchingChecklist(false);
     },
 
     async doFetchDetailsTask({ checklistId, taskId }) {
       const endpoint = `checklist/${checklistId}/task/${taskId}`;
+      dispatch.programStore.setIsFetchingTask(true);
 
       try {
         const response = await axiosClient.get(endpoint);
@@ -108,10 +124,13 @@ export const programStore: any = createModel<IRootStore>()({
       } catch (error) {
         throw new Error('Failed to fetch detail task.');
       }
+      dispatch.programStore.setIsFetchingTask(false);
+
     },
     /* Selected question effects */
     async doSubmitSelectedQuestionAnswer({ answers, taskId }) {
       const endpoint = `user/task/${taskId}/quiz/selected-question/answer`;
+      dispatch.programStore.setIsFetchingAnswer(true);
       try {
 
         await axiosClient.post(endpoint, answers);
@@ -119,11 +138,14 @@ export const programStore: any = createModel<IRootStore>()({
       } catch (error) {
         throw new Error('Failed to submit answer.');
       }
+      dispatch.programStore.setIsFetchingAnswer(false);
 
     },
 
     async doUpdateSubmitSelectedQuestionAnswer({ answers, taskId }) {
       const endpoint = `user/task/${taskId}/quiz/selected-question/answer`;
+      dispatch.programStore.setIsFetchingAnswer(true);
+
       try {
 
         await axiosClient.put(endpoint, answers);
@@ -131,11 +153,14 @@ export const programStore: any = createModel<IRootStore>()({
       } catch (error) {
         throw new Error('Failed to submit answer.');
       }
+      dispatch.programStore.setIsFetchingAnswer(false);
 
     },
 
     async doFetchSelectedQuestionAnswer({ taskId }) {
       const endpoint = `user/task/${taskId}/quiz/selected-question/answer`;
+      dispatch.programStore.setIsFetchingAnswer(true);
+
       try {
 
         const response = await axiosClient.get(endpoint);
@@ -147,11 +172,14 @@ export const programStore: any = createModel<IRootStore>()({
         throw new Error('Failed to fetch answer.');
 
       }
+      dispatch.programStore.setIsFetchingAnswer(false);
+
     },
 
     /* Constructed question effects */
     async doSubmitContructedQuestion({ answer, taskId }: { answer: { question: string }, taskId: number }) {
       const endpoint = `user/task/${taskId}/quiz/constructed-question/answer`;
+      dispatch.programStore.setIsFetchingAnswer(true);
 
       try {
         await axiosClient.post(endpoint, answer);
@@ -159,10 +187,13 @@ export const programStore: any = createModel<IRootStore>()({
         throw new Error('Failed to submit answer.');
 
       }
+      dispatch.programStore.setIsFetchingAnswer(false);
+
     },
 
     async doUpdateSubmitContructedQuestion({ answer, taskId }: { answer: { question: string }, taskId: number }) {
       const endpoint = `user/task/${taskId}/quiz/constructed-question/answer`;
+      dispatch.programStore.setIsFetchingAnswer(true);
 
       try {
         await axiosClient.put(endpoint, answer);
@@ -171,10 +202,13 @@ export const programStore: any = createModel<IRootStore>()({
         throw new Error('Failed to submit answer.');
 
       }
+      dispatch.programStore.setIsFetchingAnswer(false);
+
     },
 
-    async doFetchContructedQuestionAnswer({taskId}){
+    async doFetchContructedQuestionAnswer({ taskId }) {
       const endpoint = `user/task/${taskId}/quiz/constructed-question/answer`;
+      dispatch.programStore.setIsFetchingAnswer(true);
 
       try {
         const response = await axiosClient.get(endpoint);
@@ -186,35 +220,44 @@ export const programStore: any = createModel<IRootStore>()({
         throw new Error('Failed to fetch answers.');
 
       }
+      dispatch.programStore.setIsFetchingAnswer(false);
+
     },
 
     /* Binary question effects */
-    async doSubmitBinaryQuestion({taskId, answers}){
+    async doSubmitBinaryQuestion({ taskId, answers }) {
       const endpoint = `user/task/${taskId}/quiz/true-false-question/answer`;
+      dispatch.programStore.setIsFetchingAnswer(true);
 
       try {
         await axiosClient.post(endpoint, answers);
-        
+
       } catch (error) {
         throw new Error('Failed to submit answers.');
 
       }
+      dispatch.programStore.setIsFetchingAnswer(false);
+
     },
 
-    async doUpdateSubmitBinaryQuestion({taskId, answers}){
+    async doUpdateSubmitBinaryQuestion({ taskId, answers }) {
       const endpoint = `user/task/${taskId}/quiz/true-false-question/answer`;
+      dispatch.programStore.setIsFetchingAnswer(true);
 
       try {
         await axiosClient.put(endpoint, answers);
-        
+
       } catch (error) {
         throw new Error('Failed to submit answers.');
 
       }
+      dispatch.programStore.setIsFetchingAnswer(false);
+
     },
 
-    async doFetchBinaryQuestion({taskId}){
+    async doFetchBinaryQuestionAnswer({ taskId }) {
       const endpoint = `user/task/${taskId}/quiz/true-false-question/answer`;
+      dispatch.programStore.setIsFetchingAnswer(true);
 
       try {
         const response = await axiosClient.get(endpoint);
@@ -226,6 +269,8 @@ export const programStore: any = createModel<IRootStore>()({
         throw new Error('Failed to fetch answers.');
 
       }
+      dispatch.programStore.setIsFetchingAnswer(false);
+
     },
   }),
 

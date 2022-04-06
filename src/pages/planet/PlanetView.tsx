@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import 'antd/dist/antd.css';
 //import './index.css';
-import { Layout, Menu, Breadcrumb, notification, Spin, Card } from 'antd';
+import { Layout, Menu, Breadcrumb, notification, Spin, Card, Skeleton } from 'antd';
 import {
   NotificationOutlined,
 } from '@ant-design/icons';
@@ -21,40 +21,30 @@ const { SubMenu } = Menu;
 const { Header, Content, Footer, Sider } = Layout;
 
 interface IPlanetViewStates {
-  selectedTask: ITask | null;
   defaultSelectedKeys: string;
   defaultOpenKeys: string;
-  isLoading: boolean;
 }
 export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
   state = {
-    selectedTask: null,
     defaultSelectedKeys: '',
     defaultOpenKeys: '',
-    isLoading: false,
   };
 
   componentDidMount = async () => {
     const { doFetchDetailsPhase } = this.props;
     const id = _.replace(window.location.pathname, '/planets/', '');
     //do fetch phase with programId
-    this.setState({ isLoading: true });
-    try {
+   try {
       doFetchDetailsPhase({ programId: 1, phaseId: id });
     } catch (error) {
       notification.error({ message: 'Failed to fetch this phase.' });
-    }
-    this.setState({ isLoading: false });
-  };
+    }  };
 
   componentDidUpdate(preProps: PlanViewProps, preState: IPlanetViewStates) {
-    if (!_.isEqual(preProps, this.props)) {
 
-    }
-    console.log(this.state.isLoading);
   }
 
-  private _onFetchTasks({ checklistId }: { checklistId: number }) {
+ private _onFetchTasks({ checklistId }: { checklistId: number }) {
 
     try {
       this.props.doFetchTasks({ checklistId });
@@ -62,11 +52,10 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
     } catch (error) {
       notification.error({ message: "Failed to fetch tasks." });
     }
+
   }
 
   private _onFetchFetchQuestionAnswer(task: ITask) {
-    this.setState({ isLoading: true });
-    console.log(this);
     switch (task.typeId) {
       case TaskCategory.SINGLE_CHOICE:
       case TaskCategory.MULTIPLE_CHOICES:
@@ -76,25 +65,19 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
         this.props.doFetchContructedQuestionAnswer({ taskId: task.id });
         break;
       case TaskCategory.BINARY:
-        this.props.doFetchBinaryQuestion({ taskId: task.id });
+        this.props.doFetchBinaryQuestionAnswer({ taskId: task.id });
         break;
       default:
         break;
     }
-    this.setState({ isLoading: false });
   }
 
   private _onChangeSelectedTask(task: ITask) {
-    if (task) {
-      this.setState({
-        isLoading: true,
-        selectedTask: task,
-      });
-      this.props.setSeletedTask(task);
 
+    if (task) {
       this._onFetchFetchQuestionAnswer(task);
 
-      this.setState({ isLoading: false });
+      this.props.setSeletedTask(task);
     }
   }
 
@@ -106,9 +89,13 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
       doSubmitSelectedQuestionAnswer,
       doUpdateSubmitBinaryQuestion,
       doUpdateSubmitContructedQuestion,
-      doUpdateSubmitSelectedQuestionAnswer
+      doUpdateSubmitSelectedQuestionAnswer,
+      isFetchingTask,
+      isFetchingChecklist,
+      isFetchingPhase,
+      isFetchingProgram,
+      isFetchingAnswer
     } = this.props;
-    const { isLoading } = this.state;
     const { defaultOpenKeys, defaultSelectedKeys } = this.state;
 
     let content = <Content className='centered' style={{ padding: '0 50px' }}>
@@ -134,7 +121,7 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
                 title={checklist.title}
                 onTitleClick={this._onFetchTasks.bind(this, { checklistId: checklist.id })}
               >
-                {_.map(checklist.tasks, (task) => (
+                {isFetchingChecklist?<Skeleton active={true} /> :_.map(checklist.tasks, (task) => (
                   <Menu.Item
                     key={task.id}
                     onClick={this._onChangeSelectedTask.bind(this, task)}
@@ -147,7 +134,7 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
           </Menu>
         </Sider>
         <Content style={{ padding: '0 24px', minHeight: 280 }}>
-          <Card>
+          <Card style={{height: '100%'}}>
             <TaskItem
               task={this.props.selectedTask}
               doSubmitBinaryQuestion={doSubmitBinaryQuestion}
@@ -159,16 +146,17 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
               doUpdateSubmitSelectedQuestionAnswer={doUpdateSubmitSelectedQuestionAnswer}
 
               onFetchQuestionAnswer={this._onFetchFetchQuestionAnswer}
-              isLoading={isLoading}
+              isLoading={isFetchingTask}
+              isFetchingAnswer = { isFetchingAnswer}
             />
           </Card>
         </Content>
       </Layout>
     </Content>;
 
-    if (isLoading) {
+    if (isFetchingPhase) {
       content = <Spin size='large' />
-    } else if (!_.isEmpty(selectedPhase) && _.isEmpty(selectedPhase.checklists) && !isLoading) {
+    } else if (!_.isEmpty(selectedPhase) && _.isEmpty(selectedPhase.checklists) && !isFetchingTask) {
       content = <EmptyResult message={"Opps, we don't have any checklist here."} />
     }
     return (
@@ -185,6 +173,11 @@ const mapStateToProps = (state: IRootStore) => ({
   selectedPhase: state.programStore.selectedPhase,
   program: state.programStore.program,
   selectedTask: state.programStore.selectedTask,
+  isFetchingProgram: state.programStore.isFetchingProgram,
+  isFetchingTask: state.programStore.isFetchingTask,
+  isFetchingPhase: state.programStore.isFetchingPhase,
+  isFetchingChecklist: state.programStore.isFetchingChecklist,
+  isFetchingAnswer: state.programStore.isFetchingAnswer,
 });
 
 const mapDispatchToProps = (dispatch: IRootDispatch) => ({
@@ -195,7 +188,7 @@ const mapDispatchToProps = (dispatch: IRootDispatch) => ({
 
   doFetchSelectedQuestionAnswer: dispatch.programStore.doFetchSelectedQuestionAnswer,
   doFetchContructedQuestionAnswer: dispatch.programStore.doFetchContructedQuestionAnswer,
-  doFetchBinaryQuestion: dispatch.programStore.doFetchBinaryQuestion,
+  doFetchBinaryQuestionAnswer: dispatch.programStore.doFetchBinaryQuestionAnswer,
 
   doSubmitSelectedQuestionAnswer: dispatch.programStore.doSubmitSelectedQuestionAnswer,
   doSubmitContructedQuestion: dispatch.programStore.doSubmitContructedQuestion,

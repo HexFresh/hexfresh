@@ -96,7 +96,7 @@ export interface IAnswerSelectedQuestion{
 }
 
 export interface IChoiceAnswerSelectedQuestion{
-  id: number;
+  choiceId: number;
   choiceAnswer: boolean|null;
 }
 
@@ -115,7 +115,7 @@ export interface IAnswerBinaryQuestion{
 }
 
 export interface IChoiceBinaryQuestion{
-  id: number;
+  optionId: number;
   userAnswer: boolean;
-  OptionAnswer: boolean;
+  optionAnswer: boolean;
 }

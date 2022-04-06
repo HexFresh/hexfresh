@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import 'antd/dist/antd.css';
-import { IAnswerBinaryQuestion, IChoiceBinaryQuestion, ITask } from '../../interface/program-interface'
+import { ITask } from '../../interface/program-interface'
 import { TaskCategory } from '../../utilities/enum-utils';
 
 import { message, Radio, Space, Checkbox, Button, List, Skeleton } from 'antd';
@@ -16,6 +16,7 @@ import { EmptyResult } from '../results';
 interface ITaskItemProps {
   task: ITask | null;
   isLoading: boolean;
+  isFetchingAnswer: boolean;
   doSubmitSelectedQuestionAnswer: any;
   doSubmitContructedQuestion: any;
   doSubmitBinaryQuestion: any;
@@ -32,11 +33,23 @@ interface ITaskItemState {
   inputTextArea: string;
   binaryChoices: any[];
   displayActionButtonGroup: boolean;
-  isLoading: boolean;
   isTaken: boolean;
   isEmptyQuiz: boolean;
   isEdit: boolean;
   isCorrect: boolean;
+}
+
+const initialState = {
+  radioValue: 1,
+  selectedFiles: [],
+  multipleChoices: [],
+  inputTextArea: '',
+  binaryChoices: [],
+  displayActionButtonGroup: true,
+  isTaken: false,
+  isEmptyQuiz: false,
+  isEdit: false,
+  isCorrect: false,
 }
 
 export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
@@ -45,17 +58,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
     super(props);
 
     this.state = {
-      radioValue: 1,
-      selectedFiles: [],
-      multipleChoices: [],
-      inputTextArea: '',
-      binaryChoices: [],
-      displayActionButtonGroup: true,
-      isLoading: false,
-      isTaken: false,
-      isEmptyQuiz: false,
-      isEdit: false,
-      isCorrect: false,
+      ...initialState
     };
   }
 
@@ -65,22 +68,18 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
   }
 
   componentDidUpdate(prevProps: ITaskItemProps, prevState: ITaskItemState) {
-    
-    console.log('updating...');
+
     if (!_.isEqual(prevProps, this.props)) {
-      const { task, isLoading: isLoadingProp } = this.props;
-      const { isEdit, isLoading } = this.state;
-      console.log(isLoading, isLoadingProp);
+      const { task, isLoading } = this.props;
+      const { isEdit } = this.state;
       let isTakenTemp = this.state.isTaken;
       let isEmptyQuizTemp = this.state.isEmptyQuiz;
       let isCorrectTemp = false;
 
-      this.setState({ isLoading: true });
       switch (task?.typeId) {
         case TaskCategory.SINGLE_CHOICE:
         case TaskCategory.MULTIPLE_CHOICES:
           if (!_.isEmpty(task.answersSelectedQuestion)) {
-            //this.setState({ isTaken: true });
             isTakenTemp = true;
             // calculate for correct answer
             if (task.answersSelectedQuestion.answers.length === 1) {
@@ -93,72 +92,52 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
                 isCorrectTemp = true;
               }
             }
-            //if()
           } else {
-            /* this.setState({ isTaken: false }); */
             isTakenTemp = false;
           };
 
           if (_.isEmpty(task.selected_question_choices)) {
-            //this.setState({ isEmptyQuiz: true });
             isEmptyQuizTemp = true;
           } else {
-            //this.setState({ isEmptyQuiz: false });
             isEmptyQuizTemp = false;
           }
           break;
         case TaskCategory.WRITTING:
           if (!_.isEmpty(task.answerConstructedQuestion)) {
-            //this.setState({ isTaken: true });
             isTakenTemp = true;
           } else {
-            //this.setState({ isTaken: false }); 
             isTakenTemp = false;
           };
 
           if (_.isEmpty(task.quiz)) {
-            //this.setState({ isEmptyQuiz: true });
             isEmptyQuizTemp = true;
           } else {
-            //this.setState({ isEmptyQuiz: false });
             isEmptyQuizTemp = false;
           }
           break;
         case TaskCategory.BINARY:
           if (!_.isEmpty(task.answerBinaryQuestion)) {
-            //this.setState({ isTaken: true });
             isTakenTemp = true;
           } else {
-            //this.setState({ isTaken: false }); 
             isTakenTemp = false;
           };
 
           if (_.isEmpty(task.true_false_question_options)) {
-            //this.setState({ isEmptyQuiz: true });
             isEmptyQuizTemp = true;
           } else {
             isEmptyQuizTemp = false;
-            //this.setState({ isEmptyQuiz: false });
           }
           break;
         default:
           break;
       }
-      if (isEdit) {
-        this.setState({
-          isTaken: isTakenTemp,
-          isEmptyQuiz: isEmptyQuizTemp,
-          isCorrect: isCorrectTemp,
-          isLoading: false,
-        })
-      } else {
-        this.setState({
-          isTaken: isTakenTemp,
-          isEmptyQuiz: isEmptyQuizTemp,
-          isCorrect: isCorrectTemp,
-          isLoading: false,
-        })
-      }
+
+      this.setState({
+        isTaken: isTakenTemp,
+        isEmptyQuiz: isEmptyQuizTemp,
+        isCorrect: isCorrectTemp,
+      })
+
     }
 
   }
@@ -201,16 +180,6 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
     }
   }
 
-  private _resetValue() {
-    this.setState({
-      radioValue: 1,
-      selectedFiles: [],
-      multipleChoices: [],
-      inputTextArea: '',
-      binaryChoices: [],
-    })
-  }
-
   private _onSubmitTask = () => {
     const {
       task,
@@ -223,10 +192,8 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
       doUpdateSubmitSelectedQuestionAnswer,
     } = this.props;
     const { inputTextArea, multipleChoices, radioValue, binaryChoices } = this.state;
-    this.setState({ isLoading: true });
     let payload = {};
     try {
-      console.log('vo cho submit ne');
       switch (task?.typeId) {
         case TaskCategory.SINGLE_CHOICE:
           console.log(radioValue);
@@ -306,9 +273,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
 
     }
 
-    this.setState({ isLoading: false });
-    this._resetValue();
-
+    this.setState(initialState);
   }
 
   private _onRetakeTask = () => {
@@ -318,10 +283,10 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
   }
 
   private _renderTaskContent() {
-    const { task, isLoading: isLoadingProp } = this.props;
-    const { binaryChoices, multipleChoices, isEdit, isLoading, isTaken, inputTextArea } = this.state;
-    if (isLoading || isLoadingProp) {
-      //return <Skeleton active={true} />
+    const { task, isLoading } = this.props;
+    const { binaryChoices, multipleChoices, isEdit, isTaken, inputTextArea } = this.state;
+    if (isLoading) {
+      return <Skeleton active={true} />
     }
     if (!_.isEmpty(task)) {
       switch (task?.typeId) {
@@ -363,7 +328,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
               onChange={this._onChangeMultipleChoices.bind(this)}
               value={
                 task?.answersSelectedQuestion?.answers ?
-                  task.answersSelectedQuestion.answers.map(item => item.id) :
+                  task.answersSelectedQuestion.answers.map(item => item.choiceId) :
                   multipleChoices
               }
             >
@@ -377,7 +342,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
           </>;
         case TaskCategory.SINGLE_CHOICE:
           const { radioValue } = this.state;
-          const userSingleAnswer = task?.answersSelectedQuestion?.answers ? task.answersSelectedQuestion.answers[0].id : radioValue;
+          const userSingleAnswer = task?.answersSelectedQuestion?.answers ? task.answersSelectedQuestion.answers[0]?.choiceId : radioValue;
           const singleCurrentAppliedValue = (isEdit || !isEdit && !isTaken) ? radioValue : userSingleAnswer;
           return <>
             <Radio.Group style={{ width: '100%' }}
@@ -411,9 +376,9 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
             <List
               dataSource={task.true_false_question_options}
               renderItem={(item) => {
-                const answer = _.find(task?.answerBinaryQuestion?.answers, ['id', item.id]);
+                const answer = _.find(task?.answerBinaryQuestion?.answers, ['optionId', item.id]);
                 const currentValue = (isEdit || !isEdit && !isTaken) ? (_.find(binaryChoices, ['id', item.id])) : (
-                  { id: answer?.id, userAnswer: answer?.userAnswer }
+                  { id: answer?.optionId, userAnswer: answer?.userAnswer }
                 );
                 return <List.Item >
                   <Space direction="horizontal">
@@ -439,13 +404,12 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
   }
 
   render() {
-    const { task, isLoading: isLoadingProps } = this.props;
-    const { isLoading, isTaken, isEmptyQuiz, isEdit, isCorrect } = this.state;
-    console.log(isLoading, isLoadingProps);
+    const { task, isLoading, isFetchingAnswer } = this.props;
+    const { isTaken, isEmptyQuiz, isEdit, isCorrect } = this.state;
     return (
       <div>
         {
-          (isLoadingProps || isLoading) ? <Skeleton active={true} /> :
+          (isLoading || isFetchingAnswer) ? <Skeleton active={true} /> :
             <>
               <Title>{task?.quiz?.question}</Title>
               <br></br>
@@ -460,7 +424,6 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
                     {(!_.isEmpty(task) && !isEmptyQuiz && !isTaken || isTaken && isEdit) && <Button type='primary' className='mt-medium mr-medium' loading={isLoading} onClick={this._onSubmitTask}>Submit</Button>}
                     {isTaken && !isEdit ? <Button type='ghost' className='mt-medium' onClick={this._onRetakeTask}>Retake</Button> : ''}
                   </Space>
-                  <Skeleton active={true} />
                 </Space>}
             </>
         }

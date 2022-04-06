@@ -36,24 +36,25 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
 
   generateItems() {
     const {imageList} = this.props;
-    const {isLoading} = this.state;
+    const {isLoading, active} = this.state;
     if(isLoading || _.isEmpty(this.state.items)) return <></>;
     const items = [];
     let level;
-    console.log(this.state.active);
-    for (let i = this.state.active - 2; i < this.state.active + 3; i++) {
+    for (let i = 0; i < active + this.state.items.length; i++) {
       let index = i;
       if (i < 0) {
         index = this.state.items.length + i;
       } else if (i >= this.state.items.length) {
         index = i % this.state.items.length;
       }
-      level = this.state.active - i;
+      level = active - i;
       const image = _.find(imageList,{id: this.state.items[index]?.imageId })
+      console.log(level, image, this.state.items);
       items.push(
         <Item key={index} level={level} program={this.state.items[index]} image ={image} />
       );
     }
+    console.log(items);
     return items;
   }
 
@@ -94,7 +95,6 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
 
   componentDidUpdate(prevProps:ICarouselProps, prevState: ICarouselStates){
     if(!_.isEqual(prevProps, this.props)){
-      console.log(this.props, this.state);
       this.setState({items: this.props.program.phases});
     }
   }
@@ -166,6 +166,7 @@ class ItemClass extends React.Component<IItemProps, IItemStates> {
     const className = "item level" + this.props.level;
     const backgroundSize = this.props.level === 0 ? '400px' : 'auto';
     const { program, navigate, image } = this.props;
+    console.log(program);
 
     return (
       <>
