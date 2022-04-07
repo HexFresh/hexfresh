@@ -205,7 +205,7 @@ export default function ListPhase() {
                   <CircularProgress className="circular-progress" />
                 ) : phases.length === 0 ? (
                   <div className="img-404">
-                    <img style={{ height: '200px' }} src="/no-records.png" />
+                    <img alt='img-404' style={{ height: '200px' }} src="/no-records.png" />
                   </div>
                 ) : (
                   <DragDrop phases={phases} programId={programId} updatePhases={updatePhases} />

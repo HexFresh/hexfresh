@@ -7,7 +7,6 @@ import { useParams } from 'react-router-dom';
 import TaskContent from '../../components/mentor/task-content/TaskContent';
 import { Modal, Input, Select, Button, message } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
-import { CircularProgress } from '@mui/material';
 import { createChecklist, getAllChecklist, createTask } from '../../api/mentor/mentorApi';
 
 const { Option } = Select;

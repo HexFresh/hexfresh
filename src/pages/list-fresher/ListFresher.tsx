@@ -64,7 +64,7 @@ export default function ListProgram() {
       key: 'date',
     },
     {
-      title: 'Assign Program',
+      title: () => <div className="flex--center">Action</div>,
       dataIndex: 'status',
       key: 'status',
       render: (status: string, fresher: IFresher) => (
@@ -78,12 +78,14 @@ export default function ListProgram() {
             justifyContent: 'center',
           }}
         >
-          <Button
-            onClick={() => showModal(fresher.id)}
-            disabled={status !== 'completed'}
-            shape="circle"
-            icon={<AuditOutlined />}
-          />
+          <Tooltip title="Assign program">
+            <Button
+              onClick={() => showModal(fresher.id)}
+              disabled={status !== 'completed'}
+              shape="circle"
+              icon={<AuditOutlined />}
+            />
+          </Tooltip>
         </div>
       ),
     },
