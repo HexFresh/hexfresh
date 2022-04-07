@@ -5,7 +5,7 @@ import { InputBase, Avatar, CircularProgress } from '@mui/material';
 import { Pagination, Table, Button, Tooltip, Modal, Select, message } from 'antd';
 import { AuditOutlined } from '@ant-design/icons';
 import { getFreshers } from './data';
-import { getPrograms } from '../../api/mentor/mentorApi';
+import { getPrograms, assignProgramToFresher } from '../../api/mentor/mentorApi';
 import './list-fresher.css';
 
 interface IFresher {
@@ -122,8 +122,15 @@ export default function ListProgram() {
   };
 
   const handleOk = () => {
-    console.log(`Assign program ${selectProgram} to user: ${userId}`);
-    handleCancel();
+    const handleAssignProgram = async () => {
+      message.loading('Assigning program...').then(async () => {
+        await assignProgramToFresher(userId, Number(selectProgram));
+        message.success('Assign program successfully');
+        fetchFreshers(keyword, nPerPage, (page - 1) * nPerPage);
+        handleCancel();
+      });
+    };
+    handleAssignProgram();
   };
 
   const handleCancel = () => {

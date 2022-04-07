@@ -5,8 +5,8 @@ import { IRootDispatch } from "../store/store";
 
 const axiosClient = axios.create({
   withCredentials: true,
-  //baseURL: 'https://hexfresh-gamification-backend.herokuapp.com/api/',
-  baseURL: 'http://localhost:3000/api/',
+  baseURL: 'https://hexfresh-gamification-backend.herokuapp.com/api/',
+  //baseURL: 'http://localhost:3000/api/',
 });
 
 // Add a request interceptor

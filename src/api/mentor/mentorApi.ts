@@ -25,10 +25,7 @@ export const getProgramById = async (id: number) => {
   }
 };
 
-export const getPhasesOfProgram = async (
-  programId: number,
-  keyword: string
-) => {
+export const getPhasesOfProgram = async (programId: number, keyword: string) => {
   const endpoint = `program/${programId}/phase`;
   try {
     const response = await axiosClient.get(endpoint, {
@@ -52,11 +49,7 @@ export const createPhase = async (programId: number, phase: any) => {
   }
 };
 
-export const updatePhase = async (
-  programId: number,
-  phaseId: number,
-  phase: any
-) => {
+export const updatePhase = async (programId: number, phaseId: number, phase: any) => {
   const endpoint = `program/${programId}/phase/${phaseId}`;
   try {
     const response = await axiosClient.put(endpoint, phase);
@@ -104,6 +97,17 @@ export const createTask = async (checklistId: number, task: any) => {
   const endpoint = `checklist/${checklistId}/task`;
   try {
     const response = await axiosClient.post(endpoint, task);
+    const { data } = response;
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const assignProgramToFresher = async (userId: string, programId: number) => {
+  const endpoint = `program-permission`;
+  try {
+    const response = await axiosClient.post(endpoint, { userId, programId });
     const { data } = response;
     return data;
   } catch (error) {
