@@ -62,6 +62,8 @@ export default function ListPhase() {
   };
 
   const handleCancel = () => {
+    setName('');
+    setPlanet('1');
     setIsModalVisible(false);
   };
 
@@ -223,7 +225,7 @@ export default function ListPhase() {
           <Button key="back" onClick={handleCancel}>
             Cancel
           </Button>,
-          <Button key="submit" type="primary" onClick={handleOk}>
+          <Button disabled={name === ''} key="submit" type="primary" onClick={handleOk}>
             Create
           </Button>,
         ]}
@@ -231,11 +233,11 @@ export default function ListPhase() {
         <div className="form">
           <div className="field">
             <label>Title</label>
-            <Input value={name} onChange={changeNewName} />
+            <Input style={{ width: '100%', marginTop: '10px' }} value={name} onChange={changeNewName} />
           </div>
           <div className="field">
             <label>Choose planet</label>
-            <Select value={planet} style={{ width: '100%' }} onChange={changePlanet}>
+            <Select value={planet} style={{ width: '100%', marginTop: '10px' }} onChange={changePlanet}>
               <Option value="1">Planet 1</Option>
               <Option value="2">Planet 2</Option>
               <Option value="3">Planet 3</Option>

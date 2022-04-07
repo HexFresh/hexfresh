@@ -3,18 +3,8 @@ import InputBase from '@mui/material/InputBase';
 import { message } from 'antd';
 import { MinusCircleOutlined } from '@ant-design/icons';
 import { Checkbox } from 'antd';
-import {
-  updateQuestion,
-  createQuestion,
-  getTask,
-  updatePointOfTask,
-} from '../../../../api/mentor/taskApi';
-import {
-  getAnswer,
-  createEmptyAnswer,
-  deleteAnswer,
-  updateAnswer,
-} from '../../../../api/mentor/ConstructedTaskApi';
+import { updateQuestion, createQuestion, getTask, updatePointOfTask } from '../../../../api/mentor/taskApi';
+import { getAnswer, createEmptyAnswer, deleteAnswer, updateAnswer } from '../../../../api/mentor/ConstructedTaskApi';
 import { CircularProgress } from '@mui/material';
 import './constructed-task.css';
 
@@ -33,8 +23,6 @@ function ConstructedTask(props: any) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [point, setPoint] = React.useState(0);
   const [isMatchingRequired, setIsMatchingRequired] = React.useState();
-
-  console.log({ answer, taskName: task.title });
 
   const fetchTask = async (id: number) => {
     setIsLoading(true);
@@ -186,11 +174,7 @@ function ConstructedTask(props: any) {
                   multiline
                   maxRows={12}
                   sx={{ width: '100%', fontSize: '18px' }}
-                  value={
-                    (answer?.sampleAnswer === ' '
-                      ? ''
-                      : answer?.sampleAnswer) || ''
-                  }
+                  value={(answer?.sampleAnswer === ' ' ? '' : answer?.sampleAnswer) || ''}
                   onChange={(e) => handleSampleAnswerChange(e.target.value)}
                   onBlur={(e) => handleUpdateSampleAnswer(e.target.value)}
                   placeholder="Fill answer"
@@ -202,11 +186,7 @@ function ConstructedTask(props: any) {
                 onClick={handleRemoveAnswer}
               />
             </div>
-            <Checkbox
-              className="checkbox"
-              onChange={onCheckboxChange}
-              checked={isMatchingRequired}
-            >
+            <Checkbox className="checkbox" onChange={onCheckboxChange} checked={isMatchingRequired}>
               Matching Required
             </Checkbox>
           </div>

@@ -1,8 +1,10 @@
 import React from 'react';
+import { MinusCircleOutlined } from '@ant-design/icons';
+import { message } from 'antd';
 import { Droppable, DragDropContext, Draggable, DropResult } from 'react-beautiful-dnd';
 import { sortByField } from '../../../../utils/common';
 import { InputBase } from '@mui/material';
-import { getAllOption, createOption, updateBulkOption } from '../../../../api/mentor/MatchSequenceApi';
+import { deleteOption } from '../../../../api/mentor/MatchSequenceApi';
 
 interface MatchSequenceOption {
   id: number;
@@ -21,7 +23,7 @@ const getItemStyle = (isDragging: any, draggableStyle: any) => ({
 });
 
 export default function DragDrop(props: any) {
-  const { options, updateOptions } = props;
+  const { options, updateOptions, fecthOptions, taskId } = props;
   const [currentoptions, setCurrentOptions] = React.useState<MatchSequenceOption[]>([]);
 
   React.useEffect(() => {
@@ -73,6 +75,15 @@ export default function DragDrop(props: any) {
     updateOptions(sendOptions);
   };
 
+  const handleRemoveOption = (id: number) => {
+    const removeOption = async () => {
+      await deleteOption(taskId, id);
+      fecthOptions();
+      message.success('Deleted', 0.5);
+    };
+    removeOption();
+  };
+
   return (
     <div className="DragDrop">
       <DragDropContext onDragEnd={onDragEnd}>
@@ -93,7 +104,7 @@ export default function DragDrop(props: any) {
                       style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
                     >
                       <div className="option">
-                        <div className="option-index">{option.index}</div>
+                        <div className="option-index">{index + 1}</div>
                         <div className="option-content">
                           <InputBase
                             className="input-base"
@@ -108,6 +119,13 @@ export default function DragDrop(props: any) {
                             }}
                             onBlur={handleUpdateContent}
                             placeholder="Fill answer"
+                          />
+                        </div>
+                        <div className="remove-btn">
+                          <MinusCircleOutlined
+                            className="remove-icon"
+                            style={{ fontSize: '25px', color: 'gray' }}
+                            onClick={() => handleRemoveOption(option.id)}
                           />
                         </div>
                       </div>

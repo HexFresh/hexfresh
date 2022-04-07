@@ -33,7 +33,6 @@ function MatchSequence(props: any) {
   };
 
   const fecthOptions = async () => {
-    console.log('Fetch Match Sequence Options');
     const result = await getAllOption(task.id);
     setOptions(result || []);
   };
@@ -124,7 +123,7 @@ function MatchSequence(props: any) {
             />
           </div>
           <div className="answer">
-            <DragDrop updateOptions={updateOptions} options={options} />
+            <DragDrop taskId={task.id} fecthOptions={fecthOptions} updateOptions={updateOptions} options={options} />
             <div className="add-new-choice">
               <Button
                 onClick={addNewOption}

@@ -28,6 +28,64 @@
   grid-gap: 20px;
 }
 
+.match-corresponding .answer {
+  margin-top: 10px;
+}
+
 .match-corresponding .answer .add-new-choice {
   width: 100%;
+}
+
+.match-corresponding .between {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.match-corresponding .between__container {
+  width: 2px;
+  height: 30px;
+  background-color: #9c9c9c;
+}
+
+.match-corresponding .between__circle {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  border: #9c9c9c 3px solid;
+  background-color: white;
+  border-radius: 50%;
+}
+
+.match-corresponding .input-base {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border: 1px solid #dcdfe3;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.match-corresponding .pair-answer {
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.match-corresponding .remove-btn {
+  position: absolute;
+  top: 50%;
+  right: -40px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  opacity: 0;
+}
+
+.match-corresponding .pair-answer:hover .remove-btn {
+  opacity: 1;
 }

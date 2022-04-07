@@ -33,9 +33,24 @@
 }
 
 .match-sequence .option {
+  position: relative;
   display: flex;
   background-color: transparent;
   grid-gap: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.match-sequence .option .remove-btn {
+  position: absolute;
+  right: -40px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+}
+
+.match-sequence .option:hover .remove-btn {
+  opacity: 1;
 }
 
 .match-sequence .option .input-base {
@@ -71,5 +86,5 @@
 }
 
 .match-sequence .DragDrop {
-  margin-top: 25px;
+  margin-top: 10px;
 }

@@ -77,8 +77,6 @@ function TaskContent(props: any) {
     }
   };
 
-  console.log({ task });
-
   return (
     <div className="task-content">
       <div className="task-content-container">
