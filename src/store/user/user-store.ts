@@ -2,6 +2,7 @@ import { NavigateFunction } from "react-router-dom";
 import axiosClient from "../../api/axiosClient";
 import rootStore, { IRootDispatch, IRootStore } from "../store";
 import { retrieveStoredToken } from '../../utils/calc';
+import { initSocket } from "../../utils/socketioInit";
 
 let logoutTimer: NodeJS.Timeout;
 const initialState = {
@@ -42,17 +43,23 @@ export const user: any = {
 		) {
 			const endpoint = `/auth/login`;
 			try {
-				const response = await axiosClient.post(endpoint, `username=admin&password=123`);
+				const response = await axiosClient.post(endpoint, `username=${email}&password=${password}`);
 				const { data } = response;
 				dispatch.user.loginSucces({
 					body: {
 						...data.user
-					}, 
+					},
 					token: data.token,
 				});
 
+				// Copy to success
+				const socket = initSocket(data.token);
+				socket.emit('signin','Hi from signin')
+				
 				localStorage.setItem('token', data.token);
+				sessionStorage.setItem("token", data.token as string)
 
+				console.log(data);
 				if (preLocation) {
 					dispatch.location.arrivedStartLocation();
 					navigate(preLocation, { replace: true });
@@ -89,7 +96,8 @@ export const user: any = {
 		},
 		async checkAutoLoginV2({ dispatch, navigate, location }: { dispatch: IRootDispatch, navigate: NavigateFunction, location: any }) {
 			const endpoint = `program/1`;
-			const token = localStorage.getItem('token');
+			//const token = localStorage.getItem('token');
+			const token = sessionStorage.getItem('token');
 
 			if (token) {
 				dispatch.user.retrieveToken(token);
@@ -99,20 +107,20 @@ export const user: any = {
 				const response = await axiosClient.get(endpoint);
 				if (response.status === 200) {
 					dispatch.user.loginSucces({
-					 token: response.data.token||'qưertyuiopasdfghjkl'
+						token: response.data.token || 'qưertyuiopasdfghjkl'
 					});
 
 					const preLocation = rootStore.getState().location.location;
 
-					if(preLocation){
+					if (preLocation) {
 						navigate(`${rootStore.getState().location.location}`)
-					}else{
+					} else {
 						navigate('/');
 					}
 				}
-				
+
 			} catch (error) {
-			 this.signOut({navigate});
+				this.signOut({ navigate });
 				console.log(error, 'error');
 			}
 

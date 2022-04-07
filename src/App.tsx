@@ -17,10 +17,13 @@ import ListFresher from './pages/list-fresher/ListFresher';
 import PlanetView from './pages/planet/PlanetView';
 import ListPhase from './pages/list-phase/ListPhase';
 import PhaseDetail from './pages/phase-detail/PhaseDetail';
-import { IRootDispatch, IRootStore } from './store/store';
+import rootStore, { IRootDispatch, IRootStore } from './store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { IUserStore } from './store/user/user-store';
+import { getCurrentToken, onMessageListener } from './utils/firebaseInit';
+import { initSocket } from './utils/socketioInit';
+//import io from "socket.io-client";
 
 const Home = () => {
   return (
@@ -43,18 +46,32 @@ function App() {
   const dispatch = useDispatch<IRootDispatch>();
   const auth: IUserStore = useSelector<IRootStore>((state) => state.user);
 
-  if (
-    !auth.token &&
-    location.pathname !== '/signin' &&
-    location.pathname !== '/planets' &&
-    location.pathname !== '/'
-  ) {
+
+  if (!auth.token && (
+    location.pathname !== '/signin'
+    && location.pathname !== '/planets'
+    && location.pathname !== '/')) {
     console.log(location.pathname + location.search, 'inititate...');
     dispatch.location.startAt(location.pathname + location.search);
   }
 
   useEffect(() => {
     dispatch.user.checkAutoLoginV2({ dispatch, navigate, location });
+    const accessToken = rootStore.getState().user.token;
+    if (accessToken) {
+      const socket = initSocket(accessToken);
+      socket.emit('signin', "Auto sign in");
+    }
+    else {
+      console.log("no access token")
+    }
+
+    // push notification
+    console.log("Noctification Token: ", getCurrentToken());
+    onMessageListener().then((payload) => {
+      console.log("Notification: ")
+      console.log(payload);
+    }).catch((err) => console.log("Notification fail: ", err))
   }, []);
 
   const routeWithoutSignIn = (
