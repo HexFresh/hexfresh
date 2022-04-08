@@ -225,7 +225,7 @@ export default function ListProgram() {
       </div>
       <Modal
         className="modal"
-        title="Create new phase"
+        title="Assign Program"
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
