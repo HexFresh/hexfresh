@@ -1,18 +1,9 @@
 import React from 'react';
 import InputBase from '@mui/material/InputBase';
-import {
-  CheckCircleOutlined,
-  MinusCircleOutlined,
-  PlusOutlined,
-} from '@ant-design/icons';
+import { CheckCircleOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, message } from 'antd';
 import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
-import {
-  updateQuestion,
-  createQuestion,
-  getTask,
-  updatePointOfTask,
-} from '../../../../api/mentor/taskApi';
+import { updateQuestion, createQuestion, getTask, updatePointOfTask } from '../../../../api/mentor/taskApi';
 import {
   getChoicesWithAnswer,
   updateChoice,
@@ -61,15 +52,11 @@ function SingleChoiceTask(props: any) {
 
   const handleIsRightChange = (choice: SelectedQuestionChoice) => {
     const newChoices = [...choices];
-    const currentIsrightIndex = choices.findIndex(
-      (item: SelectedQuestionChoice) => item.isRight
-    );
+    const currentIsrightIndex = choices.findIndex((item: SelectedQuestionChoice) => item.isRight);
     if (currentIsrightIndex !== -1) {
       newChoices[currentIsrightIndex].isRight = '0';
     }
-    const newIsRightIndex = choices.findIndex(
-      (item: SelectedQuestionChoice) => item.id === choice.id
-    );
+    const newIsRightIndex = choices.findIndex((item: SelectedQuestionChoice) => item.id === choice.id);
     newChoices[newIsRightIndex].isRight = true;
 
     const handleUpdate = async () => {
@@ -89,11 +76,7 @@ function SingleChoiceTask(props: any) {
     setChoices(newChoices);
   };
 
-  const handleUpdate = (
-    choiceId: number,
-    newContent: string,
-    isRight: boolean | string
-  ) => {
+  const handleUpdate = (choiceId: number, newContent: string, isRight: boolean | string) => {
     const newIsRight = isRight === null || isRight === false ? false : true;
 
     const handleUpdate = async () => {
@@ -161,7 +144,7 @@ function SingleChoiceTask(props: any) {
             maxRows={10}
             sx={{
               width: '100%',
-              fontSize: '20px',
+              fontSize: '24px',
               fontWeight: 'bold',
               marginTop: '20px',
             }}
@@ -196,12 +179,8 @@ function SingleChoiceTask(props: any) {
                       maxRows={10}
                       sx={{ width: '100%', fontSize: '18px' }}
                       value={choice.content || ''}
-                      onChange={(e) =>
-                        handleContentChange(choice.id, e.target.value)
-                      }
-                      onBlur={(e) =>
-                        handleUpdate(choice.id, e.target.value, choice.isRight)
-                      }
+                      onChange={(e) => handleContentChange(choice.id, e.target.value)}
+                      onBlur={(e) => handleUpdate(choice.id, e.target.value, choice.isRight)}
                       placeholder="Fill answer"
                     />
                   </div>
@@ -211,9 +190,7 @@ function SingleChoiceTask(props: any) {
                     onClick={() => handleRemoveChoice(choice.id)}
                   />
                   {choice.isRight === true ? (
-                    <CheckCircleOutlined
-                      style={{ fontSize: '25px', color: 'green' }}
-                    />
+                    <CheckCircleOutlined style={{ fontSize: '25px', color: 'green' }} />
                   ) : (
                     <CircleOutlinedIcon
                       style={{
@@ -227,15 +204,9 @@ function SingleChoiceTask(props: any) {
                 </div>
               );
             })}
-            <div className="add-new-choice">
-              <Button
-                onClick={addNewChoice}
-                style={{ width: '100%', borderRadius: '5px' }}
-                disabled={choices.length >= 5}
-              >
-                <PlusOutlined />
-              </Button>
-            </div>
+            <Button className="add-new-choice" onClick={addNewChoice} disabled={choices.length >= 5}>
+              Add a choice
+            </Button>
           </div>
         </div>
       )}

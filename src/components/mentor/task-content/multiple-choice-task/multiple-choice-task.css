@@ -43,7 +43,6 @@
   width: 100%;
   align-items: center;
   padding: 15px;
-  border: 1px solid #dcdfe3;
   border-radius: 5px;
   margin-bottom: 15px;
   grid-gap: 15px;
@@ -55,17 +54,27 @@
 }
 
 .task-content .multiple-choice-task .answer .add-new-choice {
+  margin-bottom: 20px;
   width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  border-radius: 5px;
+  background-color: transparent;
+  font-size: 16px;
+  color: #7d8288;
+  font-weight: bold;
+}
+
+.task-content .multiple-choice-task .answer .add-new-choice:hover {
+  background-color: white;
 }
 
 .task-content .multiple-choice-task .answer .answer-item .remove-choice-btn {
   opacity: 0;
 }
 
-.task-content
-  .multiple-choice-task
-  .answer
-  .answer-item:hover
-  .remove-choice-btn {
+.task-content .multiple-choice-task .answer .answer-item:hover .remove-choice-btn {
   opacity: 1;
 }

@@ -142,7 +142,7 @@ function ConstructedTask(props: any) {
             maxRows={10}
             sx={{
               width: '100%',
-              fontSize: '20px',
+              fontSize: '24px',
               fontWeight: 'bold',
               marginTop: '20px',
             }}

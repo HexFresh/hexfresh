@@ -2,16 +2,8 @@ import React from 'react';
 import InputBase from '@mui/material/InputBase';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, message } from 'antd';
-import {
-  updateQuestion,
-  createQuestion,
-  getTask,
-  updatePointOfTask,
-} from '../../../../api/mentor/taskApi';
-import {
-  getAllOptionsWithAnswer,
-  addEmptyOption,
-} from '../../../../api/mentor/TrueFalseTaskApi';
+import { updateQuestion, createQuestion, getTask, updatePointOfTask } from '../../../../api/mentor/taskApi';
+import { getAllOptionsWithAnswer, addEmptyOption } from '../../../../api/mentor/TrueFalseTaskApi';
 import { CircularProgress } from '@mui/material';
 import './true-false-task.css';
 import TrueFalseChoice from './TrueFalseChoice';
@@ -99,7 +91,7 @@ function TrueFalseTask(props: any) {
             maxRows={10}
             sx={{
               width: '100%',
-              fontSize: '20px',
+              fontSize: '24px',
               fontWeight: 'bold',
               marginTop: '20px',
             }}
@@ -135,19 +127,10 @@ function TrueFalseTask(props: any) {
               );
             })}
           </div>
-          <div className="add-new-choice">
-            <Button
-              onClick={addNewOption}
-              style={{
-                width: '100%',
-                borderRadius: '5px',
-                marginBottom: '20px',
-              }}
-              disabled={options.length >= 5}
-            >
-              <PlusOutlined />
-            </Button>
-          </div>
+
+          <Button className="add-new-choice" onClick={addNewOption} disabled={options.length >= 5}>
+            Add an option
+          </Button>
         </div>
       )}
     </div>

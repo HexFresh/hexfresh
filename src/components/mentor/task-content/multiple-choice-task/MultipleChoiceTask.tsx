@@ -1,18 +1,8 @@
 import React from 'react';
 import InputBase from '@mui/material/InputBase';
-import {
-  CheckSquareOutlined,
-  BorderOutlined,
-  MinusCircleOutlined,
-  PlusOutlined,
-} from '@ant-design/icons';
+import { CheckSquareOutlined, BorderOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, message } from 'antd';
-import {
-  updateQuestion,
-  createQuestion,
-  getTask,
-  updatePointOfTask,
-} from '../../../../api/mentor/taskApi';
+import { updateQuestion, createQuestion, getTask, updatePointOfTask } from '../../../../api/mentor/taskApi';
 import {
   getChoicesWithAnswer,
   updateChoice,
@@ -76,11 +66,7 @@ function MultipleChoiceTask(props: any) {
     setChoices(newChoices);
   };
 
-  const handleUpdate = (
-    choiceId: number,
-    newContent: string,
-    isRight: boolean
-  ) => {
+  const handleUpdate = (choiceId: number, newContent: string, isRight: boolean) => {
     const newIsRight = isRight === null || isRight === false ? false : true;
 
     const handleUpdate = async () => {
@@ -148,7 +134,7 @@ function MultipleChoiceTask(props: any) {
             maxRows={10}
             sx={{
               width: '100%',
-              fontSize: '20px',
+              fontSize: '24px',
               fontWeight: 'bold',
               marginTop: '20px',
             }}
@@ -183,12 +169,8 @@ function MultipleChoiceTask(props: any) {
                       maxRows={10}
                       sx={{ width: '100%', fontSize: '18px' }}
                       value={choice.content || ''}
-                      onChange={(e) =>
-                        handleContentChange(choice.id, e.target.value)
-                      }
-                      onBlur={(e) =>
-                        handleUpdate(choice.id, e.target.value, choice.isRight)
-                      }
+                      onChange={(e) => handleContentChange(choice.id, e.target.value)}
+                      onBlur={(e) => handleUpdate(choice.id, e.target.value, choice.isRight)}
                       placeholder="Fill answer"
                     />
                   </div>
@@ -211,15 +193,9 @@ function MultipleChoiceTask(props: any) {
                 </div>
               );
             })}
-            <div className="add-new-choice">
-              <Button
-                onClick={addNewChoice}
-                style={{ width: '100%', borderRadius: '5px' }}
-                disabled={choices.length >= 5}
-              >
-                <PlusOutlined />
-              </Button>
-            </div>
+            <Button className="add-new-choice" onClick={addNewChoice} disabled={choices.length >= 5}>
+              Add a choice
+            </Button>
           </div>
         </div>
       )}

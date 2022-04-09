@@ -1,6 +1,5 @@
 import React from 'react';
 import InputBase from '@mui/material/InputBase';
-import { PlusOutlined } from '@ant-design/icons';
 import { Button, message } from 'antd';
 import { updateQuestion, createQuestion, getTask, updatePointOfTask } from '../../../../api/mentor/taskApi';
 import { CircularProgress } from '@mui/material';
@@ -98,7 +97,7 @@ function MatchSequence(props: any) {
             maxRows={10}
             sx={{
               width: '100%',
-              fontSize: '20px',
+              fontSize: '24px',
               fontWeight: 'bold',
               marginTop: '20px',
             }}
@@ -124,15 +123,9 @@ function MatchSequence(props: any) {
           </div>
           <div className="answer">
             <DragDrop taskId={task.id} fecthOptions={fecthOptions} updateOptions={updateOptions} options={options} />
-            <div className="add-new-choice">
-              <Button
-                onClick={addNewOption}
-                style={{ width: '100%', borderRadius: '5px' }}
-                disabled={options.length >= 5}
-              >
-                <PlusOutlined />
-              </Button>
-            </div>
+            <Button className="add-new-choice" onClick={addNewOption} disabled={options.length >= 5}>
+              Add an option
+            </Button>
           </div>
         </div>
       )}

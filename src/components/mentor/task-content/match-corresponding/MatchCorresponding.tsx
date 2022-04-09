@@ -1,6 +1,6 @@
 import React from 'react';
 import InputBase from '@mui/material/InputBase';
-import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { MinusCircleOutlined } from '@ant-design/icons';
 import { Button, message } from 'antd';
 import { CircularProgress } from '@mui/material';
 import './match-corresponding.css';
@@ -130,7 +130,7 @@ function MatchCorresponding(props: any) {
             maxRows={10}
             sx={{
               width: '100%',
-              fontSize: '20px',
+              fontSize: '24px',
               fontWeight: 'bold',
               marginTop: '20px',
             }}
@@ -196,15 +196,10 @@ function MatchCorresponding(props: any) {
                 );
               })}
             </div>
-            <div className="add-new-choice">
-              <Button
-                onClick={addNewOption}
-                style={{ width: '100%', borderRadius: '5px' }}
-                disabled={pairAnswers.length >= 5}
-              >
-                <PlusOutlined />
-              </Button>
-            </div>
+
+            <Button className="add-new-choice" onClick={addNewOption} disabled={pairAnswers.length >= 5}>
+              Add an option
+            </Button>
           </div>
         </div>
       )}
