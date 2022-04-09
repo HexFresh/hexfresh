@@ -114,3 +114,14 @@ export const assignProgramToFresher = async (userId: string, programId: number) 
     console.log(error);
   }
 };
+
+export const getImages = async () => {
+  const endpoint = `image`;
+  try {
+    const response = await axiosClient.get(endpoint);
+    const { data } = response;
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};

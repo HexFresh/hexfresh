@@ -9,7 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { deletePhase, updatePhase } from '../../api/mentor/mentorApi';
+import { deletePhase, updatePhase, getImages } from '../../api/mentor/mentorApi';
 
 const { Option } = Select;
 
@@ -20,6 +20,12 @@ interface Iphase {
   imageId: string;
 }
 
+interface IImage {
+  id: number;
+  description: string;
+  imageLink: string;
+}
+
 export default function PhaseItem(props: any) {
   const { phase, updatePhases } = props;
 
@@ -28,6 +34,9 @@ export default function PhaseItem(props: any) {
   const [updatedPhase, setUpdatedPhase] = useState<Iphase>(phase);
   const [disableTitle, setDisableTitle] = useState(true);
   const [disableImage, setDisableImage] = useState(true);
+  const [images, setImages] = useState<IImage[]>([]);
+
+  console.log({ images });
 
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -39,7 +48,13 @@ export default function PhaseItem(props: any) {
 
   const programId = useParams<{ programId: string }>().programId;
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const fetchImages = async () => {
+      const reusult = await getImages();
+      setImages(reusult);
+    };
+    fetchImages();
+  }, []);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -48,14 +63,12 @@ export default function PhaseItem(props: any) {
   const handleOk = () => {
     const data = { ...updatedPhase, imageId: Number(updatedPhase.imageId) };
     const handleUpdatePhase = async () => {
-      message
-        .loading({ content: 'Updating...', key: 'update' })
-        .then(async () => {
-          await updatePhase(Number(programId), Number(phase.id), data);
-          message.success({ content: 'Updated', key: 'update' });
-          updatePhases();
-          setIsModalVisible(false);
-        });
+      message.loading({ content: 'Updating...', key: 'update' }).then(async () => {
+        await updatePhase(Number(programId), Number(phase.id), data);
+        message.success({ content: 'Updated', key: 'update' });
+        updatePhases();
+        setIsModalVisible(false);
+      });
     };
     handleUpdatePhase();
   };
@@ -98,12 +111,7 @@ export default function PhaseItem(props: any) {
           <Button key="back" onClick={handleCancel}>
             Cancel
           </Button>,
-          <Button
-            key="submit"
-            type="primary"
-            onClick={handleOk}
-            disabled={disableTitle && disableImage}
-          >
+          <Button key="submit" type="primary" onClick={handleOk} disabled={disableTitle && disableImage}>
             Save
           </Button>,
         ]}
@@ -130,18 +138,28 @@ export default function PhaseItem(props: any) {
                 setUpdatedPhase({ ...updatedPhase, imageId: value });
               }}
             >
-              <Option value="1">Planet 1</Option>
-              <Option value="2">Planet 2</Option>
-              <Option value="3">Planet 3</Option>
-              <Option value="4">Planet 4</Option>
-              <Option value="5">Planet 5</Option>
-              <Option value="6">Planet 6</Option>
-              <Option value="7">Planet 7</Option>
-              <Option value="8">Planet 8</Option>
-              <Option value="9">Planet 9</Option>
-              <Option value="10">Planet 10</Option>
-              <Option value="11">Planet 11</Option>
-              <Option value="12">Planet 12</Option>
+              {images.map((image) => (
+                <Option
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                  key={image.id}
+                  value={image.id.toString()}
+                >
+                  <img
+                    style={{
+                      width: '20px',
+                      height: '20px',
+                      objectFit: 'cover',
+                      marginRight: '10px',
+                    }}
+                    src={image.imageLink}
+                    alt="img"
+                  />
+                  {image.description}
+                </Option>
+              ))}
             </Select>
           </div>
         </div>

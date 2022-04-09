@@ -15,7 +15,7 @@ import { CircularProgress } from '@mui/material';
 import './list-phase.css';
 import DragDrop from './DragDrop';
 import { Modal, Input, Button, Select, message } from 'antd';
-import { getPhasesOfProgram, createPhase } from '../../api/mentor/mentorApi';
+import { getPhasesOfProgram, createPhase, getImages } from '../../api/mentor/mentorApi';
 
 const { Option } = Select;
 
@@ -26,6 +26,12 @@ interface IPhase {
   index: number;
 }
 
+interface IImage {
+  id: number;
+  description: string;
+  imageLink: string;
+}
+
 export default function ListPhase() {
   const [loading, setLoading] = useState(false);
   const [phases, setphases] = useState<IPhase[] | []>([]);
@@ -33,6 +39,7 @@ export default function ListPhase() {
   const [name, setName] = useState<string>('');
   const [planet, setPlanet] = useState<string>('1');
   const [keyword, setKeyword] = useState('');
+  const [images, setImages] = useState<IImage[]>([]);
 
   const programId = useParams<{ programId: string }>().programId;
 
@@ -45,7 +52,11 @@ export default function ListPhase() {
 
   useEffect(() => {
     document.title = 'HexF - Phases';
-
+    const fetchImages = async () => {
+      const reusult = await getImages();
+      setImages(reusult);
+    };
+    fetchImages();
     fetchPhases();
   }, [keyword]);
 
@@ -205,7 +216,7 @@ export default function ListPhase() {
                   <CircularProgress className="circular-progress" />
                 ) : phases.length === 0 ? (
                   <div className="img-404">
-                    <img alt='img-404' style={{ height: '200px' }} src="/no-records.png" />
+                    <img alt="img-404" style={{ height: '200px' }} src="/no-records.png" />
                   </div>
                 ) : (
                   <DragDrop phases={phases} programId={programId} updatePhases={updatePhases} />
@@ -238,18 +249,28 @@ export default function ListPhase() {
           <div className="field">
             <label>Choose planet</label>
             <Select value={planet} style={{ width: '100%', marginTop: '10px' }} onChange={changePlanet}>
-              <Option value="1">Planet 1</Option>
-              <Option value="2">Planet 2</Option>
-              <Option value="3">Planet 3</Option>
-              <Option value="4">Planet 4</Option>
-              <Option value="5">Planet 5</Option>
-              <Option value="6">Planet 6</Option>
-              <Option value="7">Planet 7</Option>
-              <Option value="8">Planet 8</Option>
-              <Option value="9">Planet 9</Option>
-              <Option value="10">Planet 10</Option>
-              <Option value="11">Planet 11</Option>
-              <Option value="12">Planet 12</Option>
+              {images.map((image) => (
+                <Option
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                  key={image.id}
+                  value={image.id.toString()}
+                >
+                  <img
+                    style={{
+                      width: '20px',
+                      height: '20px',
+                      objectFit: 'cover',
+                      marginRight: '10px',
+                    }}
+                    src={image.imageLink}
+                    alt="img"
+                  />
+                  {image.description}
+                </Option>
+              ))}
             </Select>
           </div>
         </div>
