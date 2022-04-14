@@ -1,0 +1,187 @@
+.fresher-list-phase {
+  padding: 0;
+  margin: 0;
+  width: 100vw;
+  min-height: 100vh;
+  background-color: darkgrey;
+}
+
+.fresher-list-phase .link {
+  color: black;
+}
+
+.fresher-list-phase .link.apps {
+  color: white;
+}
+
+.fresher-list-phase .container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.fresher-list-phase .container .menu {
+  width: 70px;
+  height: 100vh;
+  background-color: #0f171f;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.fresher-list-phase .container .menu .logo {
+  margin-top: 10px;
+  padding: 5px;
+  background-color: white;
+  border-radius: 10px;
+  margin-bottom: 30px;
+}
+
+.fresher-list-phase .container .menu .menu-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 30px;
+  color: white;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.fresher-list-phase .container .menu .menu-item.active {
+  position: relative;
+  opacity: 1;
+}
+
+.fresher-list-phase .container .menu .menu-item.active:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 6px;
+  height: 100%;
+  background-color: #446cfc;
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
+}
+
+.fresher-list-phase .container .menu .menu-item:hover {
+  opacity: 1;
+}
+
+.fresher-list-phase .container .menu .bottom {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 10px;
+  grid-gap: 20px;
+}
+
+.fresher-list-phase .container .menu .bottom .folder,
+.fresher-list-phase .container .menu .bottom .settings {
+  color: white;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.fresher-list-phase .container .menu .bottom .folder:hover,
+.fresher-list-phase .container .menu .bottom .settings:hover {
+  opacity: 1;
+}
+
+.fresher-list-phase .container .page-content {
+  width: calc(100vw - 70px);
+  height: 100vh;
+  background-color: #f6f7f8;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+  grid-gap: 1px;
+}
+
+.fresher-list-phase .container .page-content .topbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+  background-color: white;
+}
+
+.fresher-list-phase .container .page-content .topbar p {
+  font-size: 20px;
+  color: #364d79;
+  font-weight: bold;
+  margin: 0;
+  margin-left: 10px;
+}
+
+.fresher-list-phase .container .page-content .name-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  font-size: 24px;
+  font-weight: bold;
+  height: 80px;
+}
+
+.fresher-list-phase .container .page-content .name-page .container {
+  padding: 0 130px;
+  display: flex;
+  align-items: center;
+}
+
+.fresher-list-phase .container .page-content .filter-search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: white;
+  height: 60px;
+}
+
+.fresher-list-phase .container .page-content .filter-search .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 130px;
+}
+
+.fresher-list-phase .container .page-content .filter-search .container .search {
+  display: flex;
+  align-items: center;
+  grid-gap: 5px;
+  border-radius: 4px;
+  border: 1px solid #dcdfe3;
+  padding: 0 10px;
+  width: 350px;
+}
+
+.fresher-list-phase .container .page-content .phases {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 130px;
+  overflow-y: hidden;
+}
+
+.fresher-list-phase .container .page-content .phases .container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.fresher-phases-list {
+  width: 100%;
+  height: 100%;
+  background-color: yellow;
+  overflow-y: scroll;
+}

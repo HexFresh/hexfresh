@@ -125,3 +125,17 @@ export const getImages = async () => {
     console.log(error);
   }
 };
+
+export const getAllFresher = async (query: any) => {
+  const endpoint = `user/fresher`;
+  const { keyword, limit, offset } = query;
+  try {
+    const response = await axiosClient.get(endpoint, {
+      params: { keyword, limit, offset },
+    });
+    const { data } = response;
+    return data;
+  } catch (error) {
+    return error;
+  }
+};

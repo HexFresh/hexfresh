@@ -9,7 +9,7 @@ interface IFresher {
 
 export const listFresher: IFresher[] = [
   {
-    id: '1',
+    id: '796c9360-bad2-11ec-b19c-636d71006ac3',
     username: 'Nguyễn Văn A',
     program: 'Công nghệ thông tin',
     percent: 80,
@@ -17,7 +17,7 @@ export const listFresher: IFresher[] = [
     status: 'completed',
   },
   {
-    id: '2',
+    id: '809b90a0-bad2-11ec-b19c-636d71006ac3',
     username: 'Nguyễn Văn B',
     program: 'Công nghệ thông tin',
     percent: 70,

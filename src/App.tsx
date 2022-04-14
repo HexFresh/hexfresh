@@ -4,13 +4,7 @@ import Carousel from './components/layouts/carousel/Carousel';
 import MeteorShower from './components/layouts/meteo-shower/MeteorShower';
 import HeaderInternal from './components/layouts/Header/HeaderInternal';
 import ProgressCard from './components/layouts/goalcard/ProgressCard';
-import {
-  Navigate,
-  Route,
-  Routes,
-  useLocation,
-  useNavigate,
-} from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import SignIn from './components/auth/SignIn';
 import ListProgram from './pages/list-program/ListProgram';
 import ListFresher from './pages/list-fresher/ListFresher';
@@ -23,6 +17,7 @@ import { useEffect } from 'react';
 import { IUserStore } from './store/user/user-store';
 import { getCurrentToken, onMessageListener } from './utils/firebaseInit';
 import { initSocket } from './utils/socketioInit';
+import FresherListPhase from './pages/fresher-list-phase/FresherListPhase';
 //import io from "socket.io-client";
 
 const Home = () => {
@@ -46,11 +41,7 @@ function App() {
   const dispatch = useDispatch<IRootDispatch>();
   const auth: IUserStore = useSelector<IRootStore>((state) => state.user);
 
-
-  if (!auth.token && (
-    location.pathname !== '/signin'
-    && location.pathname !== '/planets'
-    && location.pathname !== '/')) {
+  if (!auth.token && location.pathname !== '/signin' && location.pathname !== '/planets' && location.pathname !== '/') {
     console.log(location.pathname + location.search, 'inititate...');
     dispatch.location.startAt(location.pathname + location.search);
   }
@@ -60,18 +51,19 @@ function App() {
     const accessToken = rootStore.getState().user.token;
     if (accessToken) {
       const socket = initSocket(accessToken);
-      socket.emit('signin', "Auto sign in");
-    }
-    else {
-      console.log("no access token")
+      socket.emit('signin', 'Auto sign in');
+    } else {
+      console.log('no access token');
     }
 
     // push notification
-    console.log("Noctification Token: ", getCurrentToken());
-    onMessageListener().then((payload) => {
-      console.log("Notification: ")
-      console.log(payload);
-    }).catch((err) => console.log("Notification fail: ", err))
+    console.log('Noctification Token: ', getCurrentToken());
+    onMessageListener()
+      .then((payload) => {
+        console.log('Notification: ');
+        console.log(payload);
+      })
+      .catch((err) => console.log('Notification fail: ', err));
   }, []);
 
   const routeWithoutSignIn = (
@@ -88,21 +80,16 @@ function App() {
       <Route path="planets/:planetId" element={<PlanetView />} />
       <Route path="/mentor/programs" element={<ListProgram />} />
       <Route path="/mentor/freshers" element={<ListFresher />} />
-      <Route
-        path="/mentor/programs/:programId/phases"
-        element={<ListPhase />}
-      />
-      <Route
-        path="/mentor/programs/:programId/phases/:phaseId"
-        element={<PhaseDetail />}
-      />
+      <Route path="/mentor/freshers/:fresherId" element={<FresherListPhase />} />
+
+      <Route path="/mentor/programs/:programId/phases" element={<ListPhase />} />
+      <Route path="/mentor/programs/:programId/phases/:phaseId" element={<PhaseDetail />} />
 
       {/* <Route path="*" element={<Navigate to="/" />} /> */}
     </Routes>
   );
 
-  const routeContent =
-    auth.token !== null ? routerWithSignIn : routeWithoutSignIn;
+  const routeContent = auth.token !== null ? routerWithSignIn : routeWithoutSignIn;
 
   return <>{routeContent}</>;
 }

@@ -108,11 +108,11 @@ export default function ListPhase() {
           await createPhase(Number(programId), newPhase);
           fetchPhases();
           message.success({ content: 'Created', key: 'success' });
+          setIsModalVisible(false);
+          setName('');
         });
       };
       handleCreatePhase();
-      setIsModalVisible(false);
-      setName('');
     }
   };
 
@@ -268,7 +268,7 @@ export default function ListPhase() {
                     src={image.imageLink}
                     alt="img"
                   />
-                  {image.description}
+                  {image.description || 'No description'}
                 </Option>
               ))}
             </Select>

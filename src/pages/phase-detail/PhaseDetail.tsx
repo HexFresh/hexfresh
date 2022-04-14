@@ -118,7 +118,6 @@ function PhaseDetail() {
 
   const handleTaskOk = () => {
     if (taskTitle.length > 0) {
-      setIsTaskModalVisible(false);
       const newTask = {
         typeId: Number(taskType),
         title: taskTitle,
@@ -130,11 +129,12 @@ function PhaseDetail() {
           await createTask(Number(checklistId), newTask);
           fetchChecklists();
           message.success({ content: 'Created', key: 'success' });
+          setIsTaskModalVisible(false);
+          setTaskTitle('');
+          setTaskType('1');
         });
       };
       handleCreateTask();
-      setTaskTitle('');
-      setTaskType('1');
     }
   };
 
@@ -235,11 +235,11 @@ function PhaseDetail() {
         <div className="form">
           <div className="field">
             <label>Title</label>
-            <Input value={taskTitle} onChange={changeTaskTitle} />
+            <Input style={{ width: '100%', marginTop: '10px' }} value={taskTitle} onChange={changeTaskTitle} />
           </div>
           <div className="field">
             <label>Choose type of task</label>
-            <Select value={taskType} style={{ width: '100%' }} onChange={changeTaskType}>
+            <Select value={taskType} style={{ width: '100%', marginTop: '10px' }} onChange={changeTaskType}>
               <Option value="1">Single-Choice</Option>
               <Option value="2">Multiple-Choice</Option>
               <Option value="3">Constructed-Response</Option>

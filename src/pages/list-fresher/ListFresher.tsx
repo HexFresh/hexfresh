@@ -4,21 +4,25 @@ import { Apps, School, Settings, Folder, Search } from '@mui/icons-material';
 import { InputBase, Avatar, CircularProgress } from '@mui/material';
 import { Pagination, Table, Button, Tooltip, Modal, Select, message } from 'antd';
 import { AuditOutlined } from '@ant-design/icons';
-import { getFreshers } from './data';
-import { getPrograms, assignProgramToFresher } from '../../api/mentor/mentorApi';
+import { getPrograms, assignProgramToFresher, getAllFresher } from '../../api/mentor/mentorApi';
 import './list-fresher.css';
 
 interface IFresher {
   id: string;
   username: string;
-  program: string;
-  percent: number;
-  date: string;
+  email: string;
+  currentProgram: ICurrentProgram;
+}
+
+interface ICurrentProgram {
+  id: number;
+  completedPercentage: number;
   status: string;
+  program: IProgram;
 }
 
 interface IProgram {
-  id: string;
+  id: number;
   title: string;
 }
 
@@ -49,27 +53,46 @@ export default function ListProgram() {
       ),
     },
     {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
       title: 'Program',
-      dataIndex: 'program',
       key: 'program',
+      render: (fresher: IFresher) => {
+        if (fresher.currentProgram) {
+          return <div>{fresher.currentProgram.program.title}</div>;
+        }
+        return (
+          <div
+            style={{
+              color: 'red',
+            }}
+          >
+            No program
+          </div>
+        );
+      },
     },
     {
       title: 'Completion percentage (%)',
-      dataIndex: 'percent',
       key: 'percent',
-    },
-    {
-      title: 'Program start time',
-      dataIndex: 'date',
-      key: 'date',
+      render: (fresher: IFresher) => (
+        <div>
+          {fresher?.currentProgram === null
+            ? ''
+            : fresher?.currentProgram?.completedPercentage === 0
+            ? 0
+            : fresher?.currentProgram?.completedPercentage}
+        </div>
+      ),
     },
     {
       title: () => <div className="flex--center">Action</div>,
-      dataIndex: 'status',
       key: 'status',
-      render: (status: string, fresher: IFresher) => (
+      render: (fresher: IFresher) => (
         <div
-          key={fresher.id}
           className="action"
           style={{
             display: 'flex',
@@ -81,10 +104,10 @@ export default function ListProgram() {
           <Tooltip title="Assign program">
             <Button
               onClick={() => showModal(fresher.id)}
-              disabled={status !== 'completed'}
+              disabled={fresher?.currentProgram?.status !== 'completed' && fresher?.currentProgram !== null}
               shape="circle"
               icon={<AuditOutlined />}
-            />
+            ></Button>
           </Tooltip>
         </div>
       ),
@@ -97,9 +120,10 @@ export default function ListProgram() {
 
   const fetchFreshers = async (keyword: string, limit: number, offset: number) => {
     setLoading(true);
-    const freshers = await getFreshers(keyword, limit, offset);
-    setFreshers(freshers.data);
-    setCount(freshers.count);
+    const result = await getAllFresher({ keyword, limit, offset });
+    console.log(result);
+    setFreshers(result.rows);
+    setCount(result.count);
     setLoading(false);
   };
 

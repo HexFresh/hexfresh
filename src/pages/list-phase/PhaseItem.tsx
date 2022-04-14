@@ -36,8 +36,6 @@ export default function PhaseItem(props: any) {
   const [disableImage, setDisableImage] = useState(true);
   const [images, setImages] = useState<IImage[]>([]);
 
-  console.log({ images });
-
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -157,7 +155,7 @@ export default function PhaseItem(props: any) {
                     src={image.imageLink}
                     alt="img"
                   />
-                  {image.description}
+                  {image.description || 'No description'}
                 </Option>
               ))}
             </Select>
