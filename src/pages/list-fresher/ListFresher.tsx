@@ -131,7 +131,8 @@ export default function ListProgram() {
           </Tooltip>
           <Tooltip title="Remove Program">
             <Popconfirm
-              placement="topLeft"
+              disabled={fresher?.currentProgram === null}
+              placement="bottomLeft"
               title="Are you sure to remove this program from fresher?"
               okText="Yes"
               onConfirm={() => handleRemoveProgram(fresher.id, fresher.currentProgram?.program.id)}
