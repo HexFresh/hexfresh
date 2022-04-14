@@ -182,6 +182,28 @@
 .fresher-phases-list {
   width: 100%;
   height: 100%;
-  background-color: yellow;
   overflow-y: scroll;
+}
+
+.fresher-phase {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 19px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+}
+
+.fresher-phase .left {
+  display: flex;
+  align-items: center;
+  grid-gap: 20px;
+}
+
+.fresher-phase-name {
+  font-weight: bold;
+  font-size: 18px;
 }

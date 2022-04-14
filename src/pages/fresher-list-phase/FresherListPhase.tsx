@@ -5,12 +5,14 @@ import { Apps, School, Settings, Folder, Search } from '@mui/icons-material';
 import { Avatar, Tooltip, Fade, InputBase, CircularProgress } from '@mui/material';
 import './fresher-list-phase.css';
 import { getAllPhaseOfFresher } from '../../api/mentor/review/api';
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 interface IFresherPhase {
   id: number;
-  completedPercent: number;
+  completedPercentage: number;
   isCompleted: boolean;
-  numberOfCompletedChecklist: number;
+  numberOfCompletedChecklists: number;
   phase: IPhase;
   phaseId: number;
   programId: number;
@@ -143,17 +145,24 @@ export default function FresherListPhase() {
                 <div className="fresher-phases-list">
                   {phases.map((phase, index) => (
                     <div className="fresher-phase" key={index}>
-                      <img
-                        src={phase.phase.image.imageLink}
-                        alt="img"
-                        style={{
-                          width: '50px',
-                          height: '50px',
-                          objectFit: 'cover',
-                        }}
-                      />
-                      <div className="fresher-phase-name">{phase.phase.title}</div>
-                      <div className="fresher-phase-date"></div>
+                      <div className="left">
+                        <img
+                          src={phase.phase.image.imageLink}
+                          alt="img"
+                          style={{
+                            width: '50px',
+                            height: '50px',
+                          }}
+                        />
+                        <div className="fresher-phase-name">{phase.phase.title}</div>
+                      </div>
+                      <div className="right" style={{ width: 50, height: 50 }}>
+                        <CircularProgressbar
+                          value={phase.completedPercentage}
+                          maxValue={1}
+                          text={`${phase.completedPercentage * 100}%`}
+                        />
+                      </div>
                     </div>
                   ))}
                 </div>

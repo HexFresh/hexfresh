@@ -115,6 +115,18 @@ export const assignProgramToFresher = async (userId: string, programId: number) 
   }
 };
 
+export const deleteProgramFromFresher = async (userId: string, programId: number) => {
+  const endpoint = `program-permission`;
+  try {
+    const response = await axiosClient.delete(endpoint, { data: { userId, programId } });
+    const { data } = response;
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getImages = async () => {
   const endpoint = `image`;
   try {

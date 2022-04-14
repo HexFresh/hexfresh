@@ -2,9 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Apps, School, Settings, Folder, Search } from '@mui/icons-material';
 import { InputBase, Avatar, CircularProgress } from '@mui/material';
-import { Pagination, Table, Button, Tooltip, Modal, Select, message } from 'antd';
-import { AuditOutlined } from '@ant-design/icons';
-import { getPrograms, assignProgramToFresher, getAllFresher } from '../../api/mentor/mentorApi';
+import { Pagination, Table, Button, Tooltip, Modal, Select, message, Popconfirm } from 'antd';
+import { AuditOutlined, FileExcelOutlined } from '@ant-design/icons';
+import {
+  getPrograms,
+  assignProgramToFresher,
+  getAllFresher,
+  deleteProgramFromFresher,
+} from '../../api/mentor/mentorApi';
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 import './list-fresher.css';
 
 interface IFresher {
@@ -26,7 +33,7 @@ interface IProgram {
   title: string;
 }
 
-const nPerPage = 6;
+const nPerPage = 5;
 
 const { Option } = Select;
 
@@ -76,17 +83,29 @@ export default function ListProgram() {
       },
     },
     {
-      title: 'Completion percentage (%)',
+      title: () => <div className="flex--center">Status</div>,
       key: 'percent',
-      render: (fresher: IFresher) => (
-        <div>
-          {fresher?.currentProgram === null
-            ? ''
-            : fresher?.currentProgram?.completedPercentage === 0
-            ? 0
-            : fresher?.currentProgram?.completedPercentage}
-        </div>
-      ),
+      render: (fresher: IFresher) =>
+        fresher.currentProgram ? (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              width: '100%',
+              justifyContent: 'center',
+            }}
+          >
+            <div style={{ width: 50, height: 50 }}>
+              <CircularProgressbar
+                value={fresher?.currentProgram?.completedPercentage}
+                maxValue={1}
+                text={`${fresher?.currentProgram?.completedPercentage * 100}%`}
+              />
+            </div>
+          </div>
+        ) : (
+          <></>
+        ),
     },
     {
       title: () => <div className="flex--center">Action</div>,
@@ -99,6 +118,7 @@ export default function ListProgram() {
             alignItems: 'center',
             width: '100%',
             justifyContent: 'center',
+            gridGap: '10px',
           }}
         >
           <Tooltip title="Assign program">
@@ -109,10 +129,38 @@ export default function ListProgram() {
               icon={<AuditOutlined />}
             ></Button>
           </Tooltip>
+          <Tooltip title="Remove Program">
+            <Popconfirm
+              placement="topLeft"
+              title="Are you sure to remove this program from fresher?"
+              okText="Yes"
+              onConfirm={() => handleRemoveProgram(fresher.id, fresher.currentProgram?.program.id)}
+              cancelText="No"
+            >
+              <Button disabled={fresher?.currentProgram === null} shape="circle" icon={<FileExcelOutlined />}></Button>
+            </Popconfirm>
+          </Tooltip>
         </div>
       ),
     },
   ];
+
+  const handleRemoveProgram = (fresherId: string, programId: number) => {
+    console.log({ fresherId, programId });
+    const removeProgram = async () => {
+      try {
+        message.loading({ content: 'Removing...', key: 'removeProgram' }).then(async () => {
+          await deleteProgramFromFresher(fresherId, programId);
+          message.success('Program removed successfully');
+          fetchFreshers(keyword, nPerPage, (page - 1) * nPerPage);
+        });
+      } catch (error) {
+        message.error('Error');
+      }
+    };
+
+    removeProgram();
+  };
 
   const handleChangePage = (page: number) => {
     setPage(page);
