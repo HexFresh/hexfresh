@@ -33,7 +33,7 @@ interface IProgram {
   title: string;
 }
 
-const nPerPage = 5;
+const nPerPage = 4;
 
 const { Option } = Select;
 

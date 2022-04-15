@@ -1,7 +1,7 @@
 import axiosClient from '../../axiosClient';
 
 export const getAllPhaseOfFresher = async (fresherId: string | undefined) => {
-  const endpoint = `user/${fresherId}/program/1/phase`;
+  const endpoint = `user/${fresherId}/current-program/phase`;
   try {
     const response = await axiosClient.get(endpoint);
     const { data } = response;

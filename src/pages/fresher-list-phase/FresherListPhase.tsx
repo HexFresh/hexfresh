@@ -40,7 +40,7 @@ export default function FresherListPhase() {
   const fetchPhases = async () => {
     setLoading(true);
     const result = await getAllPhaseOfFresher(fresherId);
-    setphases(result);
+    setphases(result || []);
     setLoading(false);
   };
 
