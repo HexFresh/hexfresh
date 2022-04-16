@@ -54,7 +54,7 @@ export default function ListPhase() {
     document.title = 'HexF - Phases';
     const fetchImages = async () => {
       const reusult = await getImages();
-      setImages(reusult);
+      setImages(reusult || []);
     };
     fetchImages();
     fetchPhases();

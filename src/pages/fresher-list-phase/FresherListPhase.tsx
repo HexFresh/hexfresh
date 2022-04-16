@@ -144,7 +144,11 @@ export default function FresherListPhase() {
               ) : (
                 <div className="fresher-phases-list">
                   {phases.map((phase, index) => (
-                    <div className="fresher-phase" key={index}>
+                    <Link
+                      to={`/mentor/freshers/${fresherId}/phase/${phase.phaseId}`}
+                      className="fresher-phase"
+                      key={index}
+                    >
                       <div className="left">
                         <img
                           src={phase.phase.image.imageLink}
@@ -160,10 +164,10 @@ export default function FresherListPhase() {
                         <CircularProgressbar
                           value={phase.completedPercentage}
                           maxValue={1}
-                          text={`${phase.completedPercentage * 100}%`}
+                          text={`${Math.round(phase.completedPercentage * 100)}%`}
                         />
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               )}

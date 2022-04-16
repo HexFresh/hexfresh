@@ -11,3 +11,15 @@ export const getAllPhaseOfFresher = async (fresherId: string | undefined) => {
     return null;
   }
 };
+
+export const getAllFresherChecklist = async (fresherId: string | undefined, phaseId: string | undefined) => {
+  const endpoint = `user/${fresherId}/phase/${phaseId}/checklist`;
+  try {
+    const response = await axiosClient.get(endpoint);
+    const { data } = response;
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};

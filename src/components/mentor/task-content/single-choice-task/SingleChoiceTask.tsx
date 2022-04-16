@@ -1,8 +1,8 @@
 import React from 'react';
 import InputBase from '@mui/material/InputBase';
-import { CheckCircleOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, message } from 'antd';
-import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
+import { CheckCircleOutlined, CircleOutlined } from '@mui/icons-material';
 import { updateQuestion, createQuestion, getTask, updatePointOfTask } from '../../../../api/mentor/taskApi';
 import {
   getChoicesWithAnswer,
@@ -190,9 +190,9 @@ function SingleChoiceTask(props: any) {
                     onClick={() => handleRemoveChoice(choice.id)}
                   />
                   {choice.isRight === true ? (
-                    <CheckCircleOutlined style={{ fontSize: '25px', color: 'green' }} />
+                    <CheckCircleOutlined style={{ fontSize: '30px', color: 'green' }} />
                   ) : (
-                    <CircleOutlinedIcon
+                    <CircleOutlined
                       style={{
                         fontSize: '30px',
                         color: 'gray',

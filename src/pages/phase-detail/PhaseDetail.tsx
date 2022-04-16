@@ -169,7 +169,23 @@ function PhaseDetail() {
             <Menu mode="inline" style={{ height: '100%', borderRight: 0 }}>
               {checklists.map((checklist) => {
                 return (
-                  <SubMenu key={checklist.id} title={<span>{checklist.title}</span>}>
+                  <SubMenu
+                    style={{
+                      borderBottom: '1px solid #e8e8e8',
+                    }}
+                    key={checklist.id}
+                    title={
+                      <div
+                        style={{
+                          fontSize: '18px',
+                          fontWeight: 'bold',
+                          textTransform: 'uppercase',
+                        }}
+                      >
+                        {checklist.title}
+                      </div>
+                    }
+                  >
                     {sortByField(checklist?.tasks, 'index').map((task: any) => {
                       return (
                         <Menu.Item key={task.id} onClick={() => renderTask(task)}>

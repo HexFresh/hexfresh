@@ -49,7 +49,7 @@ export default function PhaseItem(props: any) {
   useEffect(() => {
     const fetchImages = async () => {
       const reusult = await getImages();
-      setImages(reusult);
+      setImages(reusult || []);
     };
     fetchImages();
   }, []);

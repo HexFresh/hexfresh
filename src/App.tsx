@@ -18,6 +18,7 @@ import { IUserStore } from './store/user/user-store';
 import { getCurrentToken, onMessageListener } from './utils/firebaseInit';
 import { initSocket } from './utils/socketioInit';
 import FresherListPhase from './pages/fresher-list-phase/FresherListPhase';
+import ReviewTask from './pages/review-task/ReviewTask';
 //import io from "socket.io-client";
 
 const Home = () => {
@@ -78,12 +79,14 @@ function App() {
       <Route path="/" element={<Navigate to="/planets" />} />
       <Route path="planets" element={<Home />} />
       <Route path="planets/:planetId" element={<PlanetView />} />
-      <Route path="/mentor/programs" element={<ListProgram />} />
-      <Route path="/mentor/freshers" element={<ListFresher />} />
-      <Route path="/mentor/freshers/:fresherId" element={<FresherListPhase />} />
 
+      <Route path="/mentor/programs" element={<ListProgram />} />
       <Route path="/mentor/programs/:programId/phases" element={<ListPhase />} />
       <Route path="/mentor/programs/:programId/phases/:phaseId" element={<PhaseDetail />} />
+
+      <Route path="/mentor/freshers" element={<ListFresher />} />
+      <Route path="/mentor/freshers/:fresherId" element={<FresherListPhase />} />
+      <Route path="/mentor/freshers/:fresherId/phase/:phaseId" element={<ReviewTask />} />
 
       {/* <Route path="*" element={<Navigate to="/" />} /> */}
     </Routes>

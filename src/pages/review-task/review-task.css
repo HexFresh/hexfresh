@@ -1,0 +1,80 @@
+.review-task {
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.review-task .topbar {
+  width: 100%;
+  background-color: #111;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 50px;
+  padding: 0 10px;
+}
+
+.review-task .topbar .mid {
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.review-task .content {
+  width: 100vw;
+  flex: 1;
+  background-color: #dcdfe3;
+  overflow: hidden;
+  display: flex;
+}
+
+.review-task .content .left {
+  width: 320px;
+  height: calc(100vh - 50px);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+}
+
+.review-task .content .left .left__container {
+  background-color: aquamarine;
+  width: 100%;
+  height: calc(100vh - 50px);
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.review-task .content .left .left__container .task {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.review-task .content .left .left__container .task-status {
+  display: flex;
+  align-items: center;
+}
+
+.review-task .content .right {
+  flex: 1;
+  width: 100%;
+  height: calc(100vh - 50px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.review-task .content .no-task {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 30px;
+  font-weight: bold;
+}

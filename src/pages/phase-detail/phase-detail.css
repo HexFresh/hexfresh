@@ -27,7 +27,7 @@
 }
 
 .phase-detail .phase-container .sider {
-  flex: 3;
+  width: 320px;
   background-color: #fff;
   height: calc(100% - 50px);
   padding: 0;
@@ -40,7 +40,7 @@
 }
 
 .phase-detail .phase-container .page-content {
-  flex: 10;
+  flex: 1;
   height: calc(100% - 50px);
   padding: 0;
 }

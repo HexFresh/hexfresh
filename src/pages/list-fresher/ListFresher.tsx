@@ -99,7 +99,7 @@ export default function ListProgram() {
               <CircularProgressbar
                 value={fresher?.currentProgram?.completedPercentage}
                 maxValue={1}
-                text={`${fresher?.currentProgram?.completedPercentage * 100}%`}
+                text={`${Math.round(fresher?.currentProgram?.completedPercentage * 100)}%`}
               />
             </div>
           </div>
@@ -124,7 +124,7 @@ export default function ListProgram() {
           <Tooltip title="Assign program">
             <Button
               onClick={() => showModal(fresher.id)}
-              disabled={fresher?.currentProgram?.status !== 'completed' && fresher?.currentProgram !== null}
+              disabled={fresher?.currentProgram?.completedPercentage !== 1 && fresher?.currentProgram !== null}
               shape="circle"
               icon={<AuditOutlined />}
             ></Button>
