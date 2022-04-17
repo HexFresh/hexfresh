@@ -95,7 +95,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
 
   componentDidUpdate(prevProps: ITaskItemProps, prevState: ITaskItemState) {
 
-    if (!_.isEqual(prevProps, this.props)) {
+    if (!_.isEqual(prevProps.task, this.props.task)) {
       const { task } = this.props;
 
       let isTakenTemp = this.state.isTaken;
