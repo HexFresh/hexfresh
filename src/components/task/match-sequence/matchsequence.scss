@@ -1,0 +1,8 @@
+.matching_sequence{
+    &--item{
+        padding: 12px;
+        &:hover{
+            border: 1px solid #75e18c;
+        }
+    }
+}

@@ -3,6 +3,8 @@ export enum TaskCategory{
   MULTIPLE_CHOICES,
   WRITTING,
   BINARY,
+  MATCH_SEQUENCE,
+  MATCH_CORESPONSE,
   ASSIGNMENT,
 }
 

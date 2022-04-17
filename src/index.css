@@ -63,6 +63,10 @@ code {
   color: inherit;
 }
 
+.mb-medium{
+  margin-bottom: 12px !important;
+}
+
 .mt-medium {
   margin-top: 12px !important;
 }
@@ -73,6 +77,14 @@ code {
 
 .ml-small {
   margin-left: 4px;
+}
+
+.mt-large{
+  margin-top: 14px !important;
+}
+
+.mt-large-x2{
+  margin-top: 1rem !important;
 }
 
 .txt-color-black {

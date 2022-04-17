@@ -34,17 +34,18 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
     const { doFetchDetailsPhase } = this.props;
     const id = _.replace(window.location.pathname, '/planets/', '');
     //do fetch phase with programId
-   try {
+    try {
       doFetchDetailsPhase({ programId: 1, phaseId: id });
     } catch (error) {
       notification.error({ message: 'Failed to fetch this phase.' });
-    }  };
+    }
+  };
 
   componentDidUpdate(preProps: PlanViewProps, preState: IPlanetViewStates) {
 
   }
 
- private _onFetchTasks({ checklistId }: { checklistId: number }) {
+  private _onFetchTasks({ checklistId }: { checklistId: number }) {
 
     try {
       this.props.doFetchTasks({ checklistId });
@@ -56,6 +57,7 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
   }
 
   private _onFetchFetchQuestionAnswer(task: ITask) {
+    console.log(task, 'task want to fetch answer');
     switch (task.typeId) {
       case TaskCategory.SINGLE_CHOICE:
       case TaskCategory.MULTIPLE_CHOICES:
@@ -67,6 +69,12 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
       case TaskCategory.BINARY:
         this.props.doFetchBinaryQuestionAnswer({ taskId: task.id });
         break;
+      case TaskCategory.MATCH_SEQUENCE:
+        this.props.doFetchMatchingSequenceQuestionAnswer({ taskId: task.id });
+        break;
+        case TaskCategory.MATCH_CORESPONSE:
+          this.props.doFetchMatchingCorrespondingQuestionAnswer({ taskId: task.id });
+          break;
       default:
         break;
     }
@@ -75,26 +83,34 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
   private _onChangeSelectedTask(task: ITask) {
 
     if (task) {
-      this._onFetchFetchQuestionAnswer(task);
 
       this.props.setSeletedTask(task);
+      this._onFetchFetchQuestionAnswer(task);
     }
   }
 
   render() {
     const {
       selectedPhase,
+
       doSubmitBinaryQuestion,
       doSubmitContructedQuestion,
       doSubmitSelectedQuestionAnswer,
+      doSubmitMatchingSequenceQuestion,
+      doSubmitMatchingCorrespondingQuestion,
+
       doUpdateSubmitBinaryQuestion,
       doUpdateSubmitContructedQuestion,
       doUpdateSubmitSelectedQuestionAnswer,
+      doUpdateMatchingSequenceQuestion,
+      doUpdateMatchingCorrespondingQuestion,
+
       isFetchingTask,
       isFetchingChecklist,
       isFetchingPhase,
       isFetchingProgram,
-      isFetchingAnswer
+      isFetchingAnswer,
+      isSubmitingAnswer,
     } = this.props;
     const { defaultOpenKeys, defaultSelectedKeys } = this.state;
 
@@ -121,7 +137,7 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
                 title={checklist.title}
                 onTitleClick={this._onFetchTasks.bind(this, { checklistId: checklist.id })}
               >
-                {isFetchingChecklist?<Skeleton active={true} /> :_.map(checklist.tasks, (task) => (
+                {isFetchingChecklist ? <Skeleton active={true} /> : _.map(checklist.tasks, (task) => (
                   <Menu.Item
                     key={task.id}
                     onClick={this._onChangeSelectedTask.bind(this, task)}
@@ -134,20 +150,26 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
           </Menu>
         </Sider>
         <Content style={{ padding: '0 24px', minHeight: 280 }}>
-          <Card style={{height: '100%'}}>
+          <Card style={{ height: '100%' }} className='task--item'>
             <TaskItem
               task={this.props.selectedTask}
+              
               doSubmitBinaryQuestion={doSubmitBinaryQuestion}
               doSubmitContructedQuestion={doSubmitContructedQuestion}
               doSubmitSelectedQuestionAnswer={doSubmitSelectedQuestionAnswer}
+              doSubmitMatchingSequenceQuestion={doSubmitMatchingSequenceQuestion}
+              doSubmitMatchingCorrespondingQuestion={doSubmitMatchingCorrespondingQuestion}
 
               doUpdateSubmitBinaryQuestion={doUpdateSubmitBinaryQuestion}
               doUpdateSubmitContructedQuestion={doUpdateSubmitContructedQuestion}
               doUpdateSubmitSelectedQuestionAnswer={doUpdateSubmitSelectedQuestionAnswer}
+              doUpdateMatchingSequenceQuestion={doUpdateMatchingSequenceQuestion}
+              doUpdateMatchingCorrespondingQuestion={doUpdateMatchingCorrespondingQuestion}
 
-              onFetchQuestionAnswer={this._onFetchFetchQuestionAnswer}
+              onFetchQuestionAnswer={this._onFetchFetchQuestionAnswer.bind(this)}
               isLoading={isFetchingTask}
-              isFetchingAnswer = { isFetchingAnswer}
+              isFetchingAnswer={isFetchingAnswer}
+              isSubmitingAnswer={isSubmitingAnswer}
             />
           </Card>
         </Content>
@@ -178,6 +200,7 @@ const mapStateToProps = (state: IRootStore) => ({
   isFetchingPhase: state.programStore.isFetchingPhase,
   isFetchingChecklist: state.programStore.isFetchingChecklist,
   isFetchingAnswer: state.programStore.isFetchingAnswer,
+  isSubmitingAnswer: state.programStore.isSubmitingAnswer,
 });
 
 const mapDispatchToProps = (dispatch: IRootDispatch) => ({
@@ -189,13 +212,21 @@ const mapDispatchToProps = (dispatch: IRootDispatch) => ({
   doFetchSelectedQuestionAnswer: dispatch.programStore.doFetchSelectedQuestionAnswer,
   doFetchContructedQuestionAnswer: dispatch.programStore.doFetchContructedQuestionAnswer,
   doFetchBinaryQuestionAnswer: dispatch.programStore.doFetchBinaryQuestionAnswer,
+  doFetchMatchingSequenceQuestionAnswer: dispatch.programStore.doFetchMatchingSequenceQuestionAnswer,
+  doFetchMatchingCorrespondingQuestionAnswer: dispatch.programStore.doFetchMatchingCorrespondingQuestionAnswer,
 
   doSubmitSelectedQuestionAnswer: dispatch.programStore.doSubmitSelectedQuestionAnswer,
   doSubmitContructedQuestion: dispatch.programStore.doSubmitContructedQuestion,
   doSubmitBinaryQuestion: dispatch.programStore.doSubmitBinaryQuestion,
+  doSubmitMatchingSequenceQuestion: dispatch.programStore.doSubmitMatchingSequenceQuestion,
+  doSubmitMatchingCorrespondingQuestion: dispatch.programStore.doSubmitMatchingCorrespondingQuestion,
+
   doUpdateSubmitSelectedQuestionAnswer: dispatch.programStore.doUpdateSubmitSelectedQuestionAnswer,
   doUpdateSubmitContructedQuestion: dispatch.programStore.doUpdateSubmitContructedQuestion,
   doUpdateSubmitBinaryQuestion: dispatch.programStore.doUpdateSubmitBinaryQuestion,
+  doUpdateMatchingSequenceQuestion: dispatch.programStore.doUpdateMatchingSequenceQuestion,
+  doUpdateMatchingCorrespondingQuestion: dispatch.programStore.doUpdateMatchingCorrespondingQuestion,
+
 });
 
 type PlanViewStateProps = ReturnType<typeof mapStateToProps>;

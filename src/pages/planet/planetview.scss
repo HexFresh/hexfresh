@@ -9,3 +9,8 @@
   width: calc(100% - 2*1.5rem);
   max-width: 76.5rem;
 }
+.task{
+  &--item{
+    overflow: auto;
+  }
+}

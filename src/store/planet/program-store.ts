@@ -1,4 +1,5 @@
 import { createModel } from '@rematch/core';
+import { notification } from 'antd';
 import _ from 'lodash';
 import axiosClient from '../../api/axiosClient';
 import { ICheckList, IImage, IPhase, ITask } from '../../interface/program-interface';
@@ -15,6 +16,7 @@ type IProgramStore = {
   isFetchingTask: boolean;
   isFetchingChecklist: boolean;
   isFetchAnswer: boolean;
+  isSubmitingAnswer: boolean;
 }
 
 
@@ -30,6 +32,7 @@ export const programStore: any = createModel<IRootStore>()({
     isFetchingTask: false,
     isFetchingChecklist: false,
     isFetchingAnswer: false,
+    isSubmitingAnswer: false,
 
   } as unknown as IProgramStore,
   reducers: {
@@ -43,6 +46,7 @@ export const programStore: any = createModel<IRootStore>()({
     setIsFetchingTask: (state, payload) => ({ ...state, isFetchingTask: payload }),
     setIsFetchingChecklist: (state, payload)=>({...state, isFetchingChecklist: payload}),
     setIsFetchingAnswer:(state, payload)=>({...state, isFetchingAnswer: payload}),
+    setIsSubmitingAnswer: (state, payload) =>({...state, isSubmitingAnswer: payload}),
   },
   effects: (dispatch: IRootDispatch) => ({
 
@@ -53,6 +57,7 @@ export const programStore: any = createModel<IRootStore>()({
         const response = await axiosClient.get(endpoint);
         dispatch.programStore.setProgram(response.data);
       } catch (error) {
+        dispatch.programStore.setIsFetchingProgram(false);
         throw new Error('Failed to fetch program.');
       }
       dispatch.programStore.setIsFetchingProgram(false);
@@ -77,6 +82,7 @@ export const programStore: any = createModel<IRootStore>()({
         const response = await axiosClient.get(endpoint);
         dispatch.programStore.setSelectedPhase(response.data);
       } catch (error) {
+        dispatch.programStore.setIsFetchingPhase(false);
         throw new Error('Failed to fetch phase.');
       }
       dispatch.programStore.setIsFetchingPhase(false);
@@ -109,6 +115,7 @@ export const programStore: any = createModel<IRootStore>()({
         console.log(selectedPhase);
         dispatch.programStore.setSelectedPhase(selectedPhase);
       } catch (error) {
+        dispatch.programStore.setIsFetchingChecklist(false);
         throw new Error('Failed to fetch detail task.');
       }
       dispatch.programStore.setIsFetchingChecklist(false);
@@ -122,6 +129,7 @@ export const programStore: any = createModel<IRootStore>()({
         const response = await axiosClient.get(endpoint);
         dispatch.programStore.setSeletedTask(response.data);
       } catch (error) {
+        dispatch.programStore.setIsFetchingTask(false);
         throw new Error('Failed to fetch detail task.');
       }
       dispatch.programStore.setIsFetchingTask(false);
@@ -130,30 +138,41 @@ export const programStore: any = createModel<IRootStore>()({
     /* Selected question effects */
     async doSubmitSelectedQuestionAnswer({ answers, taskId }) {
       const endpoint = `user/task/${taskId}/quiz/selected-question/answer`;
-      dispatch.programStore.setIsFetchingAnswer(true);
+      dispatch.programStore.setIsSubmitingAnswer(true);
       try {
 
         await axiosClient.post(endpoint, answers);
 
       } catch (error) {
+        console.log(error);
+        dispatch.programStore.setIsSubmitingAnswer(false);
+        notification.error({
+          message:'Failed to submit answer',
+          description: error,
+        });
         throw new Error('Failed to submit answer.');
       }
-      dispatch.programStore.setIsFetchingAnswer(false);
+      dispatch.programStore.setIsSubmitingAnswer(false);
 
     },
 
     async doUpdateSubmitSelectedQuestionAnswer({ answers, taskId }) {
       const endpoint = `user/task/${taskId}/quiz/selected-question/answer`;
-      dispatch.programStore.setIsFetchingAnswer(true);
+      dispatch.programStore.setIsSubmitingAnswer(true);
 
       try {
 
         await axiosClient.put(endpoint, answers);
 
       } catch (error) {
+        dispatch.programStore.setIsSubmitingAnswer(false);
+        notification.error({
+          message:'Failed to submit answer',
+          description: error,
+        });
         throw new Error('Failed to submit answer.');
       }
-      dispatch.programStore.setIsFetchingAnswer(false);
+      dispatch.programStore.setIsSubmitingAnswer(false);
 
     },
 
@@ -169,6 +188,7 @@ export const programStore: any = createModel<IRootStore>()({
 
         dispatch.programStore.setSeletedTask(task);
       } catch (error) {
+        dispatch.programStore.setIsFetchingAnswer(false);
         throw new Error('Failed to fetch answer.');
 
       }
@@ -179,30 +199,40 @@ export const programStore: any = createModel<IRootStore>()({
     /* Constructed question effects */
     async doSubmitContructedQuestion({ answer, taskId }: { answer: { question: string }, taskId: number }) {
       const endpoint = `user/task/${taskId}/quiz/constructed-question/answer`;
-      dispatch.programStore.setIsFetchingAnswer(true);
+      dispatch.programStore.setIsSubmitingAnswer(true);
 
       try {
         await axiosClient.post(endpoint, answer);
       } catch (error) {
+        dispatch.programStore.setIsSubmitingAnswer(false);
+        notification.error({
+          message:'Failed to submit answer',
+          description: error,
+        });
         throw new Error('Failed to submit answer.');
 
       }
-      dispatch.programStore.setIsFetchingAnswer(false);
+      dispatch.programStore.setIsSubmitingAnswer(false);
 
     },
 
-    async doUpdateSubmitContructedQuestion({ answer, taskId }: { answer: { question: string }, taskId: number }) {
+    async doUpdateSubmitContructedQuestion({ answers, taskId }: { answers: { question: string }, taskId: number }) {
       const endpoint = `user/task/${taskId}/quiz/constructed-question/answer`;
-      dispatch.programStore.setIsFetchingAnswer(true);
-
+      dispatch.programStore.setIsSubmitingAnswer(true);
+      console.log(answers);
       try {
-        await axiosClient.put(endpoint, answer);
+        await axiosClient.put(endpoint, answers);
 
       } catch (error) {
+        dispatch.programStore.setIsSubmitingAnswer(false);
+        notification.error({
+          message:'Failed to submit answer',
+          description: error,
+        });
         throw new Error('Failed to submit answer.');
 
       }
-      dispatch.programStore.setIsFetchingAnswer(false);
+      dispatch.programStore.setIsSubmitingAnswer(false);
 
     },
 
@@ -217,6 +247,7 @@ export const programStore: any = createModel<IRootStore>()({
 
         dispatch.programStore.setSeletedTask(task);
       } catch (error) {
+        dispatch.programStore.setIsFetchingAnswer(false);
         throw new Error('Failed to fetch answers.');
 
       }
@@ -227,31 +258,41 @@ export const programStore: any = createModel<IRootStore>()({
     /* Binary question effects */
     async doSubmitBinaryQuestion({ taskId, answers }) {
       const endpoint = `user/task/${taskId}/quiz/true-false-question/answer`;
-      dispatch.programStore.setIsFetchingAnswer(true);
+      dispatch.programStore.setIsSubmitingAnswer(true);
 
       try {
         await axiosClient.post(endpoint, answers);
 
       } catch (error) {
+        dispatch.programStore.setIsSubmitingAnswer(false);
+        notification.error({
+          message:'Failed to submit answer',
+          description: error,
+        });
         throw new Error('Failed to submit answers.');
 
       }
-      dispatch.programStore.setIsFetchingAnswer(false);
+      dispatch.programStore.setIsSubmitingAnswer(false);
 
     },
 
     async doUpdateSubmitBinaryQuestion({ taskId, answers }) {
       const endpoint = `user/task/${taskId}/quiz/true-false-question/answer`;
-      dispatch.programStore.setIsFetchingAnswer(true);
+      dispatch.programStore.setIsSubmitingAnswer(true);
 
       try {
         await axiosClient.put(endpoint, answers);
 
       } catch (error) {
+        dispatch.programStore.setIsSubmitingAnswer(false);
+        notification.error({
+          message:'Failed to submit answer',
+          description: error,
+        });
         throw new Error('Failed to submit answers.');
 
       }
-      dispatch.programStore.setIsFetchingAnswer(false);
+      dispatch.programStore.setIsSubmitingAnswer(false);
 
     },
 
@@ -266,12 +307,129 @@ export const programStore: any = createModel<IRootStore>()({
 
         dispatch.programStore.setSeletedTask(task);
       } catch (error) {
+        dispatch.programStore.setIsFetchingAnswer(false);
         throw new Error('Failed to fetch answers.');
 
       }
       dispatch.programStore.setIsFetchingAnswer(false);
 
     },
+
+    /* Match Sequence effects */
+    async doSubmitMatchingSequenceQuestion({taskId,answers}){
+      const endpoint = `user/task/${taskId}/quiz/match-sequence/answer`;
+      dispatch.programStore.setIsSubmitingAnswer(true);
+
+      try {
+        await axiosClient.post(endpoint, answers);
+
+      } catch (error) {
+        dispatch.programStore.setIsSubmitingAnswer(false);
+        notification.error({
+          message:'Failed to submit answer',
+          description: error,
+        });
+        throw new Error('Failed to submit answers.');
+
+      }
+      dispatch.programStore.setIsSubmitingAnswer(false);
+    },
+
+    async doUpdateMatchingSequenceQuestion({taskId,answers}){
+      const endpoint = `user/task/${taskId}/quiz/match-sequence/answer`;
+      dispatch.programStore.setIsSubmitingAnswer(true);
+
+      try {
+        await axiosClient.put(endpoint, answers);
+
+      } catch (error) {
+        dispatch.programStore.setIsSubmitingAnswer(false);
+        notification.error({
+          message:'Failed to submit answer',
+          description: error,
+        });
+        throw new Error('Failed to submit answers.');
+
+      }
+      dispatch.programStore.setIsSubmitingAnswer(false);
+    },
+
+    async doFetchMatchingSequenceQuestionAnswer({ taskId }) {
+      const endpoint = `user/task/${taskId}/quiz/match-sequence/answer`;
+      dispatch.programStore.setIsFetchingAnswer(true);
+
+      try {
+        const response = await axiosClient.get(endpoint);
+        let task = _.cloneDeep(rootStore.getState().programStore.selectedTask);
+        task.answerMatchingSequenceQuestion = response.data;
+
+        dispatch.programStore.setSeletedTask(task);
+      } catch (error) {
+        dispatch.programStore.setIsFetchingAnswer(false);
+        throw new Error('Failed to fetch answers.');
+
+      }
+      dispatch.programStore.setIsFetchingAnswer(false);
+
+    },
+
+        /* Match Corresponding effects */
+        async doSubmitMatchingCorrespondingQuestion({taskId,answers}){
+          const endpoint = `user/task/${taskId}/quiz/match-corresponding/answer`;
+          dispatch.programStore.setIsSubmitingAnswer(true);
+    
+          try {
+            await axiosClient.post(endpoint, answers);
+    
+          } catch (error) {
+            dispatch.programStore.setIsSubmitingAnswer(false);
+            notification.error({
+              message:'Failed to submit answer',
+              description: error,
+            });
+            throw new Error('Failed to submit answers.');
+    
+          }
+          dispatch.programStore.setIsSubmitingAnswer(false);
+        },
+    
+        async doUpdateMatchingCorrespondingQuestion({taskId,answers}){
+          const endpoint = `user/task/${taskId}/quiz/match-corresponding/answer`;
+          dispatch.programStore.setIsSubmitingAnswer(true);
+    
+          try {
+            await axiosClient.put(endpoint, answers);
+    
+          } catch (error) {
+            dispatch.programStore.setIsSubmitingAnswer(false);
+            notification.error({
+              message:'Failed to submit answer',
+              description: error,
+            });
+            throw new Error('Failed to submit answers.');
+    
+          }
+          dispatch.programStore.setIsSubmitingAnswer(false);
+        },
+    
+        async doFetchMatchingCorrespondingQuestionAnswer({ taskId }) {
+          const endpoint = `user/task/${taskId}/quiz/match-corresponding/answer`;
+          dispatch.programStore.setIsFetchingAnswer(true);
+    
+          try {
+            const response = await axiosClient.get(endpoint);
+            let task = _.cloneDeep(rootStore.getState().programStore.selectedTask);
+            task.answerMatchingCorrespondingQuestion = response.data;
+    
+            dispatch.programStore.setSeletedTask(task);
+          } catch (error) {
+            dispatch.programStore.setIsFetchingAnswer(false);
+            throw new Error('Failed to fetch answers.');
+    
+          }
+          dispatch.programStore.setIsFetchingAnswer(false);
+    
+        },
   }),
 
 });
