@@ -1,9 +1,9 @@
 import React from 'react';
+import SingleTaskReview from './SingleTaskReview/SingleTaskReview';
 import './task-review.css';
 
 export default function TaskReview(props: any) {
   const { selectedTask } = props;
-  console.log(selectedTask);
   const renderType = () => {
     switch (selectedTask.typeId) {
       case 1:
@@ -24,6 +24,15 @@ export default function TaskReview(props: any) {
         return <div className="task-type">Chưa làm</div>;
     }
   };
+
+  const renderTask = () => {
+    switch (selectedTask.typeId) {
+      case 1:
+        return <SingleTaskReview selectedTask={selectedTask} />;
+      default:
+        return <div className="task-type">Chưa làm</div>;
+    }
+  };
   return (
     <div className="task-review">
       <div className="task-review__container">
@@ -32,73 +41,7 @@ export default function TaskReview(props: any) {
           <div className="title">{selectedTask.title}</div>
           <div className="task-review__header__right"></div>
         </div>
-        <div className="task-review__content">
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadas</div>
-          <div className="abc">sdsadasa</div>
-        </div>
+        <div className="task-review__content">{renderTask()}</div>
       </div>
     </div>
   );

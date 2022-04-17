@@ -32,7 +32,7 @@
 }
 
 .review-task .content .left {
-  width: 400px;
+  width: 350px;
   height: calc(100vh - 50px);
   overflow: hidden;
   display: flex;

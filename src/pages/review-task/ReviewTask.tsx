@@ -22,6 +22,7 @@ export default function ReviewTask() {
     setLoading(true);
     const result = await getAllFresherChecklist(fresherId, phaseId);
     setChecklists(result || []);
+    console.log(result);
     setLoading(false);
   };
 

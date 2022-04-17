@@ -52,6 +52,5 @@
   height: calc(100% - 70px);
   display: flex;
   flex-direction: column;
-  overflow-y: scroll;
-  padding: 20px 120px;
+  overflow: hidden;
 }

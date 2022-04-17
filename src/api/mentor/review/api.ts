@@ -23,3 +23,19 @@ export const getAllFresherChecklist = async (fresherId: string | undefined, phas
     return null;
   }
 };
+
+export const getUserTask = async (
+  fresherId: string | undefined,
+  checklistId: string | undefined,
+  taskId: string | undefined
+) => {
+  const endpoint = `user/${fresherId}/checklist/${checklistId}/task/${taskId}`;
+  try {
+    const response = await axiosClient.get(endpoint);
+    const { data } = response;
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
