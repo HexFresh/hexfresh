@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import './single-task-review.css';
 import { CircularProgress } from '@mui/material';
+import { RadioButtonChecked, RadioButtonUnchecked } from '@mui/icons-material';
 import { getUserTask } from '../../../../api/mentor/review/api';
+import { getChoicesWithAnswer } from '../../../../api/mentor/SelectedChoiceTaskApi';
 import { useParams } from 'react-router-dom';
-import { ISingleTaskReview } from './interface';
+import { ISingleTaskReview, ISelectedQuestionChoice, IUserSelectedQuestionAnswer } from './interface';
 
 export default function SingleTaskReview(props: any) {
   const [loading, setLoading] = useState<boolean>(false);
   const [task, setTask] = useState<ISingleTaskReview | null>(null);
+  const [choices, setChoices] = useState<ISelectedQuestionChoice[]>([]);
+  const [userAnswer, setUserAnswer] = useState<IUserSelectedQuestionAnswer | null>(null);
+  const [isShowAnswer, setIsShowAnswer] = useState<boolean>(false);
 
   const { selectedTask } = props;
   const fresherId = useParams<{ fresherId: string }>().fresherId;
@@ -16,12 +21,36 @@ export default function SingleTaskReview(props: any) {
     setLoading(true);
     const data = await getUserTask(fresherId, selectedTask.checklistId, selectedTask.id);
     setTask(data);
+
+    if (data) {
+      fetchResultSingleTask(data?.task?.id);
+      setUserAnswer(data?.user_selected_question_answer || {});
+    }
+  };
+
+  console.log({ choices, task, userAnswer });
+
+  const fetchResultSingleTask = async (id: number) => {
+    const result = await getChoicesWithAnswer(id);
+    setChoices(result || []);
     setLoading(false);
   };
 
   useEffect(() => {
     fetchSingleTask();
+
+    return () => {
+      setLoading(false);
+      setIsShowAnswer(false);
+      setTask(null);
+      setChoices([]);
+      setUserAnswer(null);
+    };
   }, []);
+
+  const isUserSelected = (choiceId: number) => {
+    return userAnswer?.answers[0].choiceId === choiceId;
+  };
 
   return (
     <div className="single-task-review">
@@ -30,6 +59,29 @@ export default function SingleTaskReview(props: any) {
       ) : (
         <div className="single-task-review__container">
           <div className="quiz">{task?.task?.quiz?.question}</div>
+          <div className="choices">
+            {choices.map((choice: any) => {
+              return (
+                <div
+                  className={
+                    isUserSelected(choice.id)
+                      ? userAnswer?.answers[0].choiceAnswer
+                        ? 'choice true'
+                        : 'choice false'
+                      : 'choice'
+                  }
+                  key={choice.id}
+                >
+                  {isUserSelected(choice.id) ? (
+                    <RadioButtonChecked style={{ color: 'white' }} />
+                  ) : (
+                    <RadioButtonUnchecked />
+                  )}
+                  <div className="choice__content">{choice.content}</div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
     </div>

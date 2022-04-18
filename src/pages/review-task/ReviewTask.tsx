@@ -22,7 +22,6 @@ export default function ReviewTask() {
     setLoading(true);
     const result = await getAllFresherChecklist(fresherId, phaseId);
     setChecklists(result || []);
-    console.log(result);
     setLoading(false);
   };
 
@@ -42,7 +41,7 @@ export default function ReviewTask() {
   };
 
   const findUserTask = (checklistId: number, taskId: number) => {
-    const tempChecklist = checklists.find((checklist) => checklist.id === checklistId);
+    const tempChecklist = checklists.find((checklist) => checklist.checklistId === checklistId);
     const tempUserTask = tempChecklist?.userTasks.find((userTask) => userTask.taskId === taskId);
     if (tempUserTask) {
       return tempUserTask;

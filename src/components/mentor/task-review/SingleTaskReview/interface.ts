@@ -37,3 +37,10 @@ export interface IAnswer {
   choiceAnswer: boolean;
   choiceId: number;
 }
+
+export interface ISelectedQuestionChoice {
+  id: number;
+  taskId: number;
+  content: string;
+  isRight: boolean | string;
+}

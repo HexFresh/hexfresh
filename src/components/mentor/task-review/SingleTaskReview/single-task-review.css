@@ -13,11 +13,50 @@
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
-  background-color: aquamarine;
   padding: 20px 120px;
 }
 
 .single-task-review__container .quiz {
+  margin-top: 20px;
   font-size: 24px;
   font-weight: bold;
+}
+
+.single-task-review__container .choices {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  grid-gap: 20px;
+}
+
+.single-task-review__container .choices .choice {
+  padding: 10px;
+  box-shadow: var(--shadow);
+  background-color: white;
+  display: flex;
+  align-items: center;
+  grid-gap: 10px;
+  border-radius: 5px;
+}
+
+.single-task-review__container .choices .choice.true {
+  background-color: #52c41a;
+}
+
+.single-task-review__container .choices .choice.true .choice__content {
+  color: white;
+}
+
+.single-task-review__container .choices .choice.false {
+  background-color: #f5222d;
+}
+
+.single-task-review__container .choices .choice.false .choice__content {
+  color: white;
+}
+
+.single-task-review__container .choices .choice__content {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
 }
