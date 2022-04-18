@@ -2,7 +2,7 @@ import { NavigateFunction } from "react-router-dom";
 import axiosClient from "../../api/axiosClient";
 import rootStore, { IRootDispatch, IRootStore } from "../store";
 import { retrieveStoredToken } from '../../utils/calc';
-import { initSocket } from "../../utils/socketioInit";
+import { socketInstance } from "../../utils/socketioInit";
 
 let logoutTimer: NodeJS.Timeout;
 const initialState = {
@@ -53,11 +53,11 @@ export const user: any = {
 				});
 
 				// Copy to success
-				const socket = initSocket(data.token);
+				const socket = socketInstance;
 				socket.emit('signin','Hi from signin')
 				
 				localStorage.setItem('token', data.token);
-				sessionStorage.setItem("token", data.token as string)
+				//sessionStorage.setItem("token", data.token as string)
 
 				console.log(data);
 				if (preLocation) {
@@ -96,8 +96,8 @@ export const user: any = {
 		},
 		async checkAutoLoginV2({ dispatch, navigate, location }: { dispatch: IRootDispatch, navigate: NavigateFunction, location: any }) {
 			const endpoint = `program/1`;
-			//const token = localStorage.getItem('token');
-			const token = sessionStorage.getItem('token');
+			const token = localStorage.getItem('token');
+			//const token = sessionStorage.getItem('token');
 
 			if (token) {
 				dispatch.user.retrieveToken(token);

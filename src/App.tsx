@@ -22,7 +22,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { IUserStore } from './store/user/user-store';
 import { getCurrentToken, onMessageListener } from './utils/firebaseInit';
-import { initSocket } from './utils/socketioInit';
+import { socketInstance } from './utils/socketioInit';
+import Chatbox from './components/chatbox/Chatbox';
 //import io from "socket.io-client";
 
 const Home = () => {
@@ -57,9 +58,9 @@ function App() {
 
   useEffect(() => {
     dispatch.user.checkAutoLoginV2({ dispatch, navigate, location });
-    const accessToken = rootStore.getState().user.token;
-    if (accessToken) {
-      const socket = initSocket(accessToken);
+
+    const socket = socketInstance;
+    if (socket.connected) {
       socket.emit('signin', "Auto sign in");
     }
     else {
@@ -104,7 +105,9 @@ function App() {
   const routeContent =
     auth.token !== null ? routerWithSignIn : routeWithoutSignIn;
 
-  return <>{routeContent}</>;
+  return <div>{routeContent}
+    <Chatbox />
+  </div>;
 }
 
 export default App;
