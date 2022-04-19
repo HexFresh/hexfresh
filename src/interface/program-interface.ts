@@ -43,10 +43,14 @@ export interface ITask{
   selected_question_choices: ISelectedChoice[];
   constructed_question_answer: IContructedQuestion;
   true_false_question_options:IBinaryTask[];
+  match_sequence_options:ISequenceTask[];
+  match_corresponding_answers: ICorrespondingTassk[];
   
   answersSelectedQuestion: IAnswerSelectedQuestion;
   answerConstructedQuestion: IAnswerContructedQuestion;
   answerBinaryQuestion: IAnswerBinaryQuestion;
+  answerMatchingSequenceQuestion: IAnswerMatchingSequenceQuestion;
+  answerMatchingCorrespondingQuestion: IAnswerMatchingCorrespondingQuestion;
 }
 
 export interface IQuiz{
@@ -65,6 +69,11 @@ export interface IContructedQuestion{
 
 export interface IBinaryTask{
   id: string;
+  content: string;
+}
+
+export interface ISequenceTask{
+  id: number;
   content: string;
 }
 
@@ -118,4 +127,40 @@ export interface IChoiceBinaryQuestion{
   optionId: number;
   userAnswer: boolean;
   optionAnswer: boolean;
+}
+
+export interface IMactchSequence{
+  id: number;
+  content: string;
+}
+
+export interface IAnswerMatchingSequenceQuestion{
+  id: number;
+  numberOfSubmissions: number;
+  answers: IChoiceSequenceQuestion[];
+}
+
+export interface IChoiceSequenceQuestion{
+  optionId: number;
+  userAnswer: number;
+  optionIndexAnswer: number;
+}
+
+export interface ICorrespondingTassk{
+  id: number;
+  content: string;
+  index: number;
+}
+
+export interface IAnswerMatchingCorrespondingQuestion{
+  id: number;
+  numberOfSubmissions: number;
+  answers: IChoiceCorrespondingQuestion[];
+}
+
+export interface IChoiceCorrespondingQuestion{
+  firstCorrectAnswerId: number;
+  secondCorrectAnswerId: number;
+  userFisrtAnswerId: number;
+  userSecondAnswerId: number;
 }

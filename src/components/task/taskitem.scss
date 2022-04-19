@@ -1,0 +1,14 @@
+.matching__card{
+  &:hover,
+  &-clicked{
+    border: 1px solid #75e18c;
+    cursor: pointer;
+  }
+}
+
+.close-badge{
+  &:hover{
+    cursor: pointer;
+    color: #ffa39e;
+  }
+}
