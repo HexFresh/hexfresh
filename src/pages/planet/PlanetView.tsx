@@ -57,7 +57,6 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
   }
 
   private _onFetchFetchQuestionAnswer(task: ITask) {
-    console.log(task, 'task want to fetch answer');
     switch (task.typeId) {
       case TaskCategory.SINGLE_CHOICE:
       case TaskCategory.MULTIPLE_CHOICES:
@@ -108,7 +107,6 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
       isFetchingTask,
       isFetchingChecklist,
       isFetchingPhase,
-      isFetchingProgram,
       isFetchingAnswer,
       isSubmitingAnswer,
     } = this.props;

@@ -3,6 +3,7 @@ import axiosClient from "../../api/axiosClient";
 import rootStore, { IRootDispatch, IRootStore } from "../store";
 import { retrieveStoredToken } from '../../utils/calc';
 import { initSocket } from "../../utils/socketioInit";
+import { notification } from "antd";
 
 let logoutTimer: NodeJS.Timeout;
 const initialState = {
@@ -67,7 +68,11 @@ export const user: any = {
 					navigate('/', { replace: true });
 				}
 			} catch (error) {
-				console.log(error);
+				notification.error({
+          message:'Login failed!',
+          description: error.message,
+        });
+				throw new Error('Failed to login.');
 			}
 		},
 		runLogoutTimer({ dispatch, timer, navigate }: { dispatch: IRootDispatch, timer: number, navigate: NavigateFunction }) {
