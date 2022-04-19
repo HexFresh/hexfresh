@@ -1,4 +1,5 @@
 import React from 'react';
+import MultipleTaskReview from './MultipleTaskReview/MultipleTaskReview';
 import SingleTaskReview from './SingleTaskReview/SingleTaskReview';
 import './task-review.css';
 
@@ -29,6 +30,8 @@ export default function TaskReview(props: any) {
     switch (selectedTask.typeId) {
       case 1:
         return <SingleTaskReview selectedTask={selectedTask} />;
+      case 2:
+        return <MultipleTaskReview selectedTask={selectedTask} />;
       default:
         return <div className="task-type">Chưa làm</div>;
     }
