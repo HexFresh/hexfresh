@@ -1,6 +1,7 @@
 import React from 'react';
-import MultipleTaskReview from './MultipleTaskReview/MultipleTaskReview';
-import SingleTaskReview from './SingleTaskReview/SingleTaskReview';
+import ConstructedTaskReview from './constructed-task-review/ConstructedTaskReview';
+import MultipleTaskReview from './multiple-task-review/MultipleTaskReview';
+import SingleTaskReview from './single-task-review/SingleTaskReview';
 import './task-review.css';
 
 export default function TaskReview(props: any) {
@@ -32,6 +33,9 @@ export default function TaskReview(props: any) {
         return <SingleTaskReview selectedTask={selectedTask} />;
       case 2:
         return <MultipleTaskReview selectedTask={selectedTask} />;
+
+      case 3:
+        return <ConstructedTaskReview selectedTask={selectedTask} />;
       default:
         return <div className="task-type">Chưa làm</div>;
     }

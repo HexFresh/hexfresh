@@ -124,7 +124,7 @@ export default function ListProgram() {
           <Tooltip title="Assign program">
             <Button
               onClick={() => showModal(fresher.id)}
-              disabled={fresher?.currentProgram?.completedPercentage !== 1 && fresher?.currentProgram !== null}
+              disabled={fresher?.currentProgram !== null}
               shape="circle"
               icon={<AuditOutlined />}
             ></Button>

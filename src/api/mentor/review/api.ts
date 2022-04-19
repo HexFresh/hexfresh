@@ -39,3 +39,20 @@ export const getUserTask = async (
     return null;
   }
 };
+
+export const updatePointByMentor = async (
+  fresherId: string | undefined,
+  checklistId: string | undefined,
+  taskId: string | undefined,
+  pointByMentor: number
+) => {
+  const endpoint = `user/${fresherId}/checklist/${checklistId}/task/${taskId}/point`;
+  try {
+    const response = await axiosClient.put(endpoint, { pointByMentor });
+    const { data } = response;
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
