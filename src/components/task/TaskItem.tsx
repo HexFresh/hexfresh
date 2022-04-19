@@ -9,7 +9,7 @@ import Dragger from 'antd/lib/upload/Dragger';
 import TextArea from 'antd/lib/input/TextArea';
 
 import { EmptyResult } from '../results';
-import { ISequenceTask, ITask } from '../../interface/program-interface'
+import { ICorrespondingTassk, ISequenceTask, ITask } from '../../interface/program-interface'
 import { TaskCategory } from '../../utilities/enum-utils';
 import './taskitem.scss';
 import { DropResult } from 'react-beautiful-dnd';
@@ -20,6 +20,7 @@ import { MultipleChoices } from './multiple-task/MultipleChoices';
 import { BinaryQuiz } from './binary-quiz/BinaryQuiz';
 import { INT_ONE, INT_TWO, INT_ZERO } from '../../constant';
 import { MatchCorrespond } from './match-corresponding/MatchCorrespond';
+import { isTrueAnswer } from './match-corresponding/match-correspoding.util';
 
 export interface IMatchingSequencePair {
   id: number;
@@ -109,7 +110,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
             isTakenTemp = true;
             // calculate for correct answer
             if (task.answersSelectedQuestion.answers.length === 1) {
-              if (task.answersSelectedQuestion.answers[ 0 ].choiceAnswer) {
+              if (task.answersSelectedQuestion.answers[ INT_ZERO ].choiceAnswer) {
 
                 isCorrectTemp = true;
               }
@@ -186,12 +187,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
           if (!_.isEmpty(task.answerMatchingCorrespondingQuestion)) {
             isTakenTemp = true;
 
-            const firstColumn = task.answerMatchingCorrespondingQuestion.answers[ 0 ];
-
-            /* if (firstColumn.firstCorrectAnswerId === firstColumn.userFisrtAnswerId && firstColumn.secondCorrectAnswerId === firstColumn.userSecondAnswerId) {
-              isCorrectTemp = true
-            }; */
-
+            isCorrectTemp = isTrueAnswer({ answers: task.answerMatchingCorrespondingQuestion.answers });
           } else {
             isTakenTemp = false;
           };
@@ -202,20 +198,18 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
             isEmptyQuizTemp = false;
           }
           break;
-
-
         default:
           break;
       }
       const sortedSequence = _.sortBy(task?.answerMatchingSequenceQuestion?.answers, [ 'userAnswer' ]);
-      const newMatchSequnce = !_.isEmpty(sortedSequence)?_.map(
+      const newMatchSequnce = !_.isEmpty(sortedSequence) ? _.map(
         sortedSequence,
         item => {
           return {
             id: item.optionId,
             content: _.find(task?.match_sequence_options, option => option.id === item.optionId)?.content || ''
           }
-        }):task?.match_sequence_options;
+        }) : task?.match_sequence_options;
 
       // calculate for matching corresponding answer content
       const columnMatchCorresponding = Array(2).fill([]);
@@ -237,7 +231,23 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
       columnMatchCorresponding[ INT_ONE ] = secondColumn;
 
       //calculate for user answer
+      const tempPair: { id: number; pair: { id: number, content: string }[]; }[] = [];
+      _.forEach(
+        task?.answerMatchingCorrespondingQuestion?.answers,
+        (item, index) => {
+          const firstItem = _.find(task?.match_corresponding_answers, [ 'id', item.userFisrtAnswerId ]);
+          const secondItem = _.find(task?.match_corresponding_answers, [ 'id', item.userSecondAnswerId ]);
 
+          if (!_.isEmpty(firstItem) && !_.isEmpty(secondItem)) {
+            tempPair.push({
+              id: index,
+              pair: [
+                { id: firstItem?.id || Math.random(), content: firstItem?.content || '' },
+                { id: secondItem?.id || Math.random(), content: secondItem?.content || '' } ]
+            });
+          }
+        }
+      )
 
       this.setState({
         ...initialState,
@@ -251,11 +261,25 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
 
         matchingCorespondingData: columnMatchCorresponding,
         matchingCorespondingDataSource: columnMatchCorresponding,
+        matchingSequencePairs: tempPair || [],
       })
 
     }
 
+    if (!_.isEqual(prevState.isEdit, this.state.isEdit)) {
+      const { task } = this.props;
+      switch (task?.typeId) {
+        case TaskCategory.MATCH_CORESPONSE:
+          this.setState({
+            matchingSequencePairs: initialState.matchingSequencePairs
+          })
+          break;
+        default: break;
+      }
+    }
+
     if (!_.isEqual(prevState.pairIds, this.state.pairIds)) {
+      console.log(123123123123);
       const { pairIds, matchingCorespondingData, matchingSequencePairs } = this.state;
       if (pairIds.length === 2) {
         const firstItem = _.find(matchingCorespondingData[ 0 ], [ 'id', pairIds[ 0 ] ]);
@@ -270,12 +294,12 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
           let prevPairs = _.cloneDeep(matchingSequencePairs);
           prevPairs.push(newPair);
 
-          const newColumn1 = _.filter(matchingCorespondingData[ 0 ], item => item.id !== firstItem.id);
-          const newColumn2 = _.filter(matchingCorespondingData[ 1 ], item => item.id !== secondItem.id);
+          const newColumn1 = _.filter(matchingCorespondingData[ INT_ZERO ], item => item.id !== firstItem.id);
+          const newColumn2 = _.filter(matchingCorespondingData[ INT_ONE ], item => item.id !== secondItem.id);
 
           const newMatchingCorespondData = _.cloneDeep(this.state.matchingCorespondingData);
-          newMatchingCorespondData[ 0 ] = newColumn1;
-          newMatchingCorespondData[ 1 ] = newColumn2;
+          newMatchingCorespondData[ INT_ZERO ] = newColumn1;
+          newMatchingCorespondData[ INT_ONE ] = newColumn2;
 
           this.setState({
             matchingSequencePairs: prevPairs,
@@ -333,26 +357,32 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
   };
 
   private _onChooseNewPair = ({ item, column }: { item: any, column: number }) => {
-    console.log(this);
-    let newPair = _.cloneDeep(this.state.pairIds);
-    newPair[ column ] = item.id;
-    this.setState({ pairIds: newPair });
+
+    this.setState((state) => {
+      const newPair = _.cloneDeep(this.state.pairIds);
+      newPair[ column ] = item.id;
+      console.log(newPair);
+
+      return {
+        pairIds: newPair
+      }
+    });
   }
 
   private _onRemovePair = ({ pairId }: { pairId: number }) => {
     const tempPair = _.find(this.state.matchingSequencePairs, [ 'id', pairId ]);
     if (!_.isEmpty(tempPair)) {
-      const id0 = tempPair?.pair[ 0 ].id;
+      const id0 = tempPair?.pair[ INT_ZERO ].id;
       const id1 = tempPair?.pair[ 1 ].id;
 
-      const itemColumn0 = _.find(this.state.matchingCorespondingDataSource[ 0 ], [ 'id', id0 ]);
+      const itemColumn0 = _.find(this.state.matchingCorespondingDataSource[ INT_ZERO ], [ 'id', id0 ]);
       const itemColumn1 = _.find(this.state.matchingCorespondingDataSource[ 1 ], [ 'id', id1 ]);
 
-      const newColumn1 = [ ...this.state.matchingCorespondingData[ 0 ], itemColumn0 ];
+      const newColumn1 = [ ...this.state.matchingCorespondingData[ INT_ZERO ], itemColumn0 ];
       const newColumn2 = [ ...this.state.matchingCorespondingData[ 1 ], itemColumn1 ];
 
       const newMatchingCorespondData = _.cloneDeep(this.state.matchingCorespondingData);
-      newMatchingCorespondData[ 0 ] = newColumn1;
+      newMatchingCorespondData[ INT_ZERO ] = newColumn1;
       newMatchingCorespondData[ 1 ] = newColumn2;
 
       this.setState({ matchingCorespondingData: newMatchingCorespondData, matchingSequencePairs: _.filter(this.state.matchingSequencePairs, item => item.id !== pairId) });
@@ -489,7 +519,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
 
             uploadValue = _.map(matchingSequencePairs, pairs => {
               return {
-                firstAnswerId: pairs.pair[ 0 ].id,
+                firstAnswerId: pairs.pair[ INT_ZERO ].id,
                 secondAnswerId: pairs.pair[ 1 ].id
               }
             });
@@ -498,7 +528,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
               answers: [ ...uploadValue ]
             }
 
-            if (_.isEmpty(task?.answerMatchingSequenceQuestion)) {
+            if (_.isEmpty(task?.answerMatchingCorrespondingQuestion)) {
               await doSubmitMatchingCorrespondingQuestion({ answers: payload, taskId: task.id });
             } else {
               await doUpdateMatchingCorrespondingQuestion({ answers: payload, taskId: task.id });
@@ -510,7 +540,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
       }
       await onFetchQuestionAnswer(task);
     } catch (error) {
-      
+
     }
     this.setState({ isEdit: false });
     //this.setState(initialState);
@@ -612,7 +642,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
           />;
 
         case TaskCategory.MATCH_SEQUENCE:
-          console.log(matchingSequence,'aaaaa');
+          console.log(matchingSequence, 'aaaaa');
           return <>
             <MatchSequence items={matchingSequence} onDragEnd={this._onDragEnd.bind(this)} />
           </>;
@@ -621,7 +651,6 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
           return <MatchCorrespond
             isEdit={isEdit}
             isTaken={isTaken}
-            task={task}
             matchingCorespondingData={matchingCorespondingData}
             matchingSequencePairs={matchingSequencePairs}
             pairIds={pairIds}
