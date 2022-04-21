@@ -3,6 +3,7 @@ import ConstructedTaskReview from './constructed-task-review/ConstructedTaskRevi
 import MultipleTaskReview from './multiple-task-review/MultipleTaskReview';
 import SingleTaskReview from './single-task-review/SingleTaskReview';
 import './task-review.css';
+import TrueFalseTaskReview from './true-false-task-review/TrueFalseTaskReview';
 
 export default function TaskReview(props: any) {
   const { selectedTask } = props;
@@ -33,9 +34,10 @@ export default function TaskReview(props: any) {
         return <SingleTaskReview selectedTask={selectedTask} />;
       case 2:
         return <MultipleTaskReview selectedTask={selectedTask} />;
-
       case 3:
         return <ConstructedTaskReview selectedTask={selectedTask} />;
+      case 4:
+        return <TrueFalseTaskReview selectedTask={selectedTask} />;
       default:
         return <div className="task-type">Chưa làm</div>;
     }

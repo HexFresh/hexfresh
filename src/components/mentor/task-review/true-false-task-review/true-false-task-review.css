@@ -1,0 +1,83 @@
+.true-false-task-review {
+  width: 100%;
+  height: calc(100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.true-false-task-review__container {
+  width: 100%;
+  height: calc(100%);
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  padding: 20px 120px;
+  position: relative;
+}
+
+.true-false-task-review__container .quiz {
+  margin-top: 40px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.true-false-task-review__top,
+.true-false-task-review__answer-item {
+  display: flex;
+  align-items: center;
+  grid-gap: 20px;
+  margin-top: 20px;
+}
+
+.true-false-task-review__top-true,
+.true-false-task-review__top-false {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.true-false-task-review__top-option {
+  flex: 1;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.true-false-task-review__answer-item__top-true,
+.true-false-task-review__answer-item__top-false {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: white;
+  border-radius: 5px;
+}
+
+.true-false-task-review__answer-item__top-option {
+  flex: 1;
+  font-size: 18px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 5px;
+  padding: 0 20px;
+}
+
+.true-false-task-review__answer-item__top-option.true {
+  background-color: #52c41a;
+  color: white;
+}
+
+.true-false-task-review__answer-item__top-option.false {
+  background-color: #f5222d;
+  color: white;
+}
