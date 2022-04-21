@@ -44,7 +44,7 @@ export default function SingleTaskReview(props: any) {
       setChoices([]);
       setUserAnswer(null);
     };
-  }, []);
+  }, [selectedTask.id]);
 
   const isUserSelected = (id: number) => {
     const answers = userAnswer?.answers;

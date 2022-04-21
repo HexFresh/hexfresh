@@ -40,7 +40,7 @@ export default function ConstructedTaskReview(props: any) {
       setTask(null);
       setAnswer(null);
     };
-  }, []);
+  }, [selectedTask.id]);
 
   const handleUpdatePointByMentor = async () => {
     if (point === 0) {
