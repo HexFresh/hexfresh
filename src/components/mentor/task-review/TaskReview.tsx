@@ -46,7 +46,7 @@ export default function TaskReview(props: any) {
         <div className="task-review__header">
           <div className="type">{renderType()}</div>
           <div className="title">{selectedTask.title}</div>
-          <div className="task-review__header__right"></div>
+          <div className="task-review__header__right">{selectedTask.point || '0'}</div>
         </div>
         <div className="task-review__content">{renderTask()}</div>
       </div>

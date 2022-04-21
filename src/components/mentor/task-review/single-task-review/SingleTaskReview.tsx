@@ -47,7 +47,20 @@ export default function SingleTaskReview(props: any) {
   }, []);
 
   const isUserSelected = (id: number) => {
-    return userAnswer?.answers[0].choiceId === id;
+    const answers = userAnswer?.answers;
+    if (answers) {
+      return answers.some((answer) => answer.choiceId === id);
+    }
+    return false;
+  };
+
+  const isRightAnswer = (id: number) => {
+    const answers = userAnswer?.answers;
+    const selected = answers?.find((answer: any) => answer.choiceId === id);
+    if (answers) {
+      return selected?.choiceAnswer;
+    }
+    return false;
   };
 
   return (
@@ -62,11 +75,7 @@ export default function SingleTaskReview(props: any) {
               return (
                 <div
                   className={
-                    isUserSelected(choice.id)
-                      ? userAnswer?.answers[0].choiceAnswer
-                        ? 'choice true'
-                        : 'choice false'
-                      : 'choice'
+                    isUserSelected(choice.id) ? (isRightAnswer(choice.id) ? 'choice true' : 'choice false') : 'choice'
                   }
                   key={choice.id}
                 >

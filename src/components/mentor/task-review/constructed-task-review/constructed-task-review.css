@@ -5,6 +5,7 @@
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  position: relative;
 }
 
 .constructed-task-review__container {
@@ -14,10 +15,11 @@
   flex-direction: column;
   overflow-y: scroll;
   padding: 20px 120px;
+  position: relative;
 }
 
 .constructed-task-review__container .quiz {
-  margin-top: 20px;
+  margin-top: 40px;
   font-size: 24px;
   font-weight: bold;
 }
@@ -33,4 +35,30 @@
   border-radius: 5px;
   position: relative;
   font-size: 18px;
+}
+
+.constructed-task-review__container .view-answer-btn {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.constructed-task-review__container .point-by-mentor__point {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 100px;
+}
+
+.constructed-task-review__container .point-by-mentor__input {
+  width: 100%;
+  height: 40px;
+  border: none;
+  border-radius: 5px;
+  padding: 0 10px;
+  font-size: 18px;
+  font-weight: bold;
+  outline: none;
+  background-color: white;
 }
