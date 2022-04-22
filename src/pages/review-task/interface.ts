@@ -31,6 +31,7 @@ export interface ITask {
 export interface IUserTask {
   id: number;
   isCompleted: boolean;
+  isRight: boolean;
   pointByMentor: number;
   taskId: number;
   userId: string;

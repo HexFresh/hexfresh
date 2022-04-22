@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Menu } from 'antd';
 import { CircularProgress } from '@mui/material';
-import { CircleOutlined, CheckCircleOutlined } from '@mui/icons-material';
+import { CheckCircleOutlined, CloseCircleOutlined, CheckOutlined } from '@ant-design/icons';
 import { getAllFresherChecklist } from '../../api/mentor/review/api';
 import { sortByField } from '../../utils/common';
 import { IUserChecklist, ITask } from './interface';
@@ -41,15 +41,11 @@ export default function ReviewTask() {
     setSelectedTask(task);
   };
 
-  const findUserTask = (checklistId: number, taskId: number) => {
+  const isRightUserTask = (checklistId: number, taskId: number) => {
     const tempChecklist = checklists.find((checklist) => checklist.checklistId === checklistId);
     const tempUserTask = tempChecklist?.userTasks.find((userTask) => userTask.taskId === taskId);
     if (tempUserTask) {
-      return tempUserTask;
-    } else {
-      return {
-        isCompleted: false,
-      };
+      return tempUserTask.isRight;
     }
   };
 
@@ -94,13 +90,27 @@ export default function ReviewTask() {
                             <div className="task">
                               <div className="task-title">{task.title}</div>
                               <div className="task-status">
-                                {findUserTask(checklist.checklistId, task.id).isCompleted === true ? (
-                                  <CheckCircleOutlined style={{ fontSize: '26px', color: 'green' }} />
-                                ) : (
-                                  <CircleOutlined
+                                {isRightUserTask(checklist.checklistId, task.id) === null ? (
+                                  <div
+                                    style={{
+                                      width: '26px',
+                                      height: '26px',
+                                      borderRadius: '50%',
+                                      border: '3px solid gray',
+                                    }}
+                                  />
+                                ) : isRightUserTask(checklist.checklistId, task.id) ? (
+                                  <CheckCircleOutlined
                                     style={{
                                       fontSize: '26px',
-                                      color: 'gray',
+                                      color: 'green',
+                                    }}
+                                  />
+                                ) : (
+                                  <CloseCircleOutlined
+                                    style={{
+                                      fontSize: '26px',
+                                      color: 'red',
                                     }}
                                   />
                                 )}
