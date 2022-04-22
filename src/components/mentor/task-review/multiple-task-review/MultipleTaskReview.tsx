@@ -27,8 +27,6 @@ export default function MultipleTaskReview(props: any) {
     }
   };
 
-  console.log({ choices, task, userAnswer });
-
   const fetchResultSingleTask = async (id: number) => {
     const result = await getChoicesWithAnswer(id);
     setChoices(result || []);

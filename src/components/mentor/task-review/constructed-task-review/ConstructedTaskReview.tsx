@@ -25,8 +25,6 @@ export default function ConstructedTaskReview(props: any) {
     setLoading(false);
   };
 
-  console.log({ selectedTask, task, answer });
-
   const fecthAnswers = async () => {
     const result = await getAnswer(selectedTask.id);
     setAnswer(result);

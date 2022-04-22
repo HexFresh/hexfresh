@@ -15,8 +15,6 @@ export default function TrueFalseTaskReview(props: any) {
   const { selectedTask } = props;
   const fresherId = useParams<{ fresherId: string }>().fresherId;
 
-  console.log({ task });
-
   const fetchUserTask = async () => {
     const data = await getUserTask(fresherId, selectedTask.checklistId, selectedTask.id);
     setTask(data);
@@ -50,7 +48,7 @@ export default function TrueFalseTaskReview(props: any) {
         return 'No';
       }
     }
-    return false;
+    return 'No';
   };
 
   const isUserSelected = (id: number) => {
