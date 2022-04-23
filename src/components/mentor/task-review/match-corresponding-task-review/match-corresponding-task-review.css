@@ -1,0 +1,102 @@
+.match-corresponding-task-review {
+  width: 100%;
+  height: calc(100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.match-corresponding-task-review__container {
+  width: 100%;
+  height: calc(100%);
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  padding: 20px 120px;
+  position: relative;
+}
+
+.match-corresponding-task-review__container .quiz {
+  margin-top: 40px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.match-corresponding-task-review__answer,
+.match-corresponding-task-review__no-answer {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  grid-gap: 20px;
+  width: 100%;
+}
+
+.match-corresponding-task-review__no-answer .pair-answer {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+}
+
+.match-corresponding-task-review__no-answer .pair-answer-first,
+.match-corresponding-task-review__no-answer .pair-answer-second {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  background-color: white;
+  font-size: 18px;
+  padding: 10px;
+  box-shadow: var(--shadow);
+}
+
+.match-corresponding-task-review__answer .pair-answer {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+}
+
+.match-corresponding-task-review__answer .pair-answer-first {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  background-color: white;
+  font-size: 18px;
+  padding: 10px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+.match-corresponding-task-review__answer .pair-answer-second-true {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  background-color: #00b300;
+  color: white;
+  font-size: 18px;
+  padding: 10px;
+  box-shadow: var(--shadow);
+}
+
+.match-corresponding-task-review__answer .pair-answer-second-false {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  background-color: #ff0000;
+  color: white;
+  font-size: 18px;
+  padding: 10px;
+  box-shadow: var(--shadow);
+}

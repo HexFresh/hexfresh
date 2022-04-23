@@ -1,5 +1,6 @@
 import React from 'react';
 import ConstructedTaskReview from './constructed-task-review/ConstructedTaskReview';
+import MatchCorrespondingTaskReview from './match-corresponding-task-review/MatchCorrespondingTaskReview';
 import MatchSequenceTaskReview from './match-sequence-task-review/MatchSequenceTaskReview';
 import MultipleTaskReview from './multiple-task-review/MultipleTaskReview';
 import SingleTaskReview from './single-task-review/SingleTaskReview';
@@ -24,6 +25,8 @@ export default function TaskReview(props: any) {
         return <div className="task-type">Match Corresponding</div>;
       case 7:
         return <div className="task-type">Document</div>;
+      case 8:
+        return <div className="task-type">Assignment</div>;
       default:
         return <div className="task-type">Chưa làm</div>;
     }
@@ -41,6 +44,8 @@ export default function TaskReview(props: any) {
         return <TrueFalseTaskReview selectedTask={selectedTask} />;
       case 5:
         return <MatchSequenceTaskReview selectedTask={selectedTask} />;
+      case 6:
+        return <MatchCorrespondingTaskReview selectedTask={selectedTask} />;
       default:
         return <div className="task-type">Chưa làm</div>;
     }

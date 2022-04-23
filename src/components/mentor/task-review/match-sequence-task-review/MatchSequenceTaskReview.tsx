@@ -15,8 +15,6 @@ export default function MatchSequenceTaskReview(props: any) {
   const { selectedTask } = props;
   const fresherId = useParams<{ fresherId: string }>().fresherId;
 
-  console.log({ task, options });
-
   const fetchUserTask = async () => {
     const data = await getUserTask(fresherId, selectedTask.checklistId, selectedTask.id);
     setTask(data);
