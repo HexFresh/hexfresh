@@ -633,7 +633,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
           </>;
         case TaskCategory.BINARY:
 
-          return <BinaryQuiz
+          return <BinaryQuiz 
             isEdit={isEdit}
             isTaken={isTaken}
             task={task}
