@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Menu } from 'antd';
 import { CircularProgress } from '@mui/material';
-import { CheckCircleOutlined, CloseCircleOutlined, CheckOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { getAllFresherChecklist } from '../../api/mentor/review/api';
 import { sortByField } from '../../utils/common';
 import { IUserChecklist, ITask } from './interface';

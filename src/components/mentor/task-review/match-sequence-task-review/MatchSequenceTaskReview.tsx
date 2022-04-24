@@ -63,7 +63,7 @@ export default function MatchSequenceTaskReview(props: any) {
                   >
                     {getContentOfOption(answer.optionId)}
                   </div>
-                  <div className="match-sequence-task-review__answer-item-real">{answer.optionIndexAnswer}</div>
+                  <div className="match-sequence-task-review__answer-item-real">{answer.optionIndexAnswer + 1}</div>
                 </div>
               ))}
             </div>

@@ -10,6 +10,7 @@ import TrueFalseTask from './true-false-task/TrueFalseTask';
 import MatchSequence from './match-sequence/MatchSequence';
 import DocumentTask from './document-task/DocumentTask';
 import MatchCorresponding from './match-corresponding/MatchCorresponding';
+import AssignmentTask from './assignment-task/AssignmentTask';
 
 function TaskContent(props: any) {
   const { task, fetchChecklists, setTaskNull } = props;
@@ -38,6 +39,9 @@ function TaskContent(props: any) {
       case 7:
         setRenderTask(<DocumentTask task={task} />);
         break;
+      case 8:
+        setRenderTask(<AssignmentTask task={task} />);
+        break;
       default:
         setRenderTask(null);
         break;
@@ -61,6 +65,8 @@ function TaskContent(props: any) {
         return <div className="task-type">Match Corresponding</div>;
       case 7:
         return <div className="task-type">Document</div>;
+      case 8:
+        return <div className="task-type">Assignment</div>;
       default:
         return <div className="task-type">Chưa làm</div>;
     }
