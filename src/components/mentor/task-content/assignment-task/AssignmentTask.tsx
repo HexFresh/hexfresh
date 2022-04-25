@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import InputBase from '@mui/material/InputBase';
-import { message, DatePicker, Upload, Button } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { message, DatePicker, Button, Popconfirm, Tooltip } from 'antd';
+import { UploadOutlined, DeleteOutlined } from '@ant-design/icons';
 import { getTask, updatePointOfTask } from '../../../../api/mentor/taskApi';
 import { CircularProgress } from '@mui/material';
 import './assignment-task.css';
@@ -10,9 +10,9 @@ import {
   createEmptyAssignment,
   updateAssignment,
   createFileInAssignment,
+  deleteFileInAssignment,
 } from '../../../../api/mentor/AssignmentTaskApi';
 import moment from 'moment';
-import axios from 'axios';
 
 interface IAssignment {
   id: number;
@@ -41,6 +41,7 @@ function AssignmentTask(props: any) {
   const [assignmentTitle, setAssignmentTitle] = useState<string>('');
   const [assignmentDescription, setAssignmentDescription] = useState<string>('');
   const [dueDate, setDueDate] = useState<string>('');
+  const temp = useRef<HTMLInputElement>(null);
 
   const fetchTask = async (id: number) => {
     const result = await getTask(task.checklistId, id);
@@ -61,6 +62,7 @@ function AssignmentTask(props: any) {
       setAssignmentDescription(result.description);
       setDueDate(result.dueDate);
     }
+    console.log(result);
   };
 
   useEffect(() => {
@@ -117,14 +119,22 @@ function AssignmentTask(props: any) {
     const result = await createFileInAssignment(task.id, file.name);
     if (result) {
       const url = result.signedUrl;
-      file.arrayBuffer().then((arrayBuffer: any) => {
+      let headers = new Headers();
+
+      headers.append('Content-Type', 'application/json');
+      headers.append('Accept', 'application/json');
+      file.arrayBuffer().then(async (arrayBuffer: any) => {
         const blob = new Blob([new Uint8Array(arrayBuffer)], { type: file.type });
-        const resultUpload = fetch(url, {
+        const newResponse = await fetch(url, {
           method: 'PUT',
           body: blob,
+          headers,
+          mode: 'cors',
         });
+        console.log(newResponse);
       });
     }
+    await fetchAssignmentTask();
     console.log(result);
   };
 
@@ -134,6 +144,16 @@ function AssignmentTask(props: any) {
     const view = new Int8Array(buffer);
 
     return [...view].map((n) => n.toString(2)).join(' ');
+  };
+
+  const handleDeleteFile = async (id: number) => {
+    const result = await deleteFileInAssignment(task.id, id);
+    if (result === '') {
+      message.success('Delete file success');
+      await fetchAssignmentTask();
+    } else {
+      message.error('Delete failed');
+    }
   };
 
   return (
@@ -177,6 +197,7 @@ function AssignmentTask(props: any) {
               fontSize: '18px',
               marginTop: '20px',
               fontFamily: 'Arial',
+              fontWeight: 'bold',
             }}
             className="due-date"
           >
@@ -190,18 +211,54 @@ function AssignmentTask(props: any) {
             placeholder="Due date"
             style={{
               width: '100%',
+              marginTop: '5px',
             }}
           />
-          <input
-            id="upload-images"
-            type="file"
-            name="myImage"
-            onChange={(event) => {
-              if (event.target.files) {
-                createNewFile(event.target.files[0]);
-              }
-            }}
-          />
+          <div className="upload-file">
+            <div className="upload-file-left">List file</div>
+            <div className="upload-file-right">
+              <Button
+                onClick={() => {
+                  temp.current?.click();
+                }}
+                icon={<UploadOutlined />}
+              >
+                Click to Upload
+              </Button>
+              <input
+                ref={temp}
+                style={{ display: 'none' }}
+                type="file"
+                onChange={(event) => {
+                  if (event.target.files) {
+                    createNewFile(event.target.files[0]);
+                  }
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="list-file">
+            {assignment?.fileList?.map((file: any, index: number) => {
+              return (
+                <div key={index} className="file-item">
+                  <div className="file-item-name">{file.fileName}</div>
+                  <Popconfirm
+                    placement="topLeft"
+                    title="Are you sure to delete this file?"
+                    okText="Yes"
+                    onConfirm={() => handleDeleteFile(file.id)}
+                    cancelText="No"
+                  >
+                    <Tooltip placement="top" title="Delete file">
+                      <DeleteOutlined />
+                    </Tooltip>
+                  </Popconfirm>
+                </div>
+              );
+            })}
+          </div>
+
           <div className="task-point">
             <div className="task-point-title">Point:</div>
             <InputBase

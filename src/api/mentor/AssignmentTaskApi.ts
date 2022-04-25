@@ -45,6 +45,13 @@ export const createFileInAssignment = async (taskId: number, fileName: string) =
   }
 };
 
-export const putFile = (url: string) => {
-  
-}
+export const deleteFileInAssignment = async (taskId: number, id: number) => {
+  const endpoint = `task/${taskId}/assignment/file/${id}`;
+  try {
+    const response = await axiosClient.delete(endpoint);
+    const { data } = response;
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};

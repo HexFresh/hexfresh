@@ -4,33 +4,18 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow-y: scroll;
+  overflow-y: hidden;
 }
 
-.assignment-task-main .checkbox {
-  width: 100%;
-  height: 100%;
-  margin-bottom: 15px;
-}
-
-.task-content .assignment-task {
+.assignment-task {
   position: relative;
   padding: 40px 100px;
   width: 100%;
   height: 100%;
+  overflow-y: scroll;
 }
 
-.assignment-task-title,
-.assignment-task-description {
-  border-bottom: solid 1px #e0e0e0;
-}
-
-.assignment-task-title:focus,
-.assignment-task-description:focus {
-  background-color: red;
-}
-
-.task-content .assignment-task .task-point {
+.assignment-task .task-point {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -43,39 +28,32 @@
   grid-gap: 20px;
 }
 
-.task-content .assignment-task .answer {
+.assignment-task-main .upload-file {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.assignment-task-main .upload-file-left {
+  font-size: 18px;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.assignment-task-main .list-file {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
+  grid-gap: 10px;
   margin-top: 10px;
 }
 
-.task-content .assignment-task .answer .answer-item {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  align-items: center;
-  padding: 15px;
-  border-radius: 5px;
-  margin-bottom: 15px;
-  grid-gap: 15px;
+.assignment-task-main .file-item {
+  padding: 10px;
   background-color: white;
-}
-
-.task-content .assignment-task .answer .answer-item-content {
-  width: 100%;
-}
-
-.task-content .assignment-task .answer .add-new-choice {
-  width: 100%;
-}
-
-.task-content .assignment-task .answer .answer-item .remove-choice-btn {
-  opacity: 0;
-}
-
-.task-content .assignment-task .answer .answer-item:hover .remove-choice-btn {
-  opacity: 1;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  grid-gap: 20px;
 }
