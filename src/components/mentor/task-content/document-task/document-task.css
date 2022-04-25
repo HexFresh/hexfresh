@@ -1,11 +1,60 @@
 .document-task {
   height: 100%;
+  background-color: white;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .document-task__container {
   height: 100%;
+  display: flex;
+  width: 100%;
+}
+
+.document-task .left {
+  flex: 3;
+}
+
+.document-task .right {
+  flex: 2;
+  padding: 10px;
+  background-color: #f6f7f8;
 }
 
 .jodit-wysiwyg {
   overflow-y: scroll;
+}
+
+.document-task .upload-file {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.document-task .upload-file-left {
+  font-size: 18px;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.document-task .list-file {
+  display: flex;
+  flex-direction: column;
+  grid-gap: 10px;
+  margin-top: 10px;
+}
+
+.document-task .file-item {
+  padding: 10px;
+  background-color: white;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  grid-gap: 20px;
 }

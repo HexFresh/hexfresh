@@ -135,6 +135,7 @@ function AssignmentTask(props: any) {
       });
     }
     await fetchAssignmentTask();
+    message.success('Uploaded', 0.5);
     console.log(result);
   };
 
