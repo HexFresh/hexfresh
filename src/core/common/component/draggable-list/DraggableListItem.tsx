@@ -8,6 +8,7 @@ export type DraggableListItemProps = {
   component: any;
   itemId: string;
   item: any;
+  isDragDisabled: boolean;
   index: number;
 };
 
@@ -17,10 +18,10 @@ const useStyles: any = makeStyles({
   }
 });
 
-const DraggableListItem = ({ component: Component, item, itemId, index }: DraggableListItemProps) => {
+const DraggableListItem = ({ component: Component, item, itemId, index, isDragDisabled }: DraggableListItemProps) => {
   const classes = useStyles();
   return (
-    <Draggable draggableId={(itemId+'')} index={index}>
+    <Draggable draggableId={(itemId+'')} index={index} isDragDisabled={isDragDisabled}>
       {(provided, snapshot) => (
         <ListItem
           ref={provided.innerRef}

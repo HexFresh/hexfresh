@@ -7,6 +7,8 @@ import './matchsequence.scss';
 
 interface IMatchSequenceProps {
     items: IMactchSequence[],
+    isTaken: boolean,
+    isEdit: boolean,
     onDragEnd: OnDragEndResponder,
 }
 const MatchSequenceItem = React.memo(({ item }: { item: IMactchSequence }) => {
@@ -22,9 +24,10 @@ const MatchSequenceItem = React.memo(({ item }: { item: IMactchSequence }) => {
 MatchSequenceItem.displayName = 'MatchSequenceItem';
 
 
-export const MatchSequence = React.memo(({ items, onDragEnd }: IMatchSequenceProps) => {
+export const MatchSequence = React.memo(({ items, isTaken, isEdit, onDragEnd }: IMatchSequenceProps) => {
+    const isDragDisabled = isTaken && !isEdit;
     return (<>
         <Typography className="mb-medium">Let arrange belows into right index.</Typography>
-        <DraggableList items={items} component={MatchSequenceItem} onDragEnd={onDragEnd} />
+        <DraggableList isDragDisabled={isDragDisabled} items={items} component={MatchSequenceItem} onDragEnd={onDragEnd} />
     </>)
 })

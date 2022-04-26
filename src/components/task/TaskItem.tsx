@@ -633,7 +633,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
           </>;
         case TaskCategory.BINARY:
 
-          return <BinaryQuiz
+          return <BinaryQuiz 
             isEdit={isEdit}
             isTaken={isTaken}
             task={task}
@@ -642,9 +642,12 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
           />;
 
         case TaskCategory.MATCH_SEQUENCE:
-          console.log(matchingSequence, 'aaaaa');
           return <>
-            <MatchSequence items={matchingSequence} onDragEnd={this._onDragEnd.bind(this)} />
+            <MatchSequence 
+            items={matchingSequence} 
+            isTaken={isTaken} 
+            isEdit={isEdit} 
+            onDragEnd={this._onDragEnd.bind(this)} />
           </>;
 
         case TaskCategory.MATCH_CORESPONSE:

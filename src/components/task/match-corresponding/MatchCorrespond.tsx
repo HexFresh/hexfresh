@@ -54,9 +54,9 @@ export const MatchCorrespond = memo(({
               <Col span={11}>
                 <Card size='small' >{card.pair[ 1 ].content}</Card>
               </Col>
-              <Col span={2}>
+              {(!isTaken || isEdit) && <Col span={2}>
                 <Card size='small' ><CloseOutlined onClick={() => { onRemovePair({ pairId: card.id }) }} className='close-badge' color='action' /></Card>
-              </Col>
+              </Col>}
             </Row>
           ))}
         </Space>
