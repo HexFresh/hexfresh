@@ -10,9 +10,8 @@ import {
   updateDocument,
 } from '../../../../api/mentor/DocumentTaskApi';
 import './document-task.css';
-import { Button, message, Popconfirm, Tooltip } from 'antd';
+import { Button, message, Popconfirm } from 'antd';
 import { UploadOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
-import { async } from '@firebase/util';
 
 interface IDocument {
   id: number;
@@ -29,6 +28,13 @@ interface IFile {
   expiredTime: string;
 }
 
+const cutString = (str: string) => {
+  if (str.length > 30) {
+    return str.slice(0, 30) + '...';
+  }
+  return str;
+};
+
 function DocumentTask(props: any) {
   const { task } = props;
   const [value, setValue] = useState<string>();
@@ -42,7 +48,6 @@ function DocumentTask(props: any) {
       await createEmptyDocument(task.id);
       fetchDocument();
     } else {
-      console.log({ document });
       setDocument(document);
     }
   };
@@ -90,29 +95,29 @@ function DocumentTask(props: any) {
   };
 
   const createNewFile = async (file: any) => {
-    const result = await createFileInDocument(task.id, file.name);
-    if (result) {
-      const url = result.signedUrl;
-      let headers = new Headers();
+    message.loading('Uploading...').then(async () => {
+      const result = await createFileInDocument(task.id, file.name);
+      if (result) {
+        const url = result.signedUrl;
+        let headers = new Headers();
+        headers.append('Content-Type', `${file.type}`);
+        headers.append('Accept', `${file.type}`);
 
-      headers.append('Content-Type', 'application/json');
-      headers.append('Accept', 'application/json');
-      file.arrayBuffer().then(async (arrayBuffer: any) => {
-        const blob = new Blob([new Uint8Array(arrayBuffer)], { type: file.type });
         const newResponse = await fetch(url, {
           method: 'PUT',
-          body: blob,
+          body: file,
           headers,
           mode: 'cors',
         });
-        console.log(newResponse);
-      });
-    }
-    await fetchDocument();
-    message.success('Uploaded', 0.5);
-    console.log(result);
+        if (newResponse.ok) {
+          await fetchDocument();
+          message.success('Uploaded', 0.5);
+        } else {
+          message.error('Error', 0.5);
+        }
+      }
+    });
   };
-
   const handleDeleteFile = async (id: number) => {
     const result = await deleteFileInDocument(task.id, id);
     if (result === '') {
@@ -152,7 +157,7 @@ function DocumentTask(props: any) {
           <div className="left">
             <JoditReact
               config={config}
-              defaultValue={document?.document || '<a>Hello</a>'}
+              defaultValue={document?.document || '<div></div>'}
               onChange={(content: string) => setValue(content)}
             />
           </div>
@@ -188,17 +193,16 @@ function DocumentTask(props: any) {
               {document?.fileList?.map((file: any, index: number) => {
                 return (
                   <div key={index} className="file-item">
-                    <div className="file-item-name">{file.fileName}</div>
+                    <div className="file-item-name">{cutString(file.fileName)}</div>
                     <Popconfirm
+                      className="delete-file"
                       placement="topLeft"
                       title="Are you sure to delete this file?"
                       okText="Yes"
                       onConfirm={() => handleDeleteFile(file.id)}
                       cancelText="No"
                     >
-                      <Tooltip placement="top" title="Delete file">
-                        <DeleteOutlined />
-                      </Tooltip>
+                      <DeleteOutlined />
                     </Popconfirm>
                   </div>
                 );

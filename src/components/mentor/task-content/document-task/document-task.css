@@ -16,17 +16,27 @@
 }
 
 .document-task .left {
-  flex: 3;
-}
-
-.document-task .right {
   flex: 2;
   padding: 10px;
-  background-color: #f6f7f8;
+  height: 100%;
+  overflow: hidden;
 }
 
 .jodit-wysiwyg {
   overflow-y: scroll;
+  height: 100%;
+}
+
+.jodit-status-bar {
+  display: none;
+}
+
+.document-task .right {
+  flex: 1;
+  padding: 10px;
+  background-color: #f6f7f8;
+  display: flex;
+  flex-direction: column;
 }
 
 .document-task .upload-file {
@@ -43,6 +53,7 @@
 }
 
 .document-task .list-file {
+  flex: 1;
   display: flex;
   flex-direction: column;
   grid-gap: 10px;

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import InputBase from '@mui/material/InputBase';
-import { message, DatePicker, Button, Popconfirm, Tooltip } from 'antd';
+import { message, DatePicker, Button, Popconfirm } from 'antd';
 import { UploadOutlined, DeleteOutlined } from '@ant-design/icons';
 import { getTask, updatePointOfTask } from '../../../../api/mentor/taskApi';
 import { CircularProgress } from '@mui/material';
@@ -32,6 +32,13 @@ interface IFile {
 
 const dateFormat = 'YYYY-MM-DD';
 
+const cutString = (str: string) => {
+  if (str.length > 80) {
+    return str.slice(0, 80) + '...';
+  }
+  return str;
+};
+
 function AssignmentTask(props: any) {
   const { task } = props;
   const [isLoading, setIsLoading] = useState(false);
@@ -62,7 +69,6 @@ function AssignmentTask(props: any) {
       setAssignmentDescription(result.description);
       setDueDate(result.dueDate);
     }
-    console.log(result);
   };
 
   useEffect(() => {
@@ -103,7 +109,6 @@ function AssignmentTask(props: any) {
       description: assignmentDescription,
       dueDate,
     };
-    console.log({ newAssignment });
     const handleUpdate = async () => {
       await updateAssignment(task.id, newAssignment);
       message.success('Updated', 0.5);
@@ -116,35 +121,28 @@ function AssignmentTask(props: any) {
   };
 
   const createNewFile = async (file: any) => {
-    const result = await createFileInAssignment(task.id, file.name);
-    if (result) {
-      const url = result.signedUrl;
-      let headers = new Headers();
+    message.loading('Uploading...').then(async () => {
+      const result = await createFileInAssignment(task.id, file.name);
+      if (result) {
+        const url = result.signedUrl;
+        let headers = new Headers();
+        headers.append('Content-Type', `${file.type}`);
+        headers.append('Accept', `${file.type}`);
 
-      headers.append('Content-Type', 'application/json');
-      headers.append('Accept', 'application/json');
-      file.arrayBuffer().then(async (arrayBuffer: any) => {
-        const blob = new Blob([new Uint8Array(arrayBuffer)], { type: file.type });
         const newResponse = await fetch(url, {
           method: 'PUT',
-          body: blob,
+          body: file,
           headers,
           mode: 'cors',
         });
-        console.log(newResponse);
-      });
-    }
-    await fetchAssignmentTask();
-    message.success('Uploaded', 0.5);
-    console.log(result);
-  };
-
-  const blobToBinary = async (blob: any) => {
-    const buffer = await blob.arrayBuffer();
-
-    const view = new Int8Array(buffer);
-
-    return [...view].map((n) => n.toString(2)).join(' ');
+        if (newResponse.ok) {
+          await fetchAssignmentTask();
+          message.success('Uploaded', 0.5);
+        } else {
+          message.error('Error', 0.5);
+        }
+      }
+    });
   };
 
   const handleDeleteFile = async (id: number) => {
@@ -243,7 +241,7 @@ function AssignmentTask(props: any) {
             {assignment?.fileList?.map((file: any, index: number) => {
               return (
                 <div key={index} className="file-item">
-                  <div className="file-item-name">{file.fileName}</div>
+                  <div className="file-item-name">{cutString(file.fileName)}</div>
                   <Popconfirm
                     placement="topLeft"
                     title="Are you sure to delete this file?"
@@ -251,9 +249,7 @@ function AssignmentTask(props: any) {
                     onConfirm={() => handleDeleteFile(file.id)}
                     cancelText="No"
                   >
-                    <Tooltip placement="top" title="Delete file">
-                      <DeleteOutlined />
-                    </Tooltip>
+                    <DeleteOutlined />
                   </Popconfirm>
                 </div>
               );
