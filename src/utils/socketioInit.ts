@@ -1,10 +1,10 @@
 import io from 'socket.io-client';
-import { Widget, addResponseMessage } from 'react-chat-widget';
+import { addResponseMessage } from 'react-chat-widget';
 
 const initSocket = () => {
   const accessToken = localStorage.getItem("token");
   const url = process.env.REACT_APP_CHAT_SERVER_URL || 'https://hexfresh-gamification-backend.herokuapp.com';
-  const socket = io(url, {
+  const socket = io("http://localhost:1402", {
     transports: ['websocket'],
     query: { token: accessToken },
   });
