@@ -63,7 +63,11 @@ code {
   color: inherit;
 }
 
-.mb-medium {
+.mb-none{
+  margin-bottom: none !important;
+}
+
+.mb-medium{
   margin-bottom: 12px !important;
 }
 
@@ -136,4 +140,8 @@ code {
 }
 .CircularProgressbar-background {
   fill: green;
+}
+
+.bg-white{
+  background-color: white;
 }

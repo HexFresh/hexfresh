@@ -83,13 +83,13 @@ const HeaderInternal = ({
         <div className="item-space"></div>
 
         <div className="header-item">
-          <Link className={textColorClassName} to="/">
+          <Link className={textColorClassName} to="/messages">
             <span className="logo-item">
               <div className="logo-img">
 
                 <img src="/more.png" alt='Onboarding icon' />
               </div>
-              <span>More</span>
+              <span>Message</span>
             </span>
           </Link>
         </div>
