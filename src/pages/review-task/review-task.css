@@ -1,3 +1,12 @@
+.review-task-main {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f2f5;
+}
+
 .review-task {
   padding: 0;
   width: 100vw;
@@ -5,6 +14,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  background-color: #f0f2f5;
 }
 
 .review-task .topbar {
@@ -17,57 +27,79 @@
   padding: 0 10px;
 }
 
-.review-task .topbar .mid {
+.review-task .topbar__left {
+  width: 50px;
+}
+
+.review-task .topbar .topbar__mid {
   color: white;
   font-size: 20px;
   font-weight: bold;
 }
 
-.review-task .content {
-  width: 100vw;
-  flex: 1;
-  background-color: #dcdfe3;
-  overflow: hidden;
-  display: flex;
+.review-task .topbar .topbar__right {
+  width: 50px;
+  height: 50px;
 }
 
-.review-task .content .left {
+.review-task .breadcrumb {
+  width: 100%;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+}
+
+.review-task .content {
+  width: 100vw;
+  height: calc(100vh - 150px);
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  padding: 20px;
+  padding-top: 0;
+  grid-gap: 20px;
+}
+
+.review-task .content .detail-left {
   width: 350px;
-  height: calc(100vh - 50px);
+  height: calc(100vh - 130px);
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: white;
+  box-shadow: var(--shadow);
 }
 
-.review-task .content .left .left__container {
-  background-color: aquamarine;
+.review-task .content .left__container {
   width: 100%;
-  height: calc(100vh - 50px);
+  height: calc(100vh - 130px);
   overflow-y: scroll;
   overflow-x: hidden;
 }
 
-.review-task .content .left .left__container .task {
+.review-task .content .left__container .task {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.review-task .content .left .left__container .task-status {
+.review-task .content .left__container .task-status {
   display: flex;
   align-items: center;
 }
 
-.review-task .content .right {
+.review-task .content .detail-right {
   flex: 1;
   width: 100%;
-  height: calc(100vh - 50px);
+  height: calc(100vh - 130px);
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  background-color: white;
+  box-shadow: var(--shadow);
 }
 
 .review-task .content .no-task {

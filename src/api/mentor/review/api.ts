@@ -12,6 +12,30 @@ export const getAllPhaseOfFresher = async (fresherId: string | undefined) => {
   }
 };
 
+export const getPhaseById = async (fresherId: string | undefined, phaseId: string | undefined) => {
+  const endpoint = `user/${fresherId}/current-program/phase/${phaseId}`;
+  try {
+    const response = await axiosClient.get(endpoint);
+    const { data } = response;
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
+export const getUserInfoById = async (fresherId: string | undefined) => {
+  const endpoint = `user/${fresherId}/info`;
+  try {
+    const response = await axiosClient.get(endpoint);
+    const { data } = response;
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
 export const getAllFresherChecklist = async (fresherId: string | undefined, phaseId: string | undefined) => {
   const endpoint = `user/${fresherId}/phase/${phaseId}/checklist`;
   try {

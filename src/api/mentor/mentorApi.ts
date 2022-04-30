@@ -38,6 +38,17 @@ export const getPhasesOfProgram = async (programId: number, keyword: string) => 
   }
 };
 
+export const getPhaseById = async (programId: number, id: number) => {
+  const endpoint = `program/${programId}/phase/${id}`;
+  try {
+    const response = await axiosClient.get(endpoint);
+    const { data } = response;
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const createPhase = async (programId: number, phase: any) => {
   const endpoint = `program/${programId}/phase`;
   try {
