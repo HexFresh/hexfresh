@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  Droppable,
-  DragDropContext,
-  Draggable,
-  DropResult,
-} from 'react-beautiful-dnd';
+import { Droppable, DragDropContext, Draggable, DropResult } from 'react-beautiful-dnd';
 import { sortByField } from '../../utils/common';
 import PhaseItem from './PhaseItem';
 
@@ -14,6 +9,7 @@ const getItemStyle = (isDragging: any, draggableStyle: any) => ({
   backgroundColor: 'white',
   marginBottom: '10px',
   color: 'black',
+  borderRadius: '10px',
   ...draggableStyle,
 });
 
@@ -25,10 +21,7 @@ export default function DragDrop(props: any) {
     if (!destination) {
       return;
     }
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    ) {
+    if (destination.droppableId === source.droppableId && destination.index === source.index) {
       return;
     }
 
@@ -60,29 +53,20 @@ export default function DragDrop(props: any) {
               {...provide.droppableProps}
               ref={provide.innerRef}
             >
-              {sortByField(phases, 'index')?.map(
-                (phase: any, index: number) => (
-                  <Draggable
-                    draggableId={phase.id.toString()}
-                    index={index}
-                    key={phase.id}
-                  >
-                    {(provided, snapshot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.dragHandleProps}
-                        {...provided.draggableProps}
-                        style={getItemStyle(
-                          snapshot.isDragging,
-                          provided.draggableProps.style
-                        )}
-                      >
-                        <PhaseItem updatePhases={updatePhases} phase={phase} />
-                      </div>
-                    )}
-                  </Draggable>
-                )
-              )}
+              {sortByField(phases, 'index')?.map((phase: any, index: number) => (
+                <Draggable draggableId={phase.id.toString()} index={index} key={phase.id}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.dragHandleProps}
+                      {...provided.draggableProps}
+                      style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
+                    >
+                      <PhaseItem updatePhases={updatePhases} phase={phase} />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
               {provide.placeholder}
             </div>
           )}

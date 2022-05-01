@@ -75,7 +75,7 @@
 .phase-detail .content .left__container {
   width: 100%;
   height: calc(100vh - 130px);
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 }
 

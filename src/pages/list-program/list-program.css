@@ -188,6 +188,7 @@
   background-color: white;
   display: flex;
   flex-direction: column;
+  border-radius: 10px;
 }
 
 .list-program .container .page-content .program .cover-photo {
@@ -197,12 +198,15 @@
   justify-content: center;
   align-items: center;
   border-bottom: 1px solid #dcdfe3;
+  overflow: hidden;
 }
 
 .list-program .container .page-content .program .cover-photo img {
   object-fit: cover;
   width: 100%;
   height: 100%;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
 .list-program .container .page-content .program .program-name {

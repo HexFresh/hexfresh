@@ -128,7 +128,7 @@
 }
 
 .list-phase .container .page-content .name-page .container {
-  width: 80%;
+  padding: 0 130px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -139,7 +139,6 @@
 }
 
 .list-phase .container .page-content .bottom {
-  padding-bottom: 50px;
   position: relative;
 }
 
@@ -149,15 +148,13 @@
   align-items: center;
   width: 100%;
   background-color: white;
-  margin-bottom: 30px;
 }
 
 .list-phase .container .page-content .filter-search .container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 0;
-  width: 80%;
+  padding: 10px 130px;
 }
 
 .list-phase .container .page-content .filter-search .container .search {
@@ -172,27 +169,40 @@
 
 .list-phase .container .page-content .phases {
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin-top: 10px;
-  height: calc(100vh - 240px);
+  height: calc(100vh - 210px);
+  grid-gap: 20px;
+  padding: 0 130px;
 }
 
-.list-phase .container .page-content .phases .container {
-  width: 80%;
+.list-phase .container .page-content .phases .phases-left {
+  flex: 4;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.list-phase .container .page-content .phases .phases-left .name-space {
+  height: 50px;
   display: flex;
-  flex-direction: column;
-  grid-gap: 20px;
-  overflow-y: scroll;
-  padding: 0 5px 10px 5px;
-  margin-bottom: 5px;
+  align-items: center;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.list-phase .container .page-content .phases .phases-left .container {
+  height: calc(100% - 50px);
+  display: flex;
   justify-content: center;
   align-items: center;
+  overflow-y: hidden;
 }
 
 .list-phase .container .page-content .phases .container .DragDrop {
   width: 100%;
   height: 100%;
+  overflow-y: auto;
+  border-radius: 10px;
 }
 
 .list-phase .container .page-content .phase {
@@ -205,7 +215,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px;
+  padding: 18px;
 }
 
 .list-phase .container .page-content .phase .left {
@@ -246,4 +256,28 @@
 
 .modal .form .field .select .option {
   height: 200px;
+}
+
+.list-phase .container .page-content .phases .leaderboard {
+  flex: 3;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.list-phase .container .page-content .phases .leaderboard .name-space {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.list-phase .container .page-content .phases .leaderboard__container {
+  height: calc(100% - 50px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: hidden;
+  background-color: lightcoral;
 }

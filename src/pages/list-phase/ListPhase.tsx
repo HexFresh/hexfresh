@@ -187,7 +187,7 @@ export default function ListPhase() {
           </div>
           <div className="name-page">
             <div className="container">
-              <div className="name">Phases</div>
+              <div className="name">Program's Detail</div>
               <div className="add-phase">
                 <Button icon={<PlusOutlined />} className="add-phase-btn" type="primary" onClick={showModal}>
                   Create a new phase
@@ -211,16 +211,23 @@ export default function ListPhase() {
               </div>
             </div>
             <div className="phases">
-              <div className="container">
-                {loading ? (
-                  <CircularProgress className="circular-progress" />
-                ) : phases.length === 0 ? (
-                  <div className="img-404">
-                    <img alt="img-404" style={{ height: '200px' }} src="/no-records.png" />
-                  </div>
-                ) : (
-                  <DragDrop phases={phases} programId={programId} updatePhases={updatePhases} />
-                )}
+              <div className="phases-left">
+                <div className="name-space">List phase</div>
+                <div className="container">
+                  {loading ? (
+                    <CircularProgress className="circular-progress" />
+                  ) : phases.length === 0 ? (
+                    <div className="img-404">
+                      <img alt="img-404" style={{ height: '200px' }} src="/no-records.png" />
+                    </div>
+                  ) : (
+                    <DragDrop phases={phases} programId={programId} updatePhases={updatePhases} />
+                  )}
+                </div>
+              </div>
+              <div className="leaderboard">
+                <div className="name-space">Leaderboard</div>
+                <div className="leaderboard__container"></div>
               </div>
             </div>
           </div>
