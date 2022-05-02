@@ -102,12 +102,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px;
+  padding: 8px;
   background-color: white;
   border-bottom: 1px solid #f6f7f8;
 }
 
-.list-phase .container .page-content .topbar p {
+.list-phase .container .page-content .top-bar p {
   font-size: 20px;
   color: #364d79;
   font-weight: bold;
@@ -152,7 +152,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 130px;
+  padding: 8px 130px;
 }
 
 .list-phase .container .page-content .filter-search .container .search {
@@ -168,7 +168,8 @@
 .list-phase .container .page-content .phases {
   display: flex;
   align-items: center;
-  height: calc(100vh - 210px);
+  justify-content: center;
+  height: calc(100vh - 190px);
   grid-gap: 20px;
   padding: 0 130px;
 }
@@ -178,6 +179,7 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
+  border-radius: 10px;
 }
 
 .list-phase .container .page-content .phases .phases-left .name-space {
@@ -194,6 +196,10 @@
   justify-content: center;
   align-items: center;
   overflow-y: hidden;
+  background-color: white;
+  border-radius: 10px;
+  padding: 8px;
+  box-shadow: var(--shadow);
 }
 
 .list-phase .container .page-content .phases .container .DragDrop {
@@ -206,7 +212,6 @@
 .list-phase .container .page-content .phase {
   width: 100%;
   background-color: white;
-  box-shadow: var(--shadow);
   border-radius: 10px;
   cursor: pointer;
   position: relative;
@@ -214,6 +219,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 18px;
+  border: solid 1px #d4d4d4;
+  font-weight: bold;
 }
 
 .list-phase .container .page-content .phase .left {
@@ -261,6 +268,7 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
+  border-radius: 10px;
 }
 
 .list-phase .container .page-content .phases .leaderboard .name-space {
@@ -277,5 +285,73 @@
   justify-content: center;
   align-items: center;
   overflow-y: hidden;
-  background-color: lightcoral;
+  background-color: white;
+  border-radius: 10px;
+  padding: 8px;
+  box-shadow: var(--shadow);
+}
+
+.list-phase .leaderboard__container__content {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  grid-gap: 8px;
+}
+
+.list-phase .leaderboard__container__content__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 10px;
+  padding: 18px;
+  border: solid 1px #d4d4d4;
+  font-weight: bold;
+}
+
+.list-phase .leaderboard__container__content__item__avatar {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.list-phase .leaderboard__container__content__item--left {
+  display: flex;
+  align-items: center;
+  grid-gap: 10px;
+}
+
+.list-phase .leaderboard__container__content__item--left .rank {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border-radius: 50%;
+  font-weight: bold;
+  border: solid 1px #d4d4d4;
+}
+
+.list-phase .leaderboard__container__content__item--left .rank .medal {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.list-phase .leaderboard__container__content__item__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  image-rendering: auto;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+
+  /* Safari seems to support, but seems deprecated and does the same thing as the others. */
+  image-rendering: -webkit-optimize-contrast;
 }
