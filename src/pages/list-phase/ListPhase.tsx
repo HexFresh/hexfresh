@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {Link} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import AppsIcon from '@mui/icons-material/Apps';
 import SchoolIcon from '@mui/icons-material/School';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -10,14 +10,14 @@ import Tooltip from '@mui/material/Tooltip';
 import Fade from '@mui/material/Fade';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
-import { PlusOutlined } from '@ant-design/icons';
-import { CircularProgress } from '@mui/material';
+import {PlusOutlined} from '@ant-design/icons';
+import {CircularProgress} from '@mui/material';
 import './list-phase.css';
 import DragDrop from './DragDrop';
-import { Modal, Input, Button, Select, message } from 'antd';
-import { getPhasesOfProgram, createPhase, getImages } from '../../api/mentor/mentorApi';
+import {Modal, Input, Button, Select, message} from 'antd';
+import {getPhasesOfProgram, createPhase, getImages} from '../../api/mentor/mentorApi';
 
-const { Option } = Select;
+const {Option} = Select;
 
 interface IPhase {
   id: string;
@@ -34,7 +34,7 @@ interface IImage {
 
 export default function ListPhase() {
   const [loading, setLoading] = useState(false);
-  const [phases, setphases] = useState<IPhase[] | []>([]);
+  const [phases, setPhases] = useState<IPhase[] | []>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [name, setName] = useState<string>('');
   const [planet, setPlanet] = useState<string>('1');
@@ -46,22 +46,28 @@ export default function ListPhase() {
   const fetchPhases = async () => {
     setLoading(true);
     const result = await getPhasesOfProgram(Number(programId), keyword);
-    setphases(result);
+    setPhases(result);
     setLoading(false);
   };
 
   useEffect(() => {
     document.title = 'HexF - Phases';
     const fetchImages = async () => {
-      const reusult = await getImages();
-      setImages(reusult || []);
+      const result = await getImages();
+      setImages(result || []);
     };
-    fetchImages();
-    fetchPhases();
+    fetchImages().then(r => {
+      console.log(r);
+    });
+    fetchPhases().then(r => {
+      console.log(r);
+    });
   }, [keyword]);
 
   const updatePhases = () => {
-    fetchPhases();
+    fetchPhases().then(r => {
+      console.log(r);
+    });
   };
 
   const showModal = () => {
@@ -104,15 +110,17 @@ export default function ListPhase() {
         index: findMaxIndex(phases) + 1,
       };
       const handleCreatePhase = async () => {
-        message.loading({ content: 'Creating...' }).then(async () => {
+        message.loading({content: 'Creating...'}).then(async () => {
           await createPhase(Number(programId), newPhase);
-          fetchPhases();
-          message.success({ content: 'Created', key: 'success' });
+          await fetchPhases();
+          message.success({content: 'Created', key: 'success'});
           setIsModalVisible(false);
           setName('');
         });
       };
-      handleCreatePhase();
+      handleCreatePhase().then(r => {
+        console.log(r);
+      });
     }
   };
 
@@ -122,32 +130,32 @@ export default function ListPhase() {
         <div className="menu">
           <Link to="/mentor/programs">
             <div className="logo">
-              <img src="/logo.svg" width="40px" alt="logo" />
+              <img src="/logo.svg" width="40px" alt="logo"/>
             </div>
           </Link>
           <div className="menu-item active">
             <Tooltip
               TransitionComponent={Fade}
-              TransitionProps={{ timeout: 600 }}
+              TransitionProps={{timeout: 600}}
               title="Programs"
               placement="right"
               arrow
             >
               <Link className="link apps" to="/mentor/programs">
-                <AppsIcon sx={{ width: 40, height: 40 }} />
+                <AppsIcon sx={{width: 40, height: 40}}/>
               </Link>
             </Tooltip>
           </div>
           <div className="menu-item">
             <Tooltip
               TransitionComponent={Fade}
-              TransitionProps={{ timeout: 600 }}
+              TransitionProps={{timeout: 600}}
               title="Freshers"
               placement="right"
               arrow
             >
               <Link className="link apps" to="/mentor/freshers">
-                <SchoolIcon sx={{ width: 40, height: 40 }} />
+                <SchoolIcon sx={{width: 40, height: 40}}/>
               </Link>
             </Tooltip>
           </div>
@@ -156,40 +164,41 @@ export default function ListPhase() {
             <div className="folder">
               <Tooltip
                 TransitionComponent={Fade}
-                TransitionProps={{ timeout: 600 }}
+                TransitionProps={{timeout: 600}}
                 title="Resources"
                 placement="right"
                 arrow
               >
-                <FolderIcon sx={{ width: 30, height: 30 }} />
+                <FolderIcon sx={{width: 30, height: 30}}/>
               </Tooltip>
             </div>
             <div className="settings">
               <Tooltip
                 TransitionComponent={Fade}
-                TransitionProps={{ timeout: 600 }}
+                TransitionProps={{timeout: 600}}
                 title="Settings"
                 placement="right"
                 arrow
               >
-                <SettingsIcon sx={{ width: 30, height: 30 }} />
+                <SettingsIcon sx={{width: 30, height: 30}}/>
               </Tooltip>
             </div>
             <div className="avatar">
-              <Avatar />
+              <Avatar/>
             </div>
           </div>
         </div>
         <div className="page-content">
-          <div className="topbar">
-            <img src="/logo.svg" width="30px" alt="logo" />
+          <div className="top-bar">
+            <img src="/logo.svg" width="30px" alt="logo"/>
             <p>Hexfresh</p>
           </div>
           <div className="name-page">
             <div className="container">
               <div className="name">Program's Detail</div>
               <div className="add-phase">
-                <Button icon={<PlusOutlined />} className="add-phase-btn" type="primary" onClick={showModal}>
+                <Button icon={<PlusOutlined/>} className="add-phase-btn" type="primary"
+                        onClick={showModal}>
                   Create a new phase
                 </Button>
               </div>
@@ -199,9 +208,9 @@ export default function ListPhase() {
             <div className="filter-search">
               <div className="container">
                 <div className="search">
-                  <SearchIcon style={{ width: '20px', height: '20px' }} />
+                  <SearchIcon style={{width: '20px', height: '20px'}}/>
                   <InputBase
-                    style={{ fontSize: '14px', width: '100%' }}
+                    style={{fontSize: '14px', width: '100%'}}
                     placeholder="Search"
                     value={keyword}
                     onChange={(e) => setKeyword(e.target.value)}
@@ -215,13 +224,13 @@ export default function ListPhase() {
                 <div className="name-space">List phase</div>
                 <div className="container">
                   {loading ? (
-                    <CircularProgress className="circular-progress" />
+                    <CircularProgress className="circular-progress"/>
                   ) : phases.length === 0 ? (
                     <div className="img-404">
-                      <img alt="img-404" style={{ height: '200px' }} src="/no-records.png" />
+                      <img alt="img-404" style={{height: '200px'}} src="/no-records.png"/>
                     </div>
                   ) : (
-                    <DragDrop phases={phases} programId={programId} updatePhases={updatePhases} />
+                    <DragDrop phases={phases} programId={programId} updatePhases={updatePhases}/>
                   )}
                 </div>
               </div>
@@ -251,11 +260,11 @@ export default function ListPhase() {
         <div className="form">
           <div className="field">
             <label>Title</label>
-            <Input style={{ width: '100%', marginTop: '10px' }} value={name} onChange={changeNewName} />
+            <Input style={{width: '100%', marginTop: '10px'}} value={name} onChange={changeNewName}/>
           </div>
           <div className="field">
             <label>Choose planet</label>
-            <Select value={planet} style={{ width: '100%', marginTop: '10px' }} onChange={changePlanet}>
+            <Select value={planet} style={{width: '100%', marginTop: '10px'}} onChange={changePlanet}>
               {images.map((image) => (
                 <Option
                   style={{

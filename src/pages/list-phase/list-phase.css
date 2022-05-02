@@ -98,7 +98,7 @@
   background-color: #f6f7f8;
 }
 
-.list-phase .container .page-content .topbar {
+.list-phase .container .page-content .top-bar {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -111,15 +111,13 @@
   font-size: 20px;
   color: #364d79;
   font-weight: bold;
-  margin: 0;
-  margin-left: 10px;
+  margin: 0 0 0 10px;
 }
 
 .list-phase .container .page-content .name-page {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
   background-color: white;
   border-bottom: 1px solid #f6f7f8;
   font-size: 24px;
