@@ -104,6 +104,7 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
       doSubmitMatchingSequenceQuestion,
       doSubmitMatchingCorrespondingQuestion,
       doSubmitAssignment,
+      doSubmitDocument,
 
       doUpdateSubmitBinaryQuestion,
       doUpdateSubmitContructedQuestion,
@@ -166,6 +167,7 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
               doSubmitMatchingSequenceQuestion={doSubmitMatchingSequenceQuestion}
               doSubmitMatchingCorrespondingQuestion={doSubmitMatchingCorrespondingQuestion}
               doSubmitAssignment={doSubmitAssignment}
+              doSubmitDocument={doSubmitDocument}
 
               doUpdateSubmitBinaryQuestion={doUpdateSubmitBinaryQuestion}
               doUpdateSubmitContructedQuestion={doUpdateSubmitContructedQuestion}
@@ -231,6 +233,7 @@ const mapDispatchToProps = (dispatch: IRootDispatch) => ({
   doSubmitMatchingSequenceQuestion: dispatch.programStore.doSubmitMatchingSequenceQuestion,
   doSubmitMatchingCorrespondingQuestion: dispatch.programStore.doSubmitMatchingCorrespondingQuestion,
   doSubmitAssignment: dispatch.programStore.doSubmitAssignment,
+  doSubmitDocument: dispatch.programStore.doSubmitDocument,
 
   doUpdateSubmitSelectedQuestionAnswer: dispatch.programStore.doUpdateSubmitSelectedQuestionAnswer,
   doUpdateSubmitContructedQuestion: dispatch.programStore.doUpdateSubmitContructedQuestion,

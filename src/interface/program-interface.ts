@@ -53,6 +53,7 @@ export interface ITask {
   answerBinaryQuestion: IAnswerBinaryQuestion;
   answerMatchingSequenceQuestion: IAnswerMatchingSequenceQuestion;
   answerMatchingCorrespondingQuestion: IAnswerMatchingCorrespondingQuestion;
+  answerDocument: IAnswerDocument;
 }
 
 export interface IAssignmentFile {
@@ -63,7 +64,15 @@ export interface IAssignmentFile {
   presignUrl: string;
 }
 
-export interface IDocumentTask{
+export interface IAnswerDocument {
+  documentId: number;
+  id: number;
+  isRead: boolean;
+  numberOfSubmissions: number;
+  userTaskId: number;
+}
+
+export interface IDocumentTask {
   id: number;
   taskId: number;
   title: string;

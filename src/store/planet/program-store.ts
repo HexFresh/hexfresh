@@ -112,7 +112,6 @@ export const programStore: any = createModel<IRootStore>()({
         newChecklists = _.sortBy(newChecklists, [ 'index' ]);
         selectedPhase.checklists = newChecklists;
 
-        console.log(selectedPhase);
         dispatch.programStore.setSelectedPhase(selectedPhase);
       } catch (error) {
         dispatch.programStore.setIsFetchingChecklist(false);
@@ -573,6 +572,24 @@ export const programStore: any = createModel<IRootStore>()({
       dispatch.programStore.setIsFetchingAnswer(false);
     },
 
+    async doSubmitDocument({ taskId }) {
+      const endpoint = `user/task/${taskId}/document/answer`;
+      dispatch.programStore.setIsFetchingAnswer(true);
+
+      try {        
+       await axiosClient.post(endpoint);
+       
+      } catch (error) {
+        dispatch.programStore.setIsFetchingAnswer(false);
+        notification.error({
+          message: 'Failed to submit answer',
+          description: error,
+        });
+        throw new Error('Failed to fetch answers.');
+
+      }
+      dispatch.programStore.setIsFetchingAnswer(false);
+    },
     
   }),
 

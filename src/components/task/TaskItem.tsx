@@ -39,6 +39,7 @@ interface ITaskItemProps {
   doSubmitMatchingSequenceQuestion: any;
   doSubmitMatchingCorrespondingQuestion: any;
   doSubmitAssignment: any;
+  doSubmitDocument: any;
 
   onFetchQuestionAnswer: any;
 
@@ -208,6 +209,11 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
           const element = document.getElementById('taskitem--document__html') as HTMLInputElement;
           if(!isEmpty(task?.document_question?.document)&&element){
             element.innerHTML = task?.document_question?.document.toString();
+          }
+          console.log(task);
+
+          if(!isEmpty(task?.answerDocument)){
+            isTakenTemp = task?.answerDocument?.isRead;
           }
           break;
         default:
@@ -423,6 +429,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
       doSubmitMatchingSequenceQuestion,
       doSubmitMatchingCorrespondingQuestion,
       doSubmitAssignment,
+      doSubmitDocument,
 
       onFetchQuestionAnswer,
 
@@ -569,6 +576,8 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
             await doSubmitAssignment({ taskId: task.id, answers: selectedFiles[ 0 ] });
           }
           break;
+          case TaskCategory.DOCUMENT:
+            await doSubmitDocument({taskId: task.id});
         default:
           break;
       }
@@ -625,7 +634,6 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
               return false;
             }
           };
-          console.log(task?.assignment_question?.fileList);
           return <>
             <Title> {task?.assignment_question?.title}</Title>
             <Typography>Please read the files below: </Typography>
@@ -740,11 +748,11 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
                 <EmptyResult message='Opps! Waiting for the mentor to create the content for this question.' />}
               {this.state.displayActionButtonGroup &&
                 <Space direction="vertical">
-                  {task?.typeId !== TaskCategory.WRITTING && isTaken && isCorrect && !isEdit ? <Text type='success'>Your anwser is correct.</Text> : ''}
-                  {task?.typeId !== TaskCategory.WRITTING && isTaken && !isCorrect && !isEdit ? <Text type='danger'>Your anwser is incorrect.</Text> : ''}
+                  {!_.includes([TaskCategory.WRITTING, TaskCategory.DOCUMENT],task?.typeId) && isTaken && isCorrect && !isEdit ? <Text type='success'>Your anwser is correct.</Text> : ''}
+                  {!_.includes([TaskCategory.WRITTING, TaskCategory.DOCUMENT],task?.typeId) && isTaken && !isCorrect && !isEdit ? <Text type='danger'>Your anwser is incorrect.</Text> : ''}
                   <Space direction="horizontal">
                     {(!_.isEmpty(task) && !isEmptyQuiz && !isTaken || isTaken && isEdit) && <Button type='primary' className='mt-medium mr-medium' loading={isSubmitingAnswer} onClick={this._onSubmitTask}>Submit</Button>}
-                    {isTaken && !isEdit ? <Button type='ghost' className='mt-medium' onClick={this._onRetakeTask}>Retake</Button> : ''}
+                    {isTaken && !isEdit && !_.includes([TaskCategory.DOCUMENT],task?.typeId) ? <Button type='ghost' className='mt-medium' onClick={this._onRetakeTask}>Retake</Button> : ''}
                   </Space>
                 </Space>}
             </>
