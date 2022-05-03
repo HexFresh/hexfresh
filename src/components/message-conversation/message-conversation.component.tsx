@@ -1,5 +1,5 @@
-import { SendOutlined } from "@mui/icons-material";
-import { Input } from "antd";
+import { SendOutlined, MoreVert } from "@mui/icons-material";
+import { Avatar, Input } from "antd";
 import { memo } from "react"
 
 import './message-conversation.scss';
@@ -7,9 +7,9 @@ import './message-conversation.scss';
 export const MessageDetail = memo(() => {
   return <section className="chat">
     <div className="header-chat">
-      <i className="icon fa fa-user-o" aria-hidden="true"></i>
+      <Avatar size='large' >Y</Avatar>
       <p className="name">Megan Leib</p>
-      <i className="icon clickable fa fa-ellipsis-h right" aria-hidden="true"></i>
+      <MoreVert className="right icon" style={{cursor: 'pointer'}}/>
     </div>
     <div className="messages-chat">
       <div className="message">
@@ -43,7 +43,7 @@ export const MessageDetail = memo(() => {
     </div>
     <div className="footer-chat">
       <Input className="write-message" placeholder="Type your message here"></Input>
-      <SendOutlined color="primary" />
+      <SendOutlined color="primary" className="icon" style={{cursor: 'pointer'}} />
     </div>
   </section>
 });

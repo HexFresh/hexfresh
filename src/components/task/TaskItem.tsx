@@ -206,6 +206,9 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
           break;
         case TaskCategory.DOCUMENT:
           const element = document.getElementById('taskitem--document__html') as HTMLInputElement;
+          if(!isEmpty(task?.document_question?.document)&&element){
+            element.innerHTML = task?.document_question?.document.toString();
+          }
           break;
         default:
           break;
@@ -606,7 +609,6 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
           return <>
             <Title> {task?.document_question?.title}</Title>
             <div className='taskitem--document__html' id='taskitem--document__html'>
-              {task?.document_question?.document}
             </div>
           </>;
         case TaskCategory.ASSIGNMENT:

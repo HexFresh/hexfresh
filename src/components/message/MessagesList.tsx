@@ -8,21 +8,23 @@ export const MessagesList = memo(({
   loadMore,
   list,
   onClickItem,
+  className,
 }: {
   initLoading: boolean;
   loadMore: any;
   list: any[];
   onClickItem: any;
+  className?: string | undefined;
 }) => {
   return <List
-    className="demo-loadmore-list bg-white"
+    className={`${"demo-loadmore-list bg-white"} ${className}`}
     loading={initLoading}
     itemLayout="horizontal"
     loadMore={loadMore}
     dataSource={list}
     style={{ height: '100%', overflowY: 'auto', overflowX: 'hidden' }}
     renderItem={item => (
-      <List.Item onClick={onClickItem } className='messages--item'>
+      <List.Item onClick={onClickItem} className='messages--item pv-medium'>
         <Skeleton avatar title={false} loading={item.loading} active>
           <List.Item.Meta
             avatar={<Avatar src={item.picture.large} />}
