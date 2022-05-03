@@ -19,6 +19,7 @@ import { getCurrentToken, onMessageListener } from './utils/firebaseInit';
 import { initSocket } from './utils/socketioInit';
 import FresherListPhase from './pages/fresher-list-phase/FresherListPhase';
 import ReviewTask from './pages/review-task/ReviewTask';
+import FresherLeaderboard from './pages/fresher-leaderboard/FresherLeaderboard';
 //import io from "socket.io-client";
 
 const Home = () => {
@@ -79,6 +80,8 @@ function App() {
       <Route path="/" element={<Navigate to="/planets" />} />
       <Route path="planets" element={<Home />} />
       <Route path="planets/:planetId" element={<PlanetView />} />
+
+      <Route path="/leaderboard" element={<FresherLeaderboard />} />
 
       <Route path="/mentor/programs" element={<ListProgram />} />
       <Route path="/mentor/programs/:programId/phases" element={<ListPhase />} />
