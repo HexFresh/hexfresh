@@ -52,17 +52,11 @@ interface IMember {
 export default function FresherLeaderboard() {
   const [loading, setLoading] = useState<boolean>(false);
   const [leaderboard, setLeaderboard] = useState<IMember[] | []>([]);
-  const [outThree, setOutThree] = useState<IMember[] | []>([]);
 
   const fetchLeaderboard = async () => {
     setLeaderboard(data);
-    if (leaderboard.length > 3) {
-      setOutThree(leaderboard.slice(3));
-    }
     console.log(data);
   };
-
-  console.log({ leaderboard, outThree });
 
   useEffect(() => {
     const fetchData = async () => {
