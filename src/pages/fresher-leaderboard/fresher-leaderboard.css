@@ -115,6 +115,7 @@
 .top-three__point {
   font-size: 18px;
   color: white;
+  font-weight: bold;
 }
 
 .out-three {
@@ -151,6 +152,7 @@
   flex: 8;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   grid-gap: 10px;
   background-color: white;
   border-radius: 60px;
@@ -158,6 +160,12 @@
   padding: 1px;
   font-size: 18px;
   font-weight: bold;
+}
+
+.out-three__item .mid__left {
+  display: flex;
+  align-items: center;
+  grid-gap: 20px;
 }
 
 .mid__avt {
@@ -174,21 +182,18 @@
   border-radius: 50%;
 }
 
-.out-three__item .right {
+.out-three__item .mid__right {
   flex: 1;
   display: flex;
   justify-content: flex-end;
 }
 
-.out-three__item .right .right__content {
+.out-three__item .right__content {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 62px;
-  height: 62px;
   background-color: white;
-  border-radius: 50%;
-  position: relative;
   font-weight: bold;
   font-size: 18px;
+  margin-right: 10px;
 }

@@ -145,17 +145,20 @@ export default function FresherLeaderboard() {
                     <div className="left__content">{`#${item.rank}`}</div>
                   </div>
                   <div className="mid">
-                    <div className="mid__avt">
-                      <img
-                        className="avt"
-                        src="https://i.pinimg.com/236x/8f/33/30/8f3330d6163782b88b506d396f5d156f.jpg"
-                        alt="avt"
-                      />
+                    <div className="mid__left">
+                      <div className="mid__avt">
+                        <img
+                          className="avt"
+                          src="https://i.pinimg.com/236x/8f/33/30/8f3330d6163782b88b506d396f5d156f.jpg"
+                          alt="avt"
+                        />
+                      </div>
+                      <div className="mid__name">{item.name}</div>
                     </div>
-                    <div className="mid__name">{item.name}</div>
-                  </div>
-                  <div className="right">
-                    <div className="right__content">{item.point}</div>
+
+                    <div className="mid__right">
+                      <div className="right__content">{item.point}</div>
+                    </div>
                   </div>
                 </div>
               ))}
