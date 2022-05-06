@@ -197,3 +197,11 @@
   font-size: 18px;
   margin-right: 30px;
 }
+
+.pagination {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}

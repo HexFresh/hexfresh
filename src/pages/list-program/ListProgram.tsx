@@ -132,7 +132,7 @@ export default function ListProgram() {
               </div>
             ) : (
               <div className="img-404">
-                <img style={{ height: '200px' }} src="/no-records.png" />
+                <img style={{ height: '200px' }} src="/no-records.png" alt="img" />
               </div>
             )}
           </div>

@@ -4,6 +4,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import Star from '../../components/layouts/star/Star';
 import './fresher-leaderboard.css';
 import { Link } from 'react-router-dom';
+import { Pagination } from 'antd';
 
 const data = [
   {
@@ -26,21 +27,6 @@ const data = [
     point: '70',
     rank: 4,
   },
-  {
-    name: 'Nguyễn Văn E',
-    point: '60',
-    rank: 5,
-  },
-  {
-    name: 'Nguyễn Văn F',
-    point: '60',
-    rank: 6,
-  },
-  {
-    name: 'Nguyễn Văn G',
-    point: '60',
-    rank: 7,
-  },
 ];
 
 interface IMember {
@@ -49,11 +35,19 @@ interface IMember {
   rank: number;
 }
 
+const nPerPage = 4;
+
 export default function FresherLeaderboard() {
   const [loading, setLoading] = useState<boolean>(false);
   const [leaderboard, setLeaderboard] = useState<IMember[] | []>([]);
+  const [count, setCount] = useState(0);
+  const [page, setPage] = useState(1);
 
-  const fetchLeaderboard = async () => {
+  const handleChangePage = (page: number) => {
+    setPage(page);
+  };
+
+  const fetchLeaderboard = async (limit: number, offset: number) => {
     setLeaderboard(data);
     console.log(data);
   };
@@ -61,11 +55,11 @@ export default function FresherLeaderboard() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      await fetchLeaderboard();
+      await fetchLeaderboard(nPerPage, (page - 1) * nPerPage);
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [page]);
 
   return (
     <div className="fresher-leaderboard">
@@ -139,7 +133,7 @@ export default function FresherLeaderboard() {
 
           <div className="out-three">
             {leaderboard.length > 3 &&
-              leaderboard.slice(3).map((item, index) => (
+              leaderboard.map((item, index) => (
                 <div className="out-three__item" key={index}>
                   <div className="left">
                     <div className="left__content">{`#${item.rank}`}</div>
@@ -162,6 +156,15 @@ export default function FresherLeaderboard() {
                   </div>
                 </div>
               ))}
+          </div>
+          <div className="pagination">
+            <Pagination
+              current={count === 0 ? undefined : page}
+              total={6}
+              pageSize={4}
+              onChange={handleChangePage}
+              hideOnSinglePage
+            />
           </div>
         </div>
       )}
