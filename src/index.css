@@ -94,6 +94,7 @@ code {
 /* width */
 ::-webkit-scrollbar {
   width: 7px;
+  display: none;
 }
 
 /* Track */

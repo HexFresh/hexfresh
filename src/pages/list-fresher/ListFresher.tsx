@@ -171,14 +171,14 @@ export default function ListProgram() {
     setLoading(true);
     const result = await getAllFresher({ keyword, limit, offset });
     console.log(result);
-    setFreshers(result.rows);
-    setCount(result.count);
+    setFreshers(result.rows || []);
+    setCount(result.count || 0);
     setLoading(false);
   };
 
   const fetchPrograms = async () => {
     const programs = await getPrograms({ keyword: '', limit: null, offset: 0 });
-    setPrograms(programs.rows);
+    setPrograms(programs.rows || []);
   };
 
   useEffect(() => {

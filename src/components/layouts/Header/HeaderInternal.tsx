@@ -16,6 +16,7 @@ const HeaderInternal = ({ textColorClassName }: { textColorClassName?: string })
   const onClickMenu = ({ key }: { key: string }) => {
     switch (key) {
       case '1':
+        navigate('/user/profile');
         break;
       case '2':
         break;

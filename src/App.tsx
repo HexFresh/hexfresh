@@ -1,5 +1,4 @@
 import './App.css';
-import Header from './components/layouts/Header/Header';
 import Carousel from './components/layouts/carousel/Carousel';
 import MeteorShower from './components/layouts/meteo-shower/MeteorShower';
 import HeaderInternal from './components/layouts/Header/HeaderInternal';
@@ -20,6 +19,7 @@ import { initSocket } from './utils/socketioInit';
 import FresherListPhase from './pages/fresher-list-phase/FresherListPhase';
 import ReviewTask from './pages/review-task/ReviewTask';
 import FresherLeaderboard from './pages/fresher-leaderboard/FresherLeaderboard';
+import UserProfile from './pages/user-profile/UserProfile';
 //import io from "socket.io-client";
 
 const Home = () => {
@@ -90,6 +90,8 @@ function App() {
       <Route path="/mentor/freshers" element={<ListFresher />} />
       <Route path="/mentor/freshers/:fresherId" element={<FresherListPhase />} />
       <Route path="/mentor/freshers/:fresherId/phase/:phaseId" element={<ReviewTask />} />
+
+      <Route path="/user/profile" element={<UserProfile />} />
 
       {/* <Route path="*" element={<Navigate to="/" />} /> */}
     </Routes>
