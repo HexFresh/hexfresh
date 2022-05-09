@@ -1,0 +1,72 @@
+.assignment-review {
+  width: 100%;
+  height: calc(100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.assignment-review .point-by-mentor {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 100px;
+}
+
+.assignment-review .point-by-mentor__input {
+  width: 100%;
+  height: 40px;
+  border: none;
+  border-radius: 5px;
+  padding: 0 10px;
+  font-size: 18px;
+  font-weight: bold;
+  outline: none;
+  background-color: white;
+}
+
+.assignment-review__container {
+  width: 100%;
+  height: calc(100%);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 20px 120px;
+  position: relative;
+}
+
+.assignment-review__container .title {
+  margin-top: 40px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  grid-gap: 10px;
+}
+
+.assignment-review__container .description {
+  margin-top: 20px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  grid-gap: 10px;
+}
+
+.assignment-review__container .title .description__title,
+.assignment-review__container .description .description__title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.assignment-review__container .file-item {
+  padding: 10px;
+  background-color: white;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  grid-gap: 20px;
+  color: black;
+  margin-top: 20px;
+}

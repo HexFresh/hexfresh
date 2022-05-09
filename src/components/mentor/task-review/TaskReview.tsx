@@ -4,11 +4,13 @@ import MatchCorrespondingTaskReview from './match-corresponding-task-review/Matc
 import MatchSequenceTaskReview from './match-sequence-task-review/MatchSequenceTaskReview';
 import MultipleTaskReview from './multiple-task-review/MultipleTaskReview';
 import SingleTaskReview from './single-task-review/SingleTaskReview';
-import './task-review.css';
 import TrueFalseTaskReview from './true-false-task-review/TrueFalseTaskReview';
+import AssignmentReview from './assignment-review/AssignmentReview';
+import './task-review.css';
 
 export default function TaskReview(props: any) {
   const { selectedTask } = props;
+  console.log(selectedTask);
   const renderType = () => {
     switch (selectedTask.typeId) {
       case 1:
@@ -46,6 +48,8 @@ export default function TaskReview(props: any) {
         return <MatchSequenceTaskReview selectedTask={selectedTask} />;
       case 6:
         return <MatchCorrespondingTaskReview selectedTask={selectedTask} />;
+      case 8:
+        return <AssignmentReview selectedTask={selectedTask} />;
       default:
         return <div className="task-type">Chưa làm</div>;
     }

@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
 
 export const initSocket = (accessToken: string) => {
-  const socket = io('https://hexfresh-gamification-backend.herokuapp.com', {
+  const socket = io('https://hexfresh-socket.herokuapp.com', {
     transports: ['websocket'],
     query: { token: accessToken },
   });
