@@ -71,9 +71,15 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
       case TaskCategory.MATCH_SEQUENCE:
         this.props.doFetchMatchingSequenceQuestionAnswer({ taskId: task.id });
         break;
-        case TaskCategory.MATCH_CORESPONSE:
-          this.props.doFetchMatchingCorrespondingQuestionAnswer({ taskId: task.id });
-          break;
+      case TaskCategory.MATCH_CORESPONSE:
+        this.props.doFetchMatchingCorrespondingQuestionAnswer({ taskId: task.id });
+        break;
+      case TaskCategory.ASSIGNMENT:
+        this.props.doFetchUserAnswerAssignment({ taskId: task.id });
+        break;
+        case TaskCategory.DOCUMENT:
+        this.props.doFetchUserAnswerDocument({ taskId: task.id });
+        break;
       default:
         break;
     }
@@ -97,12 +103,15 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
       doSubmitSelectedQuestionAnswer,
       doSubmitMatchingSequenceQuestion,
       doSubmitMatchingCorrespondingQuestion,
+      doSubmitAssignment,
+      doSubmitDocument,
 
       doUpdateSubmitBinaryQuestion,
       doUpdateSubmitContructedQuestion,
       doUpdateSubmitSelectedQuestionAnswer,
       doUpdateMatchingSequenceQuestion,
       doUpdateMatchingCorrespondingQuestion,
+      doUpdateAssignment,
 
       isFetchingTask,
       isFetchingChecklist,
@@ -124,9 +133,9 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
         <Sider className="site-layout-background" width={300}>
           <Menu
             mode="inline"
-            defaultSelectedKeys={[defaultSelectedKeys]}
-            defaultOpenKeys={[defaultOpenKeys]}
-            style={{ height: '100%' }}
+            defaultSelectedKeys={[ defaultSelectedKeys ]}
+            defaultOpenKeys={[ defaultOpenKeys ]}
+            style={{ height: '100%', overflowY: 'auto', overflowX: 'hidden' }}
           >
             {_.map(selectedPhase.checklists, (checklist) => (
               <SubMenu
@@ -151,18 +160,21 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
           <Card style={{ height: '100%' }} className='task--item'>
             <TaskItem
               task={this.props.selectedTask}
-              
+
               doSubmitBinaryQuestion={doSubmitBinaryQuestion}
               doSubmitContructedQuestion={doSubmitContructedQuestion}
               doSubmitSelectedQuestionAnswer={doSubmitSelectedQuestionAnswer}
               doSubmitMatchingSequenceQuestion={doSubmitMatchingSequenceQuestion}
               doSubmitMatchingCorrespondingQuestion={doSubmitMatchingCorrespondingQuestion}
+              doSubmitAssignment={doSubmitAssignment}
+              doSubmitDocument={doSubmitDocument}
 
               doUpdateSubmitBinaryQuestion={doUpdateSubmitBinaryQuestion}
               doUpdateSubmitContructedQuestion={doUpdateSubmitContructedQuestion}
               doUpdateSubmitSelectedQuestionAnswer={doUpdateSubmitSelectedQuestionAnswer}
               doUpdateMatchingSequenceQuestion={doUpdateMatchingSequenceQuestion}
               doUpdateMatchingCorrespondingQuestion={doUpdateMatchingCorrespondingQuestion}
+              doUpdateAssignment={doUpdateAssignment}
 
               onFetchQuestionAnswer={this._onFetchFetchQuestionAnswer.bind(this)}
               isLoading={isFetchingTask}
@@ -212,19 +224,23 @@ const mapDispatchToProps = (dispatch: IRootDispatch) => ({
   doFetchBinaryQuestionAnswer: dispatch.programStore.doFetchBinaryQuestionAnswer,
   doFetchMatchingSequenceQuestionAnswer: dispatch.programStore.doFetchMatchingSequenceQuestionAnswer,
   doFetchMatchingCorrespondingQuestionAnswer: dispatch.programStore.doFetchMatchingCorrespondingQuestionAnswer,
+  doFetchUserAnswerAssignment: dispatch.programStore.doFetchUserAnswerAssignment,
+  doFetchUserAnswerDocument: dispatch.programStore.doFetchUserAnswerDocument,
 
   doSubmitSelectedQuestionAnswer: dispatch.programStore.doSubmitSelectedQuestionAnswer,
   doSubmitContructedQuestion: dispatch.programStore.doSubmitContructedQuestion,
   doSubmitBinaryQuestion: dispatch.programStore.doSubmitBinaryQuestion,
   doSubmitMatchingSequenceQuestion: dispatch.programStore.doSubmitMatchingSequenceQuestion,
   doSubmitMatchingCorrespondingQuestion: dispatch.programStore.doSubmitMatchingCorrespondingQuestion,
+  doSubmitAssignment: dispatch.programStore.doSubmitAssignment,
+  doSubmitDocument: dispatch.programStore.doSubmitDocument,
 
   doUpdateSubmitSelectedQuestionAnswer: dispatch.programStore.doUpdateSubmitSelectedQuestionAnswer,
   doUpdateSubmitContructedQuestion: dispatch.programStore.doUpdateSubmitContructedQuestion,
   doUpdateSubmitBinaryQuestion: dispatch.programStore.doUpdateSubmitBinaryQuestion,
   doUpdateMatchingSequenceQuestion: dispatch.programStore.doUpdateMatchingSequenceQuestion,
   doUpdateMatchingCorrespondingQuestion: dispatch.programStore.doUpdateMatchingCorrespondingQuestion,
-
+  doUpdateAssignment: dispatch.programStore.doUpdateAssignment,
 });
 
 type PlanViewStateProps = ReturnType<typeof mapStateToProps>;

@@ -5,6 +5,7 @@ export enum TaskCategory{
   BINARY,
   MATCH_SEQUENCE,
   MATCH_CORESPONSE,
+  DOCUMENT,
   ASSIGNMENT,
 }
 

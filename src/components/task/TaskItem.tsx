@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import _ from 'lodash';
+import _, { isEmpty } from 'lodash';
 import 'antd/dist/antd.css';
-import { message, Space, Button, Skeleton } from 'antd';
+import { message, Space, Button, Skeleton, Upload, Card, Typography } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import Title from 'antd/lib/typography/Title';
 import Text from 'antd/lib/typography/Text';
@@ -9,7 +9,7 @@ import Dragger from 'antd/lib/upload/Dragger';
 import TextArea from 'antd/lib/input/TextArea';
 
 import { EmptyResult } from '../results';
-import { ICorrespondingTassk, ISequenceTask, ITask } from '../../interface/program-interface'
+import { ISequenceTask, ITask } from '../../interface/program-interface'
 import { TaskCategory } from '../../utilities/enum-utils';
 import './taskitem.scss';
 import { DropResult } from 'react-beautiful-dnd';
@@ -21,6 +21,7 @@ import { BinaryQuiz } from './binary-quiz/BinaryQuiz';
 import { INT_ONE, INT_TWO, INT_ZERO } from '../../constant';
 import { MatchCorrespond } from './match-corresponding/MatchCorrespond';
 import { isTrueAnswer } from './match-corresponding/match-correspoding.util';
+import { CloseOutlined } from '@mui/icons-material';
 
 export interface IMatchingSequencePair {
   id: number;
@@ -30,18 +31,24 @@ interface ITaskItemProps {
   task: ITask | null;
   isLoading: boolean;
   isFetchingAnswer: boolean;
+
   isSubmitingAnswer: boolean;
   doSubmitSelectedQuestionAnswer: any;
   doSubmitContructedQuestion: any;
   doSubmitBinaryQuestion: any;
   doSubmitMatchingSequenceQuestion: any;
   doSubmitMatchingCorrespondingQuestion: any;
+  doSubmitAssignment: any;
+  doSubmitDocument: any;
+
   onFetchQuestionAnswer: any;
+
   doUpdateSubmitBinaryQuestion: any;
   doUpdateSubmitContructedQuestion: any;
   doUpdateSubmitSelectedQuestionAnswer: any;
   doUpdateMatchingSequenceQuestion: any;
   doUpdateMatchingCorrespondingQuestion: any;
+  doUpdateAssignment: any;
 }
 
 interface ITaskItemState {
@@ -198,6 +205,17 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
             isEmptyQuizTemp = false;
           }
           break;
+        case TaskCategory.DOCUMENT:
+          const element = document.getElementById('taskitem--document__html') as HTMLInputElement;
+          if(!isEmpty(task?.document_question?.document)&&element){
+            element.innerHTML = task?.document_question?.document.toString();
+          }
+          console.log(task);
+
+          if(!isEmpty(task?.answerDocument)){
+            isTakenTemp = task?.answerDocument?.isRead;
+          }
+          break;
         default:
           break;
       }
@@ -279,7 +297,6 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
     }
 
     if (!_.isEqual(prevState.pairIds, this.state.pairIds)) {
-      console.log(123123123123);
       const { pairIds, matchingCorespondingData, matchingSequencePairs } = this.state;
       if (pairIds.length === 2) {
         const firstItem = _.find(matchingCorespondingData[ 0 ], [ 'id', pairIds[ 0 ] ]);
@@ -389,6 +406,20 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
     }
   }
 
+  private _onChangeFile = (info: any) => {
+    const file = info.file;
+    !isEmpty(file) && this.setState({ selectedFiles: [ file ] });
+  }
+
+  private _onDropFile = (e: any) => {
+    const file = e.dataTransfer.files[ 0 ];
+    !isEmpty(file) && this.setState({ selectedFiles: [ file ] });
+  }
+
+  private _onRemoveFile = () => {
+    this.setState({ selectedFiles: [] });
+  }
+
   private _onSubmitTask = async () => {
     const {
       task,
@@ -397,7 +428,11 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
       doSubmitSelectedQuestionAnswer,
       doSubmitMatchingSequenceQuestion,
       doSubmitMatchingCorrespondingQuestion,
+      doSubmitAssignment,
+      doSubmitDocument,
+
       onFetchQuestionAnswer,
+
       doUpdateSubmitBinaryQuestion,
       doUpdateSubmitContructedQuestion,
       doUpdateSubmitSelectedQuestionAnswer,
@@ -412,6 +447,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
       binaryChoices,
       matchingSequence,
       matchingSequencePairs,
+      selectedFiles,
     } = this.state;
 
     let payload = {};
@@ -535,6 +571,13 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
             }
           }
           break;
+        case TaskCategory.ASSIGNMENT:
+          if (!isEmpty(selectedFiles)) {
+            await doSubmitAssignment({ taskId: task.id, answers: selectedFiles[ 0 ] });
+          }
+          break;
+          case TaskCategory.DOCUMENT:
+            await doSubmitDocument({taskId: task.id});
         default:
           break;
       }
@@ -562,7 +605,8 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
       matchingSequence,
       pairIds,
       matchingCorespondingData,
-      matchingSequencePairs
+      matchingSequencePairs,
+      selectedFiles,
     } = this.state;
     if (isLoading) {
       return <Skeleton active={true} />
@@ -570,37 +614,56 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
     if (!_.isEmpty(task)) {
 
       switch (task?.typeId) {
+        case TaskCategory.DOCUMENT:
+          return <>
+            <Title> {task?.document_question?.title}</Title>
+            <div className='taskitem--document__html' id='taskitem--document__html'>
+            </div>
+          </>;
         case TaskCategory.ASSIGNMENT:
           const props = {
             name: 'file',
-            multiple: true,
-            action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-            onChange(info: any) {
-              const { status } = info.file;
-              if (status !== 'uploading') {
-                console.log(info.file, info.fileList);
+            multiple: false,
+            showUploadList: false,
+
+            beforeUpload(file: any) {
+              const isValid = file.type === 'application/pdf';
+              if (!isValid) {
+                message.error(`${file.name} is not a valid file`);
               }
-              if (status === 'done') {
-                message.success(`${info.file.name} file uploaded successfully.`);
-              } else if (status === 'error') {
-                message.error(`${info.file.name} file upload failed.`);
-              }
-            },
-            onDrop(e: any) {
-              console.log('Dropped files', e.dataTransfer.files);
-            },
+              return false;
+            }
           };
           return <>
-            <Dragger {...props}>
+            <Title> {task?.assignment_question?.title}</Title>
+            <Typography>Please read the files below: </Typography>
+            {!isEmpty(task?.assignment_question?.fileList) && _.map(task?.assignment_question?.fileList, file => {
+              return <div className='mt-large'>
+                <Card className='mt-medium mb-medium' size='small'>
+                  <div className='taskitem--assignment__card-body'>
+                    <a href={file.presignUrl} target='_blank' style={{ width: '100%', marginBottom: '0px' }} rel="noreferrer">{file.fileName}</a>
+                  </div>
+                </Card>
+              </div>
+            })}
+            <Dragger {...props} onChange={this._onChangeFile} onDrop={this._onDropFile}>
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />
               </p>
               <p className="ant-upload-text">Click or drag file to this area to upload</p>
               <p className="ant-upload-hint">
-                Support for a single or bulk upload. Strictly prohibit from uploading company data or other
-                band files
+                {task?.assignment_question?.description}
+                Please submit your assignemt before {new Date(task?.assignment_question?.dueDate).toLocaleString()}
               </p>
-            </Dragger>,
+            </Dragger>
+            {!isEmpty(selectedFiles) && <div className='mt-large'>
+              <Card className='mt-medium' size='small'>
+                <div className='taskitem--assignment__card-body'>
+                  <p style={{ width: '100%', marginBottom: '0px' }}>{selectedFiles[ 0 ].name}</p>
+                  <CloseOutlined className='close-badge' color='action' onClick={this._onRemoveFile} />
+                </div>
+              </Card>
+            </div>}
           </>;
         case TaskCategory.MULTIPLE_CHOICES:
           return <MultipleChoices
@@ -633,7 +696,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
           </>;
         case TaskCategory.BINARY:
 
-          return <BinaryQuiz 
+          return <BinaryQuiz
             isEdit={isEdit}
             isTaken={isTaken}
             task={task}
@@ -643,11 +706,11 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
 
         case TaskCategory.MATCH_SEQUENCE:
           return <>
-            <MatchSequence 
-            items={matchingSequence} 
-            isTaken={isTaken} 
-            isEdit={isEdit} 
-            onDragEnd={this._onDragEnd.bind(this)} />
+            <MatchSequence
+              items={matchingSequence}
+              isTaken={isTaken}
+              isEdit={isEdit}
+              onDragEnd={this._onDragEnd.bind(this)} />
           </>;
 
         case TaskCategory.MATCH_CORESPONSE:
@@ -685,11 +748,11 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
                 <EmptyResult message='Opps! Waiting for the mentor to create the content for this question.' />}
               {this.state.displayActionButtonGroup &&
                 <Space direction="vertical">
-                  {task?.typeId !== TaskCategory.WRITTING && isTaken && isCorrect && !isEdit ? <Text type='success'>Your anwser is correct.</Text> : ''}
-                  {task?.typeId !== TaskCategory.WRITTING && isTaken && !isCorrect && !isEdit ? <Text type='danger'>Your anwser is incorrect.</Text> : ''}
+                  {!_.includes([TaskCategory.WRITTING, TaskCategory.DOCUMENT],task?.typeId) && isTaken && isCorrect && !isEdit ? <Text type='success'>Your anwser is correct.</Text> : ''}
+                  {!_.includes([TaskCategory.WRITTING, TaskCategory.DOCUMENT],task?.typeId) && isTaken && !isCorrect && !isEdit ? <Text type='danger'>Your anwser is incorrect.</Text> : ''}
                   <Space direction="horizontal">
                     {(!_.isEmpty(task) && !isEmptyQuiz && !isTaken || isTaken && isEdit) && <Button type='primary' className='mt-medium mr-medium' loading={isSubmitingAnswer} onClick={this._onSubmitTask}>Submit</Button>}
-                    {isTaken && !isEdit ? <Button type='ghost' className='mt-medium' onClick={this._onRetakeTask}>Retake</Button> : ''}
+                    {isTaken && !isEdit && !_.includes([TaskCategory.DOCUMENT],task?.typeId) ? <Button type='ghost' className='mt-medium' onClick={this._onRetakeTask}>Retake</Button> : ''}
                   </Space>
                 </Space>}
             </>
