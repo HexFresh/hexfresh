@@ -23,6 +23,7 @@ export default function ReviewTask() {
 
   const fetchChecklists = async () => {
     const result = await getAllFresherChecklist(fresherId, phaseId);
+    console.log(result);
     setChecklists(result || []);
   };
 
@@ -40,9 +41,7 @@ export default function ReviewTask() {
     document.title = 'HexF - Review Task';
     const fetchData = async () => {
       setLoading(true);
-      await fetchChecklists();
-      await fetchPhaseById();
-      await fetchUserInfo();
+      await Promise.all([fetchChecklists(), fetchPhaseById(), fetchUserInfo()]);
       setLoading(false);
     };
     fetchData();

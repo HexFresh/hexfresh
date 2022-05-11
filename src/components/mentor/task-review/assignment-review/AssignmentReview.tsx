@@ -81,7 +81,7 @@ export default function AssignmentReview(props: any) {
           <div className="description">
             <div className="description__title">Deadline:</div>
             <div className="description__content">{`${moment(task?.task.assignment.dueDate).format(
-              'YYYY-MM-DD'
+              'DD-MM-YYYY'
             )}`}</div>
           </div>
 
