@@ -306,7 +306,7 @@ export default function UserProfile() {
                           const newUserProfile = { ...userProfile, degreeId: value };
                           setUserProfile(newUserProfile as IUserProfile);
                         }}
-                        value={userProfile?.degreeId}
+                        value={userProfile?.degree?.id}
                       >
                         {degrees.map((degree) => (
                           <Select.Option value={degree.id} key={degree.id}>
@@ -330,7 +330,7 @@ export default function UserProfile() {
                           const newUserProfile = { ...userProfile, jobPositionId: value };
                           setUserProfile(newUserProfile as IUserProfile);
                         }}
-                        value={userProfile?.jobPositionId}
+                        value={userProfile?.job_position?.id}
                       >
                         {jobPositions.map((job) => (
                           <Select.Option value={job.id} key={job.id}>
@@ -368,7 +368,7 @@ export default function UserProfile() {
                             filterOption={(input: any, option: any) =>
                               option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                             }
-                            placeholder="Provinces"
+                            placeholder="Province"
                             style={{
                               width: '100%',
                             }}
@@ -387,7 +387,7 @@ export default function UserProfile() {
                             filterOption={(input: any, option: any) =>
                               option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                             }
-                            placeholder="Districts"
+                            placeholder="District"
                             style={{
                               width: '100%',
                             }}
@@ -406,7 +406,7 @@ export default function UserProfile() {
                             filterOption={(input: any, option: any) =>
                               option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                             }
-                            placeholder="Wards"
+                            placeholder="Ward"
                             style={{
                               width: '100%',
                             }}
