@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
 
-export const initSocket = (accessToken: string) => {
-  const accessToken = localStorage.getItem("token");
+export const initSocket = () => {
+  const accessToken = localStorage.getItem('token');
   const url = 'https://hexfresh-socket.herokuapp.com';
   const socket = io(url as string, {
     transports: ['websocket'],
@@ -22,11 +22,11 @@ export const initSocket = (accessToken: string) => {
     // To do: implement refetch & update notification
   });
 
-  socket.off("receive message").on("receive message", (data) => {
+  socket.off('receive message').on('receive message', (data) => {
     //nhan message
     console.log(data);
     alert(data.message.data);
-  })
+  });
 
   return socket;
 };
