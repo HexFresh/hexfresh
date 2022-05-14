@@ -13,6 +13,8 @@ const initialState = {
 	email: null,
 	username: null,
 	roleId: null,
+	recipients: [],
+	isFetchingProfile: false,
 }
 
 export const user: any = {
@@ -37,7 +39,10 @@ export const user: any = {
 				token: payload,
 			}
 		},
-		logout: (state: IRootStore) => { return { ...initialState } }
+		logout: (state: IRootStore) => { return { ...initialState } },
+
+		setRecipients: (state: IRootStore, payload: any)=>({ ...state, recipients: payload}),
+		setIsFetchingProfile:(state:IRootStore, payload: any)=>({...state, isFetchingProfile: payload}),
 
 	},
 	effects: (dispatch: IRootDispatch) => ({
@@ -149,6 +154,20 @@ export const user: any = {
 			}
 
 		},
+
+		async fetchProfileUser({userId}:{userId: string}){
+			const endpoint = `user/${userId}/user-profile`;
+
+			try {
+				const response = await axiosClient.get(endpoint);
+				const updatedRecipients = [...rootStore.getState().user.recipients, response.data];
+
+				dispatch.user.setRecipients(updatedRecipients);
+
+			} catch (error) {
+				console.log(error);
+			}
+		}
 
 	}),
 }

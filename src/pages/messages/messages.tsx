@@ -2,6 +2,7 @@ import { Breadcrumb, Button, Card, Layout } from "antd";
 import Search from "antd/lib/input/Search";
 import { Content } from "antd/lib/layout/layout";
 import Sider from "antd/lib/layout/Sider";
+import _ from "lodash";
 import { FC, useCallback, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import HeaderInternal from "../../components/layouts/Header/HeaderInternal";
@@ -40,6 +41,7 @@ const Messages: FC<MessageProps> = ({
   profileRecipients,
   isFetchingConversations,
   isFetchingConversation,
+  isFetchingRecipients,
 }) => {
   const [ state, setState ] = useState<typeof initialState>(initialState);
   const [ isActiveModal, setActiveModal ] = useState<boolean>(false);
@@ -76,8 +78,7 @@ const Messages: FC<MessageProps> = ({
     ) : null;
 
   const onClickItem = async (item: IConversation) => {
-    console.log(item);
-    await doFetchConversation({conversationId: item?._id, skip:0, limit: 0});
+    await doFetchConversation({ conversationId: item?._id, skip: 0, limit: 0 });
   };
 
   const handleAddChat = useCallback(() =>
@@ -93,6 +94,10 @@ const Messages: FC<MessageProps> = ({
     setActiveModal(false);
   }
     , []);
+
+  useEffect(() => {
+    !_.isEmpty(selectedConversation?.recipients) && doFetchRecipientsProfile({ recipients: selectedConversation?.recipients })
+  }, [ doFetchRecipientsProfile, selectedConversation ])
 
   return (
     <>
@@ -127,9 +132,10 @@ const Messages: FC<MessageProps> = ({
             </Sider>
             <Content style={{ padding: '0 24px', minHeight: 280 }}>
               <Card style={{ height: '100%' }} className='task--item'>
-                <MessageDetail 
-                isLoading={isFetchingConversation}
-                conversation={selectedConversation}
+                <MessageDetail
+                profileRecipients={profileRecipients}
+                  isLoading={isFetchingConversation || isFetchingRecipients}
+                  conversation={selectedConversation}
                 />
               </Card>
             </Content>
@@ -153,6 +159,7 @@ const mapStateToProps = (state: IRootStore) => ({
   profileRecipients: state.message.profileRecipients,
   isFetchingConversations: state.message.isFetchingConversations,
   isFetchingConversation: state.message.isFetchingConversation,
+  isFetchingRecipients: state.message.isFetchingRecipients,
 });
 
 const mapDispatchToProps = (dispatch: IRootDispatch) => ({

@@ -1,8 +1,9 @@
 import { notification } from "antd";
-import _ from "lodash";
+import _, { values } from "lodash";
 import axiosClient from "../../api/axiosClient";
 import axiosMessage from "../../api/axiosMessage";
 import rootStore, { IRootDispatch, IRootStore } from "../store"
+import { IUser } from "../user/user-interface";
 
 export const messageStore: any = {
   state: {
@@ -11,6 +12,7 @@ export const messageStore: any = {
     profileRecipients: [],
     isFetchingConversations: false,
     isFetchingConversation: false,
+    isFetchingRecipients: false,
   },
   reducers: {
     setIsFetchingConversation: (state: IRootStore, payload: any) => ({ ...state, isFetchingConversation: payload }),
@@ -18,6 +20,7 @@ export const messageStore: any = {
     setSelectedConversation: (state: IRootStore, payload: any) => ({ ...state, selectedConversation: payload }),
     setConversations: (state: IRootStore, payload: any) => ({ ...state, conversations: payload }),
     setuserProfiles: (state: IRootStore, payload: any) => ({ ...state, profileRecipients: payload }),
+    setIsFetchingRecipients: (state: IRootStore, payload: any) => ({ ...state, isFetchingRecipients: payload }),
   },
   effects: (dispatch: IRootDispatch) => ({
     async doCreateConversation({ recipients, title }: { recipients: string[], title: string }) {
@@ -90,21 +93,34 @@ export const messageStore: any = {
     },
     async doFetchRecipientsProfile({ recipients }: { recipients: string[] }) {
 
+      dispatch.message.setIsFetchingRecipients(true);
       dispatch.message.setuserProfiles([]);
 
       try {
-        _.forEach(recipients,
+       const promises =  _.map(recipients,
           async recipient => {
 
             const endpoint = `user/${recipient}/user-profile`;
 
-            const response = await axiosClient.get(endpoint);
+            return await axiosClient.get(endpoint)}
+          );
 
-            const prevUserProfiles = _.cloneDeep(rootStore.getState().message.profileRecipients);
-            const updatedUserProfiles = prevUserProfiles.push(response.data);
-            dispatch.message.setuserProfiles(updatedUserProfiles);
+        Promise.allSettled(promises).then(values => {
+          const recipients = _.map(values,(result)=>{
+            if( result.status==='fulfilled'){
+              return result.value.data;
+            }
+            if(result.status==='rejected'){
+              return {} as IUser;
+            }
           });
+          dispatch.message.setuserProfiles(recipients);
+        });
+        dispatch.message.setIsFetchingRecipients(false);
+
       } catch (error) {
+        dispatch.message.setIsFetchingRecipients(false);
+
         throw new Error(error);
       }
     }
