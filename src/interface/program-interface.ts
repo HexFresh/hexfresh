@@ -47,18 +47,28 @@ export interface ITask {
   match_corresponding_answers: ICorrespondingTassk[];
   assignment_question: IAssignemtTask;
   document_question: IDocumentTask;
-
+  
   answersSelectedQuestion: IAnswerSelectedQuestion;
   answerConstructedQuestion: IAnswerContructedQuestion;
   answerBinaryQuestion: IAnswerBinaryQuestion;
   answerMatchingSequenceQuestion: IAnswerMatchingSequenceQuestion;
   answerMatchingCorrespondingQuestion: IAnswerMatchingCorrespondingQuestion;
   answerDocument: IAnswerDocument;
+  answerAssignment: IAnswerAssignment;
 }
 
 export interface IAssignmentFile {
   expiredTime: number;
   fileName: string;
+  id: number;
+  keyFileName: string;
+  presignUrl: string;
+}
+
+export interface IAnswerAssignment{
+  answer: string;
+  createdAt: string;
+  fileList: IAssignmentFile[];
   id: number;
   keyFileName: string;
   presignUrl: string;
