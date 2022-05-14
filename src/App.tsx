@@ -15,7 +15,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { IUserStore } from './store/user/user-store';
 import { getCurrentToken, onMessageListener } from './utils/firebaseInit';
-import { initSocket } from './utils/socketioInit';
 import FresherListPhase from './pages/fresher-list-phase/FresherListPhase';
 import ReviewTask from './pages/review-task/ReviewTask';
 import FresherLeaderboard from './pages/fresher-leaderboard/FresherLeaderboard';
@@ -51,13 +50,6 @@ function App() {
 
   useEffect(() => {
     dispatch.user.checkAutoLoginV2({ dispatch, navigate, location });
-    const accessToken = rootStore.getState().user.token;
-    if (accessToken) {
-      const socket = initSocket(accessToken);
-      socket.emit('signin', 'Auto sign in');
-    } else {
-      console.log('no access token');
-    }
 
     // push notification
     console.log('Noctification Token: ', getCurrentToken());

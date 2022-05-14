@@ -77,7 +77,7 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
       case TaskCategory.ASSIGNMENT:
         this.props.doFetchUserAnswerAssignment({ taskId: task.id });
         break;
-        case TaskCategory.DOCUMENT:
+      case TaskCategory.DOCUMENT:
         this.props.doFetchUserAnswerDocument({ taskId: task.id });
         break;
       default:
@@ -144,7 +144,7 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
                 title={checklist.title}
                 onTitleClick={this._onFetchTasks.bind(this, { checklistId: checklist.id })}
               >
-                {isFetchingChecklist ? <Skeleton active={true} /> : _.map(checklist.tasks, (task) => (
+                {isFetchingChecklist && _.isEmpty(checklist) ? <Skeleton active={true} /> : _.map(checklist.tasks, (task) => (
                   <Menu.Item
                     key={task.id}
                     onClick={this._onChangeSelectedTask.bind(this, task)}

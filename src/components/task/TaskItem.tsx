@@ -22,6 +22,7 @@ import { INT_ONE, INT_TWO, INT_ZERO } from '../../constant';
 import { MatchCorrespond } from './match-corresponding/MatchCorrespond';
 import { isTrueAnswer } from './match-corresponding/match-correspoding.util';
 import { CloseOutlined } from '@mui/icons-material';
+import { InlineValue } from '../../core/common/component/inline-value';
 
 export interface IMatchingSequencePair {
   id: number;
@@ -207,12 +208,12 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
           break;
         case TaskCategory.DOCUMENT:
           const element = document.getElementById('taskitem--document__html') as HTMLInputElement;
-          if(!isEmpty(task?.document_question?.document)&&element){
+          if (!isEmpty(task?.document_question?.document) && element) {
             element.innerHTML = task?.document_question?.document.toString();
           }
           console.log(task);
 
-          if(!isEmpty(task?.answerDocument)){
+          if (!isEmpty(task?.answerDocument)) {
             isTakenTemp = task?.answerDocument?.isRead;
           }
           break;
@@ -576,8 +577,8 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
             await doSubmitAssignment({ taskId: task.id, answers: selectedFiles[ 0 ] });
           }
           break;
-          case TaskCategory.DOCUMENT:
-            await doSubmitDocument({taskId: task.id});
+        case TaskCategory.DOCUMENT:
+          await doSubmitDocument({ taskId: task.id });
         default:
           break;
       }
@@ -627,10 +628,10 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
             showUploadList: false,
 
             beforeUpload(file: any) {
-              const isValid = file.type === 'application/pdf';
-              if (!isValid) {
-                message.error(`${file.name} is not a valid file`);
-              }
+              /*  const isValid = file.type === 'application/pdf';
+               if (!isValid) {
+                 message.error(`${file.name} is not a valid file`);
+               } */
               return false;
             }
           };
@@ -653,8 +654,11 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
               <p className="ant-upload-text">Click or drag file to this area to upload</p>
               <p className="ant-upload-hint">
                 {task?.assignment_question?.description}
+              </p>
+              <p className="ant-upload-hint">
                 Please submit your assignemt before {new Date(task?.assignment_question?.dueDate).toLocaleString()}
               </p>
+
             </Dragger>
             {!isEmpty(selectedFiles) && <div className='mt-large'>
               <Card className='mt-medium' size='small'>
@@ -664,6 +668,12 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
                 </div>
               </Card>
             </div>}
+            <div>
+              <Title level={3}>Status assignment</Title>
+              <InlineValue title='Status assignment' value='Submited.' />
+              <InlineValue title='Time remaining' value='2 hours' />
+              <InlineValue title='Lastest modify at' value={(new Date()).toDateString()} />
+            </div>
           </>;
         case TaskCategory.MULTIPLE_CHOICES:
           return <MultipleChoices
@@ -743,18 +753,17 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
             <>
               <Title>{task?.quiz?.question}</Title>
               <br></br>
-              {!isEmptyQuiz ?
-                this._renderTaskContent() :
-                <EmptyResult message='Opps! Waiting for the mentor to create the content for this question.' />}
-              {this.state.displayActionButtonGroup &&
-                <Space direction="vertical">
-                  {!_.includes([TaskCategory.WRITTING, TaskCategory.DOCUMENT],task?.typeId) && isTaken && isCorrect && !isEdit ? <Text type='success'>Your anwser is correct.</Text> : ''}
-                  {!_.includes([TaskCategory.WRITTING, TaskCategory.DOCUMENT],task?.typeId) && isTaken && !isCorrect && !isEdit ? <Text type='danger'>Your anwser is incorrect.</Text> : ''}
-                  <Space direction="horizontal">
-                    {(!_.isEmpty(task) && !isEmptyQuiz && !isTaken || isTaken && isEdit) && <Button type='primary' className='mt-medium mr-medium' loading={isSubmitingAnswer} onClick={this._onSubmitTask}>Submit</Button>}
-                    {isTaken && !isEdit && !_.includes([TaskCategory.DOCUMENT],task?.typeId) ? <Button type='ghost' className='mt-medium' onClick={this._onRetakeTask}>Retake</Button> : ''}
-                  </Space>
-                </Space>}
+              <Space direction="vertical" style={{width:'100%', gap: '0px'}}>
+                {!isEmptyQuiz ?
+                  this._renderTaskContent() :
+                  <EmptyResult message='Opps! Waiting for the mentor to create the content for this question.' />}
+                {!_.includes([ TaskCategory.WRITTING, TaskCategory.DOCUMENT ], task?.typeId) && isTaken && isCorrect && !isEdit ? <Text type='success'>Your anwser is correct.</Text> : ''}
+                {!_.includes([ TaskCategory.WRITTING, TaskCategory.DOCUMENT ], task?.typeId) && isTaken && !isCorrect && !isEdit ? <Text type='danger'>Your anwser is incorrect.</Text> : ''}
+                <Space direction="horizontal">
+                  {(!_.isEmpty(task) && !isEmptyQuiz && !isTaken || isTaken && isEdit) && <Button type='primary' className='mt-medium mr-medium' loading={isSubmitingAnswer} onClick={this._onSubmitTask}>Submit</Button>}
+                  {isTaken && !isEdit && !_.includes([ TaskCategory.DOCUMENT ], task?.typeId) ? <Button type='ghost' className='mt-medium' onClick={this._onRetakeTask}>Retake</Button> : ''}
+                </Space>
+              </Space>
             </>
         }
 

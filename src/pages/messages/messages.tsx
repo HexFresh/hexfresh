@@ -2,13 +2,24 @@ import { Breadcrumb, Button, Card, Layout } from "antd";
 import Search from "antd/lib/input/Search";
 import { Content } from "antd/lib/layout/layout";
 import Sider from "antd/lib/layout/Sider";
-import { useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
+import { connect } from "react-redux";
 import HeaderInternal from "../../components/layouts/Header/HeaderInternal";
 import { MessageDetail } from "../../components/message-conversation/message-conversation.component";
 import { MessageCreateModal } from "../../components/message/message-create-modal/message-create-modal.component";
 import { MessageListHeader } from "../../components/message/message-list-header/message-list-header.component";
 
 import { MessagesList } from "../../components/message/MessagesList";
+import { IConversation } from "../../store/message/message-interface";
+import { IRootDispatch, IRootStore } from "../../store/store";
+
+export type Message = {
+  id: string;
+  from: string;
+  data: string;
+  recipients: string[];
+  createdAt: Date;
+}
 
 const initialState = {
   initLoading: true,
@@ -17,25 +28,28 @@ const initialState = {
   list: [],
 };
 
-const count = 7;
-const fakeDataUrl = `https://randomuser.me/api/?results=${count}&inc=name,gender,email,nat,picture&noinfo`;
+const Messages: FC<MessageProps> = ({
+  doCreateConversation,
+  doFetchAllConversation,
+  doFetchConversation,
+  doRenameConversation,
+  doFetchRecipientsProfile,
 
-const Messages = () => {
+  selectedConversation,
+  conversations,
+  profileRecipients,
+  isFetchingConversations,
+  isFetchingConversation,
+}) => {
   const [ state, setState ] = useState<typeof initialState>(initialState);
   const [ isActiveModal, setActiveModal ] = useState<boolean>(false);
 
   useEffect(() => {
-    fetch(fakeDataUrl)
-      .then(res => res.json())
-      .then(res => {
-        const newState = {
-          ...state,
-          initLoading: false,
-          data: res.results,
-          list: res.results,
-        }
-        setState(newState);
-      });
+    doFetchAllConversation();
+    setState({
+      ...state,
+      initLoading: false,
+    })
   }, [])
 
   const onLoadMore = () => {
@@ -43,19 +57,7 @@ const Messages = () => {
       ...state,
       loading: true,
     });
-    fetch(fakeDataUrl)
-      .then(res => res.json())
-      .then(res => {
-        const data = state.data.concat(res.results);
-        setState(
-          {
-            ...state,
-            data,
-            list: data,
-            loading: false,
-          }
-        );
-      });
+
   };
 
   const { initLoading, data, list, loading } = state;
@@ -73,7 +75,10 @@ const Messages = () => {
       </div>
     ) : null;
 
-  const onClickItem = () => { };
+  const onClickItem = async (item: IConversation) => {
+    console.log(item);
+    await doFetchConversation({conversationId: item?._id, skip:0, limit: 0});
+  };
 
   const handleAddChat = useCallback(() =>
     setActiveModal(true)
@@ -113,13 +118,19 @@ const Messages = () => {
                 onSearch={(value) => { console.log(value) }}
               />
               <MessagesList
+                isLoading={isFetchingConversations}
+                conversations={conversations}
                 onClickItem={onClickItem}
-                initLoading={initLoading} list={list}
+                initLoading={initLoading}
+                list={list}
                 loadMore={loadMore} />
             </Sider>
             <Content style={{ padding: '0 24px', minHeight: 280 }}>
               <Card style={{ height: '100%' }} className='task--item'>
-                <MessageDetail />
+                <MessageDetail 
+                isLoading={isFetchingConversation}
+                conversation={selectedConversation}
+                />
               </Card>
             </Content>
           </Layout>
@@ -136,4 +147,25 @@ const Messages = () => {
   )
 }
 
-export default Messages;
+const mapStateToProps = (state: IRootStore) => ({
+  selectedConversation: state.message.selectedConversation,
+  conversations: state.message.conversations,
+  profileRecipients: state.message.profileRecipients,
+  isFetchingConversations: state.message.isFetchingConversations,
+  isFetchingConversation: state.message.isFetchingConversation,
+});
+
+const mapDispatchToProps = (dispatch: IRootDispatch) => ({
+  doCreateConversation: dispatch.message.doCreateConversation,
+  doFetchAllConversation: dispatch.message.doFetchAllConversation,
+  doFetchConversation: dispatch.message.doFetchConversation,
+  doRenameConversation: dispatch.message.doRenameConversation,
+  doFetchRecipientsProfile: dispatch.message.doFetchRecipientsProfile,
+});
+
+type MessageStateProps = ReturnType<typeof mapStateToProps>;
+type MessageDispatchProps = ReturnType<typeof mapDispatchToProps>;
+
+type MessageProps = MessageDispatchProps & MessageStateProps;
+
+export default connect(mapStateToProps, mapDispatchToProps)(Messages);

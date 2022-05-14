@@ -2,8 +2,9 @@ import { NavigateFunction } from "react-router-dom";
 import axiosClient from "../../api/axiosClient";
 import rootStore, { IRootDispatch, IRootStore } from "../store";
 import { retrieveStoredToken } from '../../utils/calc';
-import { initSocket } from "../../utils/socketioInit";
+import { socketInstance } from "../../utils/socketioInit";
 import { notification } from "antd";
+import { setAuthToken } from "../../api/axiosMessage";
 
 let logoutTimer: NodeJS.Timeout;
 const initialState = {
@@ -20,6 +21,10 @@ export const user: any = {
 	},
 	reducers: {
 		loginSucces: (state: IRootStore, payload: any) => {
+			const socket = socketInstance;
+			socket.io.opts.query = "token=" +  payload.token as any;
+
+			socket.emit('signin','Hi from signin')
 			return {
 				...state,
 				...payload.body,
@@ -53,9 +58,11 @@ export const user: any = {
 					token: data.token,
 				});
 
+				//set token for axios message
+				setAuthToken(data.token);
+
 				// Copy to success
-				const socket = initSocket(data.token);
-				socket.emit('signin','Hi from signin')
+
 				
 				localStorage.setItem('token', data.token);
 				sessionStorage.setItem("token", data.token as string)
@@ -111,8 +118,20 @@ export const user: any = {
 			try {
 				const response = await axiosClient.get(endpoint);
 				if (response.status === 200) {
+
+					const accessToken = localStorage.getItem('token');
+					if (accessToken) {
+						//set token for axios message
+						setAuthToken(accessToken);
+						
+						const socket = socketInstance;
+						socket.io.opts.query = "token=" +  accessToken as any;
+						socket.emit('signin', 'Auto sign in');
+					} else {
+						console.log('no access token');
+					}
 					dispatch.user.loginSucces({
-						token: response.data.token || 'qưertyuiopasdfghjkl'
+						token: accessToken||'ẻdtafygsuhijdeiyfuiwuyefv'
 					});
 
 					const preLocation = rootStore.getState().location.location;
@@ -129,7 +148,7 @@ export const user: any = {
 				console.log(error, 'error');
 			}
 
-		}
+		},
 
 	}),
 }

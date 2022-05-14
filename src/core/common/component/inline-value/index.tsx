@@ -1,0 +1,1 @@
+export { InlineValue } from './inline-value.component'
