@@ -27,7 +27,6 @@
   margin-top: 450px;
   font-size: 22px;
   font-weight: bold;
-  color: var(--main-color);
   margin-bottom: 10px;
 }
 
@@ -119,7 +118,6 @@
 }
 
 .user-profile__container .info__title {
-  color: var(--main-color);
   font-weight: bold;
   font-size: 16px;
   text-transform: uppercase;
@@ -155,6 +153,17 @@
   justify-content: center;
   align-items: center;
   border-radius: 4px;
+  width: 100px;
+}
+
+.user-profile__container .edit-profile-btn {
+  font-weight: bold;
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  width: 100px;
 }
 
 .user-profile__container .ant-select {

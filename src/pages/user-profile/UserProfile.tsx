@@ -30,22 +30,22 @@ export default function UserProfile() {
   const [provinces, setProvinces] = useState<IProvince[] | []>([]);
   const [districts, setDistricts] = useState<IDistrict[] | []>([]);
   const [wards, setWards] = useState<IWard[] | []>([]);
-  const [selectedProvince, setSelectedProvince] = useState<number | null>(null);
-  const [selectedDistrict, setSelectedDistrict] = useState<number | null>(null);
-  const [selectedWard, setSelectedWard] = useState<number | null>(null);
+  const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
+  const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
+  const [selectedWard, setSelectedWard] = useState<string | null>(null);
   const [selectedStreet, setSelectedStreet] = useState<string>('');
   const [degrees, setDegrees] = useState<IDegree[] | []>([]);
   const [jobPositions, setJobPositions] = useState<IJobPosition[] | []>([]);
+  const [edit, setEdit] = useState(false);
 
   const refInput = useRef<HTMLInputElement>(null);
 
   const fetchUserAccount = async () => {
     const result = await getCurrentUserAccount();
+    console.log(result.id)
     setUserAccount(result || null);
     setDisplayEmail(result?.email || '');
   };
-
-  console.log(userAccount);
 
   const fetchAllDegree = async () => {
     const result = await getAllDegree();
@@ -75,15 +75,15 @@ export default function UserProfile() {
       setUserProfile(result);
       setDisplayFirstName(result.firstName || '');
       setDisplayLastName(result.lastName || '');
-      setSelectedProvince(Number(result?.address?.province) || null);
-      setSelectedDistrict(Number(result?.address?.district) || null);
-      setSelectedWard(Number(result?.address?.ward) || null);
+      setSelectedProvince(result?.address?.province || null);
+      setSelectedDistrict(result?.address?.district || null);
+      setSelectedWard(result?.address?.ward || null);
       setSelectedStreet(result?.address?.street || '');
       await fetchProvinces();
-      if (Number(result?.address?.province)) {
-        await fetchDistricts(Number(result?.address?.province));
-        if (Number(result?.address?.district)) {
-          await fetchWards(Number(result?.address?.district));
+      if (result?.address?.province?.split(',')[0]) {
+        await fetchDistricts(result?.address?.province?.split(',')[0]);
+        if (result?.address?.district.split(',')[0]) {
+          await fetchWards(result?.address?.district?.split(',')[0]);
         }
       }
     }
@@ -158,20 +158,20 @@ export default function UserProfile() {
     setWards(rdata.data.wards || []);
   };
 
-  const handleChangeProvince = async (value: any) => {
+  const handleChangeProvince = async (value:string) => {
     setSelectedProvince(value);
-    await fetchDistricts(value);
+    await fetchDistricts(value.split(',')[0]);
     setSelectedDistrict(null);
     setSelectedWard(null);
   };
 
-  const handleChangeDistrict = async (value: any) => {
+  const handleChangeDistrict = async (value:string) => {
     setSelectedDistrict(value);
-    await fetchWards(value);
+    await fetchWards(value.split(',')[0]);
     setSelectedWard(null);
   };
 
-  const handleChangeWard = async (value: any) => {
+  const handleChangeWard = async (value:string) => {
     setSelectedWard(value);
   };
 
@@ -228,11 +228,12 @@ export default function UserProfile() {
                     <div className="info__title">Personal Information</div>
                     <div className="field">
                       <div className="field__title">Username</div>
-                      <Input value={userAccount?.username} className="input" placeholder="Username" />
+                      <Input disabled value={userAccount?.username} className="input" placeholder="Username" />
                     </div>
                     <div className="field">
                       <div className="field__title">First Name</div>
                       <Input
+                          disabled={!edit}
                         value={userProfile?.firstName}
                         onChange={(e) => {
                           const newUserProfile = { ...userProfile, firstName: e.target.value };
@@ -245,6 +246,7 @@ export default function UserProfile() {
                     <div className="field">
                       <div className="field__title">Last Name</div>
                       <Input
+                          disabled={!edit}
                         value={userProfile?.lastName || ''}
                         onChange={(e) => {
                           const newUserProfile = { ...userProfile, lastName: e.target.value };
@@ -257,6 +259,7 @@ export default function UserProfile() {
                     <div className="field">
                       <div className="field__title">Date of birth</div>
                       <DatePicker
+                          disabled={!edit}
                         defaultValue={moment(userProfile?.dateOfBirth || '2022-01-01', dateFormat)}
                         onChange={onDateOfBirthChange}
                         format={dateFormat}
@@ -267,6 +270,7 @@ export default function UserProfile() {
                     <div className="field">
                       <div className="field__title">Gender</div>
                       <Select
+                          disabled={!edit}
                         showSearch
                         optionFilterProp="children"
                         filterOption={(input: any, option: any) =>
@@ -295,6 +299,7 @@ export default function UserProfile() {
                     <div className="field">
                       <div className="field__title">Degree</div>
                       <Select
+                          disabled={!edit}
                         showSearch
                         optionFilterProp="children"
                         filterOption={(input: any, option: any) =>
@@ -319,6 +324,7 @@ export default function UserProfile() {
                     <div className="field">
                       <div className="field__title">Job position</div>
                       <Select
+                          disabled={!edit}
                         showSearch
                         optionFilterProp="children"
                         filterOption={(input: any, option: any) =>
@@ -344,11 +350,12 @@ export default function UserProfile() {
                     <div className="info__title">Contact Information</div>
                     <div className="field">
                       <div className="field__title">Email</div>
-                      <Input value={userAccount?.email || ''} className="input" />
+                      <Input disabled value={userAccount?.email || ''} className="input" />
                     </div>
                     <div className="field">
                       <div className="field__title">Phone</div>
                       <Input
+                          disabled={!edit}
                         value={userProfile?.phoneNumber || ''}
                         onChange={(e) => {
                           const newUserProfile = { ...userProfile, phoneNumber: e.target.value };
@@ -363,6 +370,7 @@ export default function UserProfile() {
                       <div className="input">
                         <div className="select">
                           <Select
+                              disabled={!edit}
                             showSearch
                             optionFilterProp="children"
                             filterOption={(input: any, option: any) =>
@@ -376,12 +384,13 @@ export default function UserProfile() {
                             value={selectedProvince}
                           >
                             {provinces.map((province) => (
-                              <Select.Option value={province.code} key={province.code}>
+                              <Select.Option value={`${province.code},${province.name}`} key={province.code}>
                                 {province.name}
                               </Select.Option>
                             ))}
                           </Select>
                           <Select
+                              disabled={!edit}
                             showSearch
                             optionFilterProp="children"
                             filterOption={(input: any, option: any) =>
@@ -395,12 +404,13 @@ export default function UserProfile() {
                             value={selectedDistrict}
                           >
                             {districts.map((district) => (
-                              <Select.Option value={district.code} key={district.code}>
+                              <Select.Option value={`${district.code},${district.name}`} key={district.code}>
                                 {district.name}
                               </Select.Option>
                             ))}
                           </Select>
                           <Select
+                              disabled={!edit}
                             showSearch
                             optionFilterProp="children"
                             filterOption={(input: any, option: any) =>
@@ -414,13 +424,14 @@ export default function UserProfile() {
                             value={selectedWard}
                           >
                             {wards.map((ward) => (
-                              <Select.Option value={ward.code} key={ward.code}>
+                              <Select.Option value={`${ward.code},${ward.name}`} key={ward.code}>
                                 {ward.name}
                               </Select.Option>
                             ))}
                           </Select>
                         </div>
                         <Input
+                            disabled={!edit}
                           value={selectedStreet || ''}
                           onChange={(e) => setSelectedStreet(e.target.value)}
                           style={{
@@ -432,9 +443,15 @@ export default function UserProfile() {
                     </div>
                   </div>
                   <div className="save-btn__container">
-                    <Button className="save-btn" onClick={handleUpdateUserProfile}>
-                      Save
-                    </Button>
+                    {edit ? (
+                        <Button className="save-btn" onClick={handleUpdateUserProfile}>
+                          Save
+                        </Button>
+                    ) : (
+                        <Button className="edit-profile-btn" onClick={() => setEdit(true)}>
+                          Edit
+                        </Button>
+                    )}
                   </div>
                 </div>
               </div>
