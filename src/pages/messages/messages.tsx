@@ -35,6 +35,7 @@ const Messages: FC<MessageProps> = ({
   doFetchConversation,
   doRenameConversation,
   doFetchRecipientsProfile,
+  doRecieveMessage,
 
   selectedConversation,
   conversations,
@@ -89,11 +90,15 @@ const Messages: FC<MessageProps> = ({
     setActiveModal(false)
     , []);
 
-  const handleSubmitModal = useCallback(() => {
-
+  const handleSubmitModal = useCallback((recipientIds, title) => {
+    const createConversation =  async ()=>{
+      await doCreateConversation({ recipients: recipientIds, title });
+      await doFetchAllConversation();
+    }
+    createConversation();
     setActiveModal(false);
   }
-    , []);
+    , [doCreateConversation, doFetchAllConversation]);
 
   useEffect(() => {
     !_.isEmpty(selectedConversation?.recipients) && doFetchRecipientsProfile({ recipients: selectedConversation?.recipients })
@@ -133,9 +138,11 @@ const Messages: FC<MessageProps> = ({
             <Content style={{ padding: '0 24px', minHeight: 280 }}>
               <Card style={{ height: '100%' }} className='task--item'>
                 <MessageDetail
-                profileRecipients={profileRecipients}
+                  doRecieveMessage={doRecieveMessage}
+                  profileRecipients={profileRecipients}
                   isLoading={isFetchingConversation || isFetchingRecipients}
                   conversation={selectedConversation}
+                  doRenameConversation={doRenameConversation}
                 />
               </Card>
             </Content>
@@ -168,6 +175,7 @@ const mapDispatchToProps = (dispatch: IRootDispatch) => ({
   doFetchConversation: dispatch.message.doFetchConversation,
   doRenameConversation: dispatch.message.doRenameConversation,
   doFetchRecipientsProfile: dispatch.message.doFetchRecipientsProfile,
+  doRecieveMessage: dispatch.message.doRecieveMessage,
 });
 
 type MessageStateProps = ReturnType<typeof mapStateToProps>;

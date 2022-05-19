@@ -19,7 +19,8 @@ export const MessageContent = React.memo(({
   const [ avatar, setAvatar ] = useState<string>("");
 
   useEffect(() => {
-    isEqual(userId, message.from) && setIsResponseMessage(true);
+    isEqual(userId, message?.from) && setIsResponseMessage(true);
+    console.log(userId, message?.from)
     const user = find(profileRecipients, [ 'userId', userId ]) as unknown as IUser;
 
     !isEmpty(user) && setAvatar(user?.avatar);
@@ -30,7 +31,7 @@ export const MessageContent = React.memo(({
     {isResponseMessage ? <div className="message text-only">
       <div className="response">
         <p className="text">{message.data}</p>
-        <p className="response-time time"> {new Date(message?.createdAt).toTimeString()}</p>
+        <p className="response-time time"> {new Date(message?.createdAt).toLocaleDateString()}</p>
       </div>
     </div> :
       <div className="message">

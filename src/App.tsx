@@ -47,17 +47,23 @@ function App() {
     dispatch.location.startAt(location.pathname + location.search);
   }
 
-  useEffect(() => {
-    dispatch.user.checkAutoLoginV2({ dispatch, navigate, location });
+  useEffect( () => {
 
-    // push notification
-    console.log('Noctification Token: ', getCurrentToken());
-    onMessageListener()
-      .then((payload) => {
-        console.log('Notification: ');
-        console.log(payload);
-      })
-      .catch((err) => console.log('Notification fail: ', err));
+    const initialFunc =  async()=>{
+      await dispatch.user.checkAutoLoginV2({ dispatch, navigate, location });
+      await dispatch.user.fetchProfileUsers();
+      // push notification
+      console.log('Noctification Token: ', getCurrentToken());
+      onMessageListener()
+        .then((payload) => {
+          console.log('Notification: ');
+          console.log(payload);
+        })
+        .catch((err) => console.log('Notification fail: ', err));
+    }
+
+    initialFunc();
+   
   }, []);
 
   const routeWithoutSignIn = (

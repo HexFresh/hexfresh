@@ -33,3 +33,11 @@ export interface IJobPosition{
 	id: number;
 	name: string;
 }
+
+export interface IQuickUser{
+	id: string,
+	username:string,
+	email: string,
+	roleId: number,
+	isActive: boolean,
+}

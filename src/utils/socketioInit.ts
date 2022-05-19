@@ -22,11 +22,11 @@ const initSocket = () => {
     // To do: implement refetch & update notification
   });
 
-  socket.off("receive message").on("receive message", (data) => {
-    //nhan message
-    console.log(data);
-    alert(data.message.data);
-  })
+  // socket.off("receive message").on("receive message", (data) => {
+  //   //nhan message
+  //   console.log(data); 
+  //   alert(data.message.data);
+  // })
 
   return socket;
 };

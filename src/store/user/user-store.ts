@@ -13,8 +13,8 @@ const initialState = {
 	email: null,
 	username: null,
 	roleId: null,
-	recipients: [],
-	isFetchingProfile: false,
+	users: [],
+	isFetchingUsers: false,
 }
 
 export const user: any = {
@@ -41,8 +41,8 @@ export const user: any = {
 		},
 		logout: (state: IRootStore) => { return { ...initialState } },
 
-		setRecipients: (state: IRootStore, payload: any)=>({ ...state, recipients: payload}),
-		setIsFetchingProfile:(state:IRootStore, payload: any)=>({...state, isFetchingProfile: payload}),
+		setUsers: (state: IRootStore, payload: any)=>({ ...state, users: payload}),
+		setIsFetchingUsers:(state:IRootStore, payload: any)=>({...state, isFetchingUsers: payload}),
 
 	},
 	effects: (dispatch: IRootDispatch) => ({
@@ -68,8 +68,10 @@ export const user: any = {
 
 				// Copy to success
 
+				await dispatch.user.fetchProfileUsers();
 				
 				localStorage.setItem('token', data.token);
+				localStorage.setItem('userId', data.userId);
 				sessionStorage.setItem("token", data.token as string)
 
 				console.log(data);
@@ -125,6 +127,7 @@ export const user: any = {
 				if (response.status === 200) {
 
 					const accessToken = localStorage.getItem('token');
+					const userId = localStorage.getItem('userId');
 					if (accessToken) {
 						//set token for axios message
 						setAuthToken(accessToken);
@@ -136,7 +139,8 @@ export const user: any = {
 						console.log('no access token');
 					}
 					dispatch.user.loginSucces({
-						token: accessToken||'ẻdtafygsuhijdeiyfuiwuyefv'
+						token: accessToken||'ẻdtafygsuhijdeiyfuiwuyefv',
+						userId
 					});
 
 					const preLocation = rootStore.getState().location.location;
@@ -155,14 +159,13 @@ export const user: any = {
 
 		},
 
-		async fetchProfileUser({userId}:{userId: string}){
-			const endpoint = `user/${userId}/user-profile`;
+		async fetchProfileUsers(){
+			const endpoint = `user`;
 
 			try {
 				const response = await axiosClient.get(endpoint);
-				const updatedRecipients = [...rootStore.getState().user.recipients, response.data];
 
-				dispatch.user.setRecipients(updatedRecipients);
+				dispatch.user.setUsers(response.data?.rows);
 
 			} catch (error) {
 				console.log(error);

@@ -15,6 +15,11 @@ code {
   margin-bottom: 1rem !important;
 }
 
+.mv-small {
+  margin-left: 0.5rem !important;
+  margin-right: 0.5rem !important;
+}
+
 .carousel-item {
   height: '160px';
   color: '#fff';
