@@ -43,7 +43,6 @@ function AssignmentTask(props: any) {
   const { task } = props;
   const [isLoading, setIsLoading] = useState(false);
   const [assignment, setAssignment] = useState<IAssignment | null>(null);
-  const [assignmentTask, setAssignmentTask] = useState<any>(null);
   const [point, setPoint] = useState<number>(0);
   const [assignmentTitle, setAssignmentTitle] = useState<string>('');
   const [assignmentDescription, setAssignmentDescription] = useState<string>('');
@@ -52,7 +51,6 @@ function AssignmentTask(props: any) {
 
   const fetchTask = async (id: number) => {
     const result = await getTask(task.checklistId, id);
-    setAssignmentTask(result);
     setPoint(result?.point);
   };
 
@@ -240,7 +238,7 @@ function AssignmentTask(props: any) {
           <div className="list-file">
             {assignment?.fileList?.map((file: any, index: number) => {
               return (
-                <div key={index} className="file-item">
+                <a target="_blank" href={file.presignUrl} key={index} className="file-item" rel="noreferrer">
                   <div className="file-item-name">{cutString(file.fileName)}</div>
                   <Popconfirm
                     placement="topLeft"
@@ -251,7 +249,7 @@ function AssignmentTask(props: any) {
                   >
                     <DeleteOutlined />
                   </Popconfirm>
-                </div>
+                </a>
               );
             })}
           </div>

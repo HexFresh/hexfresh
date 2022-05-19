@@ -1,5 +1,4 @@
 import './App.css';
-import Header from './components/layouts/Header/Header';
 import Carousel from './components/layouts/carousel/Carousel';
 import MeteorShower from './components/layouts/meteo-shower/MeteorShower';
 import HeaderInternal from './components/layouts/Header/HeaderInternal';
@@ -18,6 +17,8 @@ import { IUserStore } from './store/user/user-store';
 import { getCurrentToken, onMessageListener } from './utils/firebaseInit';
 import FresherListPhase from './pages/fresher-list-phase/FresherListPhase';
 import ReviewTask from './pages/review-task/ReviewTask';
+import FresherLeaderboard from './pages/fresher-leaderboard/FresherLeaderboard';
+import UserProfile from './pages/user-profile/UserProfile';
 import Messages from './pages/messages/messages';
 //import io from "socket.io-client";
 
@@ -80,6 +81,8 @@ function App() {
       <Route path="messages" element={<Messages />} />
       <Route path="planets/:planetId" element={<PlanetView />} />
 
+      <Route path="/leaderboard" element={<FresherLeaderboard />} />
+
       <Route path="/mentor/programs" element={<ListProgram />} />
       <Route path="/mentor/programs/:programId/phases" element={<ListPhase />} />
       <Route path="/mentor/programs/:programId/phases/:phaseId" element={<PhaseDetail />} />
@@ -87,6 +90,8 @@ function App() {
       <Route path="/mentor/freshers" element={<ListFresher />} />
       <Route path="/mentor/freshers/:fresherId" element={<FresherListPhase />} />
       <Route path="/mentor/freshers/:fresherId/phase/:phaseId" element={<ReviewTask />} />
+
+      <Route path="/user/profile" element={<UserProfile />} />
 
       {/* <Route path="*" element={<Navigate to="/" />} /> */}
     </Routes>

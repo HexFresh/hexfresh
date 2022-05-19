@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const data = [
   {
+    id: 'fa39f170-c6be-11ec-8cd5-bd10d9131985',
     name: 'Nguyễn Văn A',
     point: '100',
     avatar: 'https://i.pinimg.com/originals/f4/b7/b1/f4b7b1c8f9f9f9f9.jpg',
     rank: 1,
   },
-
   {
+    id: '11',
     name: 'Nguyễn Văn B',
     point: '90',
     avatar: 'https://i.pinimg.com/originals/f4/b7/b1/f4b7b1c8f9f9f9f9.jpg',
@@ -16,18 +18,21 @@ const data = [
   },
 
   {
+    id: '11',
     name: 'Nguyễn Văn C',
     point: '80',
     avatar: 'https://i.pinimg.com/originals/f4/b7/b1/f4b7b1c8f9f9f9f9.jpg',
     rank: 3,
   },
   {
+    id: '11',
     name: 'Nguyễn Văn D',
     point: '70',
     avatar: 'https://i.pinimg.com/originals/f4/b7/b1/f4b7b1c8f9f9f9f9.jpg',
     rank: 4,
   },
   {
+    id: '11',
     name: 'Nguyễn Văn E',
     point: '60',
     avatar: 'https://i.pinimg.com/originals/f4/b7/b1/f4b7b1c8f9f9f9f9.jpg',
@@ -66,7 +71,7 @@ export default function Leaderboard(props: any) {
     <div className="leaderboard__container">
       <div className="leaderboard__container__content">
         {leaderboard.map((item: any, index: number) => (
-          <div className="leaderboard__container__content__item" key={index}>
+          <Link to={`/mentor/freshers/${item.id}`} className="leaderboard__container__content__item" key={index}>
             <div className="leaderboard__container__content__item--left">
               <div className="leaderboard__container__content__item__rank">{renderRank(item.rank)}</div>
               <div className="leaderboard__container__content__item__avatar">
@@ -80,7 +85,7 @@ export default function Leaderboard(props: any) {
             <div className="leaderboard__container__content__item--right">
               <div className="leaderboard__container__content__item__point">{item.point}</div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

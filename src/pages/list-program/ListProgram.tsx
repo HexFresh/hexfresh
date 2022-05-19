@@ -1,11 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 import { Apps, School, Settings, Folder, Search } from '@mui/icons-material';
 import { InputBase, Avatar, CircularProgress } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { Pagination, Tooltip } from 'antd';
+import { Pagination, Tooltip, Menu, Dropdown } from 'antd';
 import './list-program.css';
 import { getPrograms } from '../../api/mentor/mentorApi';
+import { IRootDispatch } from '../../store/store';
 
 interface IProgram {
   id: string;
@@ -20,6 +23,21 @@ export default function ListProgram() {
   const [count, setCount] = useState(0);
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = React.useState(1);
+
+  const dispatch = useDispatch<IRootDispatch>();
+  const navigate = useNavigate();
+
+  const logoutHandler = React.useCallback(() => {
+    dispatch.user.logoutHandlerAction({ dispatch, navigate });
+  }, []);
+
+  const menu = (
+    <Menu>
+      <Menu.Item key="0" onClick={() => logoutHandler()}>
+        Logout
+      </Menu.Item>
+    </Menu>
+  );
 
   const handleChangePage = (page: number) => {
     setPage(page);
@@ -74,7 +92,9 @@ export default function ListProgram() {
               </Tooltip>
             </div>
             <div className="avatar">
-              <Avatar />
+              <Dropdown arrow placement="topRight" overlay={menu}>
+                <Avatar />
+              </Dropdown>
             </div>
           </div>
         </div>
@@ -132,7 +152,7 @@ export default function ListProgram() {
               </div>
             ) : (
               <div className="img-404">
-                <img style={{ height: '200px' }} src="/no-records.png" />
+                <img style={{ height: '200px' }} src="/no-records.png" alt="img" />
               </div>
             )}
           </div>

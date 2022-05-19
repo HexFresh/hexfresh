@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
 
-const initSocket = () => {
-  const accessToken = localStorage.getItem("token");
+export const initSocket = () => {
+  const accessToken = localStorage.getItem('token');
   const url = 'https://hexfresh-socket.herokuapp.com';
   const socket = io(url as string, {
     transports: ['websocket'],
