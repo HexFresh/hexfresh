@@ -1,4 +1,4 @@
-export enum TaskCategory{
+export enum TaskCategory {
   SINGLE_CHOICE = 1,
   MULTIPLE_CHOICES,
   WRITTING,
@@ -9,13 +9,17 @@ export enum TaskCategory{
   ASSIGNMENT,
 }
 
-export enum TaskStatus{
+export enum TaskStatus {
   TODO,
   DOING,
   DONE,
 }
 
-export enum AttachmentStatus{
+export enum AttachmentStatus {
   SCANING,
   SCANNED
+}
+
+export const ChatType = {
+  CHAT: 'chat',
 }

@@ -13,6 +13,8 @@ const initialState = {
 	email: null,
 	username: null,
 	roleId: null,
+	users: [],
+	isFetchingUsers: false,
 }
 
 export const user: any = {
@@ -37,7 +39,10 @@ export const user: any = {
 				token: payload,
 			}
 		},
-		logout: (state: IRootStore) => { return { ...initialState } }
+		logout: (state: IRootStore) => { return { ...initialState } },
+
+		setUsers: (state: IRootStore, payload: any)=>({ ...state, users: payload}),
+		setIsFetchingUsers:(state:IRootStore, payload: any)=>({...state, isFetchingUsers: payload}),
 
 	},
 	effects: (dispatch: IRootDispatch) => ({
@@ -63,8 +68,10 @@ export const user: any = {
 
 				// Copy to success
 
+				await dispatch.user.fetchProfileUsers();
 				
 				localStorage.setItem('token', data.token);
+				localStorage.setItem('userId', data.userId);
 				sessionStorage.setItem("token", data.token as string)
 
 				console.log(data);
@@ -120,6 +127,7 @@ export const user: any = {
 				if (response.status === 200) {
 
 					const accessToken = localStorage.getItem('token');
+					const userId = localStorage.getItem('userId');
 					if (accessToken) {
 						//set token for axios message
 						setAuthToken(accessToken);
@@ -131,7 +139,8 @@ export const user: any = {
 						console.log('no access token');
 					}
 					dispatch.user.loginSucces({
-						token: accessToken||'ẻdtafygsuhijdeiyfuiwuyefv'
+						token: accessToken||'ẻdtafygsuhijdeiyfuiwuyefv',
+						userId
 					});
 
 					const preLocation = rootStore.getState().location.location;
@@ -149,6 +158,19 @@ export const user: any = {
 			}
 
 		},
+
+		async fetchProfileUsers(){
+			const endpoint = `user`;
+
+			try {
+				const response = await axiosClient.get(endpoint);
+
+				dispatch.user.setUsers(response.data?.rows);
+
+			} catch (error) {
+				console.log(error);
+			}
+		}
 
 	}),
 }
