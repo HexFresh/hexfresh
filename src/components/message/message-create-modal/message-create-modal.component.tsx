@@ -1,6 +1,9 @@
-import { Button, Modal } from "antd";
-import Search from "antd/lib/input/Search";
-import React from "react";
+import { Avatar, Button, Input, Modal, Select } from "antd";
+import { isEmpty, map } from "lodash";
+import React, { useCallback, useState } from "react";
+import { useSelector } from "react-redux";
+import { IRootStore } from "../../../store/store";
+import { IQuickUser } from "../../../store/user/user-interface";
 
 export const MessageCreateModal = React.memo(({
   className,
@@ -17,28 +20,56 @@ export const MessageCreateModal = React.memo(({
   loading: boolean;
   className?: string | undefined;
 }) => {
+
+  const userList = useSelector((state: IRootStore) => state.user?.users) as IQuickUser[];
+  const [ recipientIds, setRecipientIds ] = useState<string[]>([]);
+  const [ title, setTitle ] = useState<string>('');
+
+  function handleChange(value: any) {
+    !isEmpty(value) && setRecipientIds(value);
+  }
+
+  const onChangeTitle = (event: any) => {
+    const { value } = event.target
+    !isEmpty(value) && setTitle(value);
+  }
+
+  const handleSubmitForm = useCallback(()=>{
+    onSubmit(recipientIds, title);
+  },[onSubmit, recipientIds, title])
+  
   return <Modal
     title="Create new conversation"
     visible={isOpenModal}
-    onOk={onSubmit}
+    onOk={handleSubmitForm}
     onCancel={onCancel}
     footer={[
       <Button key="back" onClick={onCancel}>
         Return
       </Button>,
-      <Button key="submit" type="primary" loading={loading} onClick={onSubmit}>
+      <Button key="submit" type="primary" loading={loading} onClick={handleSubmitForm}>
         Submit
       </Button>
     ]}
   >
-    <Search
-      className="mb-medium"
-      placeholder="Search conversaiclatons"
-      allowClear
-      enterButton
-      size="large"
-      onSearch={onSearchUser}
-    />
+    <Input placeholder="Input your conversation title here." value={title} onChange={onChangeTitle}  className="mh-medium"/>
+    <Select
+      mode="multiple"
+      style={{ width: '100%' }}
+      placeholder="Select your user"
+      onChange={handleChange}
+      optionLabelProp="label"
+    >
+      {!isEmpty(userList) && map(userList, userInfo => (<Select.Option value={userInfo.id} label={userInfo.username}>
+        <div className="demo-option-label-item">
+          <span role="img" aria-label="China" className="mv-small">
+            <Avatar>{userInfo.username[ 0 ]}</Avatar>
+          </span>
+          {userInfo.username}
+        </div>
+      </Select.Option>))}
+
+    </Select>
   </Modal>
 });
 

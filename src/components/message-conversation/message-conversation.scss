@@ -80,7 +80,7 @@
   margin-left:auto; /* flexbox alignment rule */
 }
 
-.response .text {
+.response.text {
   background-color: #e3effd !important;
 }
 
@@ -89,7 +89,7 @@
   height: 80px;
   display:flex;
   align-items: center;
-  position:absolute;
+  position:sticky;
   bottom: 0;
   background-color: transparent;
   border-top: 2px solid #EEE;
