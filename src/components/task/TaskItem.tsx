@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import _, { isEmpty } from 'lodash';
+import _, { get, isEmpty } from 'lodash';
 import 'antd/dist/antd.css';
 import { message, Space, Button, Skeleton, Upload, Card, Typography } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
@@ -9,7 +9,7 @@ import Dragger from 'antd/lib/upload/Dragger';
 import TextArea from 'antd/lib/input/TextArea';
 
 import { EmptyResult } from '../results';
-import { ISequenceTask, ITask } from '../../interface/program-interface'
+import { ISelectedTask, ISequenceTask, ITask } from '../../interface/program-interface'
 import { TaskCategory } from '../../utilities/enum-utils';
 import './taskitem.scss';
 import { DropResult } from 'react-beautiful-dnd';
@@ -29,7 +29,7 @@ export interface IMatchingSequencePair {
   pair: { id: number, content: string }[];
 }
 interface ITaskItemProps {
-  task: ITask | null;
+  task: ISelectedTask | null;
   isLoading: boolean;
   isFetchingAnswer: boolean;
 
@@ -99,7 +99,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
   }
 
   componentDidMount() {
-    this.setState({ matchingSequence: this.props.task?.match_sequence_options || [] });
+    this.setState({ matchingSequence: this.props.task?.task?.match_sequence_options || [] });
   }
 
   componentDidUpdate(prevProps: ITaskItemProps, prevState: ITaskItemState) {
@@ -107,135 +107,38 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
     if (!_.isEqual(prevProps.task, this.props.task)) {
       const { task } = this.props;
 
-      let isTakenTemp = this.state.isTaken;
+      let isTakenTemp = task?.isCompleted || false;
       let isEmptyQuizTemp = this.state.isEmptyQuiz;
-      let isCorrectTemp = false;
+      let isCorrectTemp = task?.isRight || false;
 
-      switch (task?.typeId) {
-        case TaskCategory.SINGLE_CHOICE:
-        case TaskCategory.MULTIPLE_CHOICES:
-          if (!_.isEmpty(task.answersSelectedQuestion)) {
-            isTakenTemp = true;
-            // calculate for correct answer
-            if (task.answersSelectedQuestion.answers.length === 1) {
-              if (task.answersSelectedQuestion.answers[ INT_ZERO ].choiceAnswer) {
-
-                isCorrectTemp = true;
-              }
-            } else {
-              if (!_.some(task.answersSelectedQuestion.answers, false) || !_.some(task.answersSelectedQuestion.answers, [ 'choiceAnswer', null ])) {
-                isCorrectTemp = true;
-              }
-            }
-          } else {
-            isTakenTemp = false;
-          };
-
-          if (_.isEmpty(task.selected_question_choices)) {
-            isEmptyQuizTemp = true;
-          } else {
-            isEmptyQuizTemp = false;
-          }
-          break;
-        case TaskCategory.WRITTING:
-          if (!_.isEmpty(task.answerConstructedQuestion)) {
-            isTakenTemp = true;
-          } else {
-            isTakenTemp = false;
-          };
-
-          if (_.isEmpty(task.quiz)) {
-            isEmptyQuizTemp = true;
-          } else {
-            isEmptyQuizTemp = false;
-          }
-          break;
-        case TaskCategory.BINARY:
-          if (!_.isEmpty(task.answerBinaryQuestion)) {
-            isTakenTemp = true;
-            const userAnswer = _.map(task.answerBinaryQuestion.answers, answer => answer.userAnswer);
-            const optionAnswer = _.map(task.answerBinaryQuestion.answers, answer => answer.optionAnswer
-            );
-            if (_.isEqual(userAnswer, optionAnswer)) {
-              isCorrectTemp = true;
-            }
-          } else {
-            isTakenTemp = false;
-          };
-
-          if (_.isEmpty(task.true_false_question_options)) {
-            isEmptyQuizTemp = true;
-          } else {
-            isEmptyQuizTemp = false;
-          }
-          break;
-
-        case TaskCategory.MATCH_SEQUENCE:
-          if (!_.isEmpty(task.answerMatchingSequenceQuestion)) {
-            isTakenTemp = true;
-            const userAnswer = _.map(task.answerMatchingSequenceQuestion.answers, answer => answer.userAnswer);
-            const optionAnswer = _.map(task.answerMatchingSequenceQuestion.answers, answer => answer.optionIndexAnswer);
-
-            if (_.isEqual(userAnswer, optionAnswer)) {
-              isCorrectTemp = true;
-            }
-
-          } else {
-            isTakenTemp = false;
-          };
-
-          if (_.isEmpty(task.match_sequence_options)) {
-            isEmptyQuizTemp = true;
-          } else {
-            isEmptyQuizTemp = false;
-          }
-          break;
-
-        case TaskCategory.MATCH_CORESPONSE:
-          if (!_.isEmpty(task.answerMatchingCorrespondingQuestion)) {
-            isTakenTemp = true;
-
-            isCorrectTemp = isTrueAnswer({ answers: task.answerMatchingCorrespondingQuestion.answers });
-          } else {
-            isTakenTemp = false;
-          };
-
-          if (_.isEmpty(task.match_corresponding_answers)) {
-            isEmptyQuizTemp = true;
-          } else {
-            isEmptyQuizTemp = false;
-          }
-          break;
+      switch (task?.task?.typeId) {
+   
         case TaskCategory.DOCUMENT:
-          const element = document.getElementById('taskitem--document__html') as HTMLInputElement;
-          if (!isEmpty(task?.document_question?.document) && element) {
-            element.innerHTML = task?.document_question?.document.toString();
-          }
-          console.log(task);
-
-          if (!isEmpty(task?.answerDocument)) {
-            isTakenTemp = task?.answerDocument?.isRead;
+          const element = document.getElementById('taskitem--document__html');
+          if (!isEmpty(task?.task?.document?.document) && element) {
+            element.innerHTML = task?.task?.document?.document.toString();
           }
           break;
         default:
           break;
       }
-      const sortedSequence = _.sortBy(task?.answerMatchingSequenceQuestion?.answers, [ 'userAnswer' ]);
+
+      const sortedSequence = _.sortBy(task?.user_match_sequence_answer?.answers, [ 'userAnswer' ]);
       const newMatchSequnce = !_.isEmpty(sortedSequence) ? _.map(
         sortedSequence,
         item => {
           return {
             id: item.optionId,
-            content: _.find(task?.match_sequence_options, option => option.id === item.optionId)?.content || ''
+            content: _.find(task?.task?.match_sequence_options, option => option.id === item.optionId)?.content || ''
           }
-        }) : task?.match_sequence_options;
+        }) : task?.task?.match_sequence_options;
 
       // calculate for matching corresponding answer content
       const columnMatchCorresponding = Array(2).fill([]);
       const firstColumn: { id: number; content: string; }[] = [];
       const secondColumn: { id: number; content: string; }[] = [];
       _.forEach(
-        task?.match_corresponding_answers,
+        task?.task?.match_corresponding_answers,
         item => {
           const tempValue = {
             id: item.id,
@@ -252,10 +155,10 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
       //calculate for user answer
       const tempPair: { id: number; pair: { id: number, content: string }[]; }[] = [];
       _.forEach(
-        task?.answerMatchingCorrespondingQuestion?.answers,
+        task?.user_match_corresponding_answer?.answers,
         (item, index) => {
-          const firstItem = _.find(task?.match_corresponding_answers, [ 'id', item.userFisrtAnswerId ]);
-          const secondItem = _.find(task?.match_corresponding_answers, [ 'id', item.userSecondAnswerId ]);
+          const firstItem = _.find(task?.task?.match_corresponding_answers, [ 'id', item.userFisrtAnswerId ]);
+          const secondItem = _.find(task?.task?.match_corresponding_answers, [ 'id', item.userSecondAnswerId ]);
 
           if (!_.isEmpty(firstItem) && !_.isEmpty(secondItem)) {
             tempPair.push({
@@ -273,10 +176,10 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
         isTaken: isTakenTemp,
         isEmptyQuiz: isEmptyQuizTemp,
         isCorrect: isCorrectTemp,
-        inputTextArea: task?.answerConstructedQuestion?.answer || '',
+        inputTextArea: task?.user_constructed_question_answer?.answer || '',
         matchingSequence: newMatchSequnce || [],
-        radioValue: task?.answersSelectedQuestion?.answers[ INT_ZERO ]?.choiceId || 0,
-        multipleChoices: task?.answersSelectedQuestion?.answers.map(item => item.choiceId) || [],
+        radioValue: task?.user_selected_question_answer?.answers[ INT_ZERO ]?.choiceId || 0,
+        multipleChoices: task?.user_selected_question_answer?.answers.map(item => item.choiceId) || [],
 
         matchingCorespondingData: columnMatchCorresponding,
         matchingCorespondingDataSource: columnMatchCorresponding,
@@ -287,7 +190,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
 
     if (!_.isEqual(prevState.isEdit, this.state.isEdit)) {
       const { task } = this.props;
-      switch (task?.typeId) {
+      switch (task?.task?.typeId) {
         case TaskCategory.MATCH_CORESPONSE:
           this.setState({
             matchingSequencePairs: initialState.matchingSequencePairs
@@ -452,9 +355,9 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
     } = this.state;
 
     let payload = {};
-
+    const taskId = get(task,'taskId');
     try {
-      switch (task?.typeId) {
+      switch (task?.task?.typeId) {
         case TaskCategory.SINGLE_CHOICE:
           console.log(radioValue);
           if (radioValue) {
@@ -465,10 +368,10 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
               ]
             };
             console.log(payload, 'payload');
-            if (_.isEmpty(task.answersSelectedQuestion)) {
-              await doSubmitSelectedQuestionAnswer({ answers: payload, taskId: task.id });
+            if (_.isEmpty(task.user_selected_question_answer)) {
+              await doSubmitSelectedQuestionAnswer({ answers: payload, taskId });
             } else {
-              await doUpdateSubmitSelectedQuestionAnswer({ answers: payload, taskId: task.id });
+              await doUpdateSubmitSelectedQuestionAnswer({ answers: payload, taskId });
             }
           }
           break;
@@ -485,10 +388,10 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
               answers: [ ...mapResult ]
             };
             console.log(payload, 'payload');
-            if (_.isEmpty(task.answersSelectedQuestion)) {
-              await doSubmitSelectedQuestionAnswer({ answers: payload, taskId: task.id });
+            if (_.isEmpty(task.user_selected_question_answer)) {
+              await doSubmitSelectedQuestionAnswer({ answers: payload, taskId});
             } else {
-              await doUpdateSubmitSelectedQuestionAnswer({ answers: payload, taskId: task.id });
+              await doUpdateSubmitSelectedQuestionAnswer({ answers: payload, taskId});
             }
           }
           break;
@@ -498,10 +401,10 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
 
             payload = { answer: inputTextArea };
             console.log(payload, 'payload');
-            if (_.isEmpty(task.answerConstructedQuestion)) {
-              await doSubmitContructedQuestion({ answers: payload, taskId: task.id });
+            if (_.isEmpty(task.user_constructed_question_answer)) {
+              await doSubmitContructedQuestion({ answers: payload, taskId});
             } else {
-              await doUpdateSubmitContructedQuestion({ answers: payload, taskId: task.id });
+              await doUpdateSubmitContructedQuestion({ answers: payload, taskId});
             }
           }
           break;
@@ -520,10 +423,10 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
               answers: [ ...uploadValue ]
             }
             console.log(payload, 'payload');
-            if (_.isEmpty(task?.answerBinaryQuestion)) {
-              await doSubmitBinaryQuestion({ answers: payload, taskId: task.id });
+            if (_.isEmpty(task?.user_true_false_question_answer)) {
+              await doSubmitBinaryQuestion({ answers: payload, taskId});
             } else {
-              await doUpdateSubmitBinaryQuestion({ answers: payload, taskId: task.id });
+              await doUpdateSubmitBinaryQuestion({ answers: payload, taskId});
             }
           }
           break;
@@ -543,10 +446,10 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
               answers: [ ...uploadValue ]
             }
 
-            if (_.isEmpty(task?.answerMatchingSequenceQuestion)) {
-              await doSubmitMatchingSequenceQuestion({ answers: payload, taskId: task.id });
+            if (_.isEmpty(task?.user_match_sequence_answer)) {
+              await doSubmitMatchingSequenceQuestion({ answers: payload, taskId});
             } else {
-              await doUpdateMatchingSequenceQuestion({ answers: payload, taskId: task.id });
+              await doUpdateMatchingSequenceQuestion({ answers: payload, taskId});
             }
           }
           break;
@@ -565,24 +468,24 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
               answers: [ ...uploadValue ]
             }
 
-            if (_.isEmpty(task?.answerMatchingCorrespondingQuestion)) {
-              await doSubmitMatchingCorrespondingQuestion({ answers: payload, taskId: task.id });
+            if (_.isEmpty(task?.user_match_corresponding_answer)) {
+              await doSubmitMatchingCorrespondingQuestion({ answers: payload, taskId});
             } else {
-              await doUpdateMatchingCorrespondingQuestion({ answers: payload, taskId: task.id });
+              await doUpdateMatchingCorrespondingQuestion({ answers: payload, taskId });
             }
           }
           break;
         case TaskCategory.ASSIGNMENT:
           if (!isEmpty(selectedFiles)) {
-            await doSubmitAssignment({ taskId: task.id, answers: selectedFiles[ 0 ] });
+            await doSubmitAssignment({ taskId, answers: selectedFiles[ 0 ] });
           }
           break;
         case TaskCategory.DOCUMENT:
-          await doSubmitDocument({ taskId: task.id });
+          await doSubmitDocument({ taskId});
         default:
           break;
       }
-      await onFetchQuestionAnswer(task);
+      await onFetchQuestionAnswer({checklistId: task?.task?.checklistId, taskId});
     } catch (error) {
 
     }
@@ -614,12 +517,12 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
     }
     if (!_.isEmpty(task)) {
 
-      switch (task?.typeId) {
+      switch (task?.task?.typeId) {
         case TaskCategory.DOCUMENT:
           return <>
-            <Title> {task?.document_question?.title}</Title>
+            <Title> {task?.task?.document?.title}</Title>
             <div className='taskitem--document__html' id='taskitem--document__html'>
-            </div>
+            Alo 123123</div>
           </>;
         case TaskCategory.ASSIGNMENT:
           const props = {
@@ -636,9 +539,9 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
             }
           };
           return <>
-            <Title> {task?.assignment_question?.title}</Title>
+            <Title> {task?.task?.assignment?.title}</Title>
             <Typography>Please read the files below: </Typography>
-            {!isEmpty(task?.assignment_question?.fileList) && _.map(task?.assignment_question?.fileList, file => {
+            {!isEmpty(task?.task?.assignment?.fileList) && _.map(task?.task?.assignment?.fileList, file => {
               return <div className='mt-large'>
                 <Card className='mt-medium mb-medium' size='small'>
                   <div className='taskitem--assignment__card-body'>
@@ -647,19 +550,19 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
                 </Card>
               </div>
             })}
-            <Dragger {...props} onChange={this._onChangeFile} onDrop={this._onDropFile}>
+            {!isTaken || isEdit && <Dragger {...props} onChange={this._onChangeFile} onDrop={this._onDropFile}>
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />
               </p>
               <p className="ant-upload-text">Click or drag file to this area to upload</p>
               <p className="ant-upload-hint">
-                {task?.assignment_question?.description}
+                {task?.task?.assignment?.description}
               </p>
               <p className="ant-upload-hint">
-                Please submit your assignemt before {new Date(task?.assignment_question?.dueDate).toLocaleString()}
+                Please submit your assignemt before {new Date(task?.task?.assignment?.dueDate).toLocaleString()}
               </p>
 
-            </Dragger>
+            </Dragger>}
             {!isEmpty(selectedFiles) && <div className='mt-large'>
               <Card className='mt-medium' size='small'>
                 <div className='taskitem--assignment__card-body'>
@@ -668,18 +571,19 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
                 </div>
               </Card>
             </div>}
-            <div>
+            {isTaken&&<div>
               <Title level={3}>Status assignment</Title>
               <InlineValue title='Status assignment' value='Submited.' />
               <InlineValue title='Time remaining' value='2 hours' />
               <InlineValue title='Lastest modify at' value={(new Date()).toDateString()} />
-            </div>
+              <InlineValue title='Your assignment' value={<a target='_blank' href={task?.task?.assignment?.fileList[0].presignUrl} rel="noreferrer">{task?.task?.assignment?.fileList[0].keyFileName}</a>} />
+            </div>}
           </>;
         case TaskCategory.MULTIPLE_CHOICES:
           return <MultipleChoices
             isEdit={isEdit}
             isTaken={isTaken}
-            task={task}
+            task={task.task}
             multipleChoices={multipleChoices}
             _onChangeMultipleChoices={this._onChangeMultipleChoices.bind(this)}
           />;
@@ -690,7 +594,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
           return <SingleChoice
             isEdit={isEdit}
             isTaken={isTaken}
-            task={task}
+            task={task.task}
             radioValue={radioValue}
             _onChangeSingleChoice={this._onChangeSingleChoice.bind(this)}
           />;
@@ -700,7 +604,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
             <TextArea disabled={!isEdit && isTaken}
               value={/* !isEdit ? task?.answerConstructedQuestion?.answer : */ inputTextArea}
               onChange={this._onChangeTextArea.bind(this)}
-              placeholder={_.isEmpty(task.constructed_question_answer?.sampleAnswer) ? "Feel free to text." : task.constructed_question_answer?.sampleAnswer}
+              placeholder={_.isEmpty(task?.task?.constructed_question_answer?.sampleAnswer) ? "Feel free to text." : task?.task?.constructed_question_answer?.sampleAnswer}
               autoSize={{ minRows: 3, maxRows: 5 }}
             />
           </>;
@@ -709,7 +613,8 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
           return <BinaryQuiz
             isEdit={isEdit}
             isTaken={isTaken}
-            task={task}
+            task={task?.task}
+            answerBinaryQuestion={task?.user_true_false_question_answer}
             binaryChoices={binaryChoices}
             onChangeBinaryChoices={this._onChangeBinaryChoices.bind(this)}
           />;
@@ -751,17 +656,17 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
         {
           (isLoading || isFetchingAnswer) ? <Skeleton active={true} /> :
             <>
-              <Title>{task?.quiz?.question}</Title>
+              <Title>{task?.task?.quiz?.question}</Title>
               <br></br>
-              <Space direction="vertical" style={{width:'100%', gap: '0px'}}>
+              <Space direction="vertical" style={{ width: '100%', gap: '0px' }}>
                 {!isEmptyQuiz ?
                   this._renderTaskContent() :
                   <EmptyResult message='Opps! Waiting for the mentor to create the content for this question.' />}
-                {!_.includes([ TaskCategory.WRITTING, TaskCategory.DOCUMENT ], task?.typeId) && isTaken && isCorrect && !isEdit ? <Text type='success'>Your anwser is correct.</Text> : ''}
-                {!_.includes([ TaskCategory.WRITTING, TaskCategory.DOCUMENT ], task?.typeId) && isTaken && !isCorrect && !isEdit ? <Text type='danger'>Your anwser is incorrect.</Text> : ''}
+                {!_.includes([ TaskCategory.WRITTING, TaskCategory.DOCUMENT ], task?.task?.typeId) && isTaken && isCorrect && !isEdit ? <Text type='success'>Your anwser is correct.</Text> : ''}
+                {!_.includes([ TaskCategory.WRITTING, TaskCategory.DOCUMENT ], task?.task?.typeId) && isTaken && !isCorrect && !isEdit ? <Text type='danger'>Your anwser is incorrect.</Text> : ''}
                 <Space direction="horizontal">
                   {(!_.isEmpty(task) && !isEmptyQuiz && !isTaken || isTaken && isEdit) && <Button type='primary' className='mt-medium mr-medium' loading={isSubmitingAnswer} onClick={this._onSubmitTask}>Submit</Button>}
-                  {isTaken && !isEdit && !_.includes([ TaskCategory.DOCUMENT ], task?.typeId) ? <Button type='ghost' className='mt-medium' onClick={this._onRetakeTask}>Retake</Button> : ''}
+                  {isTaken && !isEdit && !_.includes([ TaskCategory.DOCUMENT ], task?.task?.typeId) ? <Button type='ghost' className='mt-medium' onClick={this._onRetakeTask}>Retake</Button> : ''}
                 </Space>
               </Space>
             </>

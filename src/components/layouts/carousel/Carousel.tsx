@@ -23,7 +23,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
   constructor(props: ICarouselProps) {
     super(props);
     this.state = {
-      items: this.props.program?.phases||[],
+      items: this.props.program?.userPhases||[],
       active: 0,
       direction: "",
       isLoading:false,
@@ -48,10 +48,10 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
         index = i % this.state.items.length;
       }
       level = active - i;
-      const image = _.find(imageList,{id: this.state.items[index]?.imageId })
+      const image = _.find(imageList,{id: this.state.items[index]?.phase?.imageId })
       console.log(level, image, this.state.items);
       items.push(
-        <Item key={index} level={level} program={this.state.items[index]} image ={image} />
+        <Item key={index} level={level} program={this.state.items[index].phase} image ={image} />
       );
     }
     console.log(items);
@@ -80,9 +80,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
 
     try {
       this.setState({isLoading:true});
-      doFetchProgram({
-        id: 1
-      });
+      doFetchProgram();
       
       doFetchImageList();
 
@@ -95,7 +93,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
 
   componentDidUpdate(prevProps:ICarouselProps, prevState: ICarouselStates){
     if(!_.isEqual(prevProps, this.props)){
-      this.setState({items: this.props.program.phases});
+      this.setState({items: this.props.program.userPhases});
     }
   }
 
@@ -179,8 +177,8 @@ class ItemClass extends React.Component<IItemProps, IItemStates> {
             backgroundPosition: "center center",
           }}
         >
-          <span className="itemname">{program.title}</span>
-          <button onClick={() => { navigate(`/planets/${program.id}`) }} className="btn btn-5">Press to do</button>
+          <span className="itemname">{program?.title}</span>
+          <button onClick={() => { navigate(`/planets/${program?.id}`) }} className="btn btn-5">Press to do</button>
         </div>
 
       </>
