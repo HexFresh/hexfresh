@@ -23,6 +23,12 @@
   flex-direction: column;
 }
 
+.open-modal {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
 .user-profile__container .page-name {
   margin-top: 450px;
   font-size: 22px;

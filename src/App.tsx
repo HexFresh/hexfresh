@@ -20,6 +20,7 @@ import ReviewTask from './pages/review-task/ReviewTask';
 import FresherLeaderboard from './pages/fresher-leaderboard/FresherLeaderboard';
 import UserProfile from './pages/user-profile/UserProfile';
 import Messages from './pages/messages/messages';
+import ForgotPassword from "./pages/forgot-password/ForgotPassword";
 //import io from "socket.io-client";
 
 const Home = () => {
@@ -70,6 +71,7 @@ function App() {
   const routeWithoutSignIn = (
     <Routes>
       <Route path="/signin" element={<SignIn />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
       {/* <Route path="*" element={<Navigate to="/signin" />} /> */}
     </Routes>
   );

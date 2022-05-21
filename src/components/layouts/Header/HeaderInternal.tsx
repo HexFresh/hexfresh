@@ -19,6 +19,7 @@ const HeaderInternal = ({ textColorClassName }: { textColorClassName?: string })
         navigate('/user/profile');
         break;
       case '2':
+        navigate('/user/change-password');
         break;
       case '3':
         logoutHandler();
@@ -31,7 +32,7 @@ const HeaderInternal = ({ textColorClassName }: { textColorClassName?: string })
   const menu = (
     <Menu onClick={onClickMenu}>
       <Menu.Item key="1">My Profile</Menu.Item>
-      <Menu.Item key="2">My Todos</Menu.Item>
+      <Menu.Item key="2">Change Password</Menu.Item>
       <Menu.Item key="3">Sign out</Menu.Item>
     </Menu>
   );

@@ -56,10 +56,7 @@ const SignIn = () => {
   };
 
   const forgotPasswordHandler = () => {
-    if (!email && email.trim() === '') {
-      // dispatch(showModal('You need to provide your email first!.'));
-      return;
-    }
+    navigate('/forgot-password');
 
   };
 
