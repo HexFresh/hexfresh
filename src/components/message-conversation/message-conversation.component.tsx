@@ -118,7 +118,7 @@ export const MessageDetail = memo(({
           {_.reverse(_.map(conversation?.messages, message => <MessageContent profileRecipients={profileRecipients} message={message?.message} />))}
         </div>
         <div className="footer-chat">
-          <Input onChange={onChangeMessage} value={messageString} className="write-message" placeholder="Type your message here"></Input>
+          <Input onChange={onChangeMessage} onPressEnter={onSendMessage} value={messageString} className="write-message" placeholder="Type your message here"></Input>
           <SendOutlined onClick={onSendMessage} color="primary" className="icon" style={{ cursor: 'pointer' }} />
         </div>
       </section>
