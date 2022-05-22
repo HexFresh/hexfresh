@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import { Link, NavigateFunction, useNavigate } from "react-router-dom";
 import { programStore } from "../../../store/planet/program-store";
 import { RematchDispatch, RematchDispatcher } from "@rematch/core";
-import { message, notification, Spin } from "antd";
+import { message, notification, Progress, Spin } from "antd";
 import _ from "lodash";
 
 type ICarouselProps = StateProps & DispatchProps;
@@ -23,10 +23,10 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
   constructor(props: ICarouselProps) {
     super(props);
     this.state = {
-      items: this.props.program?.userPhases||[],
+      items: this.props.program?.userPhases || [],
       active: 0,
       direction: "",
-      isLoading:false,
+      isLoading: false,
     };
     this.rightClick = this.moveRight.bind(this);
     this.leftClick = this.moveLeft.bind(this);
@@ -35,26 +35,42 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
   private leftClick() { };
 
   generateItems() {
-    const {imageList} = this.props;
-    const {isLoading, active} = this.state;
-    if(isLoading || _.isEmpty(this.state.items)) return <></>;
+    const { imageList } = this.props;
+    const { isLoading, active } = this.state;
+    if (isLoading || _.isEmpty(this.state.items)) return <></>;
     const items = [];
     let level;
-    for (let i = 0; i < active + this.state.items.length; i++) {
-      let index = i;
-      if (i < 0) {
-        index = this.state.items.length + i;
-      } else if (i >= this.state.items.length) {
-        index = i % this.state.items.length;
+    if (this.state.items.length < 5) {
+
+      for (let i = 0; i < active + this.state.items.length; i++) {
+        let index = i;
+        if (i < 0) {
+          index = this.state.items.length + i;
+        } else if (i >= this.state.items.length) {
+          index = i % this.state.items.length;
+        }
+        level = active - i;
+        const image = _.find(imageList, { id: this.state.items[ index ]?.phase?.imageId })
+        items.push(
+          <Item key={index} level={level} program={this.state.items[ index ].phase} image={image} />
+        );
       }
-      level = active - i;
-      const image = _.find(imageList,{id: this.state.items[index]?.phase?.imageId })
-      console.log(level, image, this.state.items);
-      items.push(
-        <Item key={index} level={level} program={this.state.items[index].phase} image ={image} />
-      );
+    } else {
+
+      for (let i = active - 2; i < active + 3; i++) {
+        let index = i;
+        if (i < 0) {
+          index = this.state.items.length + i;
+        } else if (i >= this.state.items.length) {
+          index = i % this.state.items.length;
+        }
+        level = this.state.active - i;
+        const image = _.find(imageList, { id: this.state.items[ index ]?.phase?.imageId })
+        items.push(
+          <Item key={index} level={level} program={this.state.items[ index ].phase} image={image} />
+        );
+      }
     }
-    console.log(items);
     return items;
   }
 
@@ -79,30 +95,30 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
     const { doFetchProgram, doFetchImageList } = this.props;
 
     try {
-      this.setState({isLoading:true});
+      this.setState({ isLoading: true });
       doFetchProgram();
-      
+
       doFetchImageList();
 
     } catch (error) {
-      notification.error({message:'Failed to fetch list of phases.'});
+      notification.error({ message: 'Failed to fetch list of phases.' });
     }
 
-    this.setState({isLoading: false});
+    this.setState({ isLoading: false });
   }
 
-  componentDidUpdate(prevProps:ICarouselProps, prevState: ICarouselStates){
-    if(!_.isEqual(prevProps, this.props)){
-      this.setState({items: this.props.program.userPhases});
+  componentDidUpdate(prevProps: ICarouselProps, prevState: ICarouselStates) {
+    if (!_.isEqual(prevProps, this.props)) {
+      this.setState({ items: this.props.program.userPhases });
     }
   }
 
   render() {
-    const {program, imageList} = this.props;
-    const {isLoading} = this.state;
+    const { program, imageList } = this.props;
+    const { isLoading } = this.state;
 
-    if(_.isEmpty(program)||_.isEmpty(imageList) || isLoading){
-      return <Spin size="large"/>
+    if (_.isEmpty(program) || _.isEmpty(imageList) || isLoading) {
+      return <Spin size="large" />
     }
     return (
       <div id="carousel" className="noselect">

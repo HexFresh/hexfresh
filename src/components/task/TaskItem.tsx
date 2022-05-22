@@ -111,12 +111,34 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
       let isEmptyQuizTemp = this.state.isEmptyQuiz;
       let isCorrectTemp = task?.isRight || false;
 
+
+
+      if (_.isEmpty(task?.task?.selected_question_choices) &&
+        _.isEmpty(task?.task?.constructed_question_answer) &&
+        _.isEmpty(task?.task?.true_false_question_options) &&
+        _.isEmpty(task?.task?.match_sequence_options) &&
+        _.isEmpty(task?.task?.match_corresponding_answers) &&
+        _.isEmpty(task?.task?.assignment) &&
+        _.isEmpty(task?.task?.document)) {
+        isEmptyQuizTemp = true;
+      } else {
+        isEmptyQuizTemp = false;
+      }
+
+
       switch (task?.task?.typeId) {
-   
+
         case TaskCategory.DOCUMENT:
           const element = document.getElementById('taskitem--document__html');
           if (!isEmpty(task?.task?.document?.document) && element) {
             element.innerHTML = task?.task?.document?.document.toString();
+          }
+          break;
+        case TaskCategory.WRITTING:
+          if (_.isEmpty(task?.task.quiz)) {
+            isEmptyQuizTemp = true;
+          } else {
+            isEmptyQuizTemp = false;
           }
           break;
         default:
@@ -355,7 +377,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
     } = this.state;
 
     let payload = {};
-    const taskId = get(task,'taskId');
+    const taskId = get(task, 'taskId');
     try {
       switch (task?.task?.typeId) {
         case TaskCategory.SINGLE_CHOICE:
@@ -389,9 +411,9 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
             };
             console.log(payload, 'payload');
             if (_.isEmpty(task.user_selected_question_answer)) {
-              await doSubmitSelectedQuestionAnswer({ answers: payload, taskId});
+              await doSubmitSelectedQuestionAnswer({ answers: payload, taskId });
             } else {
-              await doUpdateSubmitSelectedQuestionAnswer({ answers: payload, taskId});
+              await doUpdateSubmitSelectedQuestionAnswer({ answers: payload, taskId });
             }
           }
           break;
@@ -402,9 +424,9 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
             payload = { answer: inputTextArea };
             console.log(payload, 'payload');
             if (_.isEmpty(task.user_constructed_question_answer)) {
-              await doSubmitContructedQuestion({ answers: payload, taskId});
+              await doSubmitContructedQuestion({ answers: payload, taskId });
             } else {
-              await doUpdateSubmitContructedQuestion({ answers: payload, taskId});
+              await doUpdateSubmitContructedQuestion({ answers: payload, taskId });
             }
           }
           break;
@@ -424,9 +446,9 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
             }
             console.log(payload, 'payload');
             if (_.isEmpty(task?.user_true_false_question_answer)) {
-              await doSubmitBinaryQuestion({ answers: payload, taskId});
+              await doSubmitBinaryQuestion({ answers: payload, taskId });
             } else {
-              await doUpdateSubmitBinaryQuestion({ answers: payload, taskId});
+              await doUpdateSubmitBinaryQuestion({ answers: payload, taskId });
             }
           }
           break;
@@ -447,9 +469,9 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
             }
 
             if (_.isEmpty(task?.user_match_sequence_answer)) {
-              await doSubmitMatchingSequenceQuestion({ answers: payload, taskId});
+              await doSubmitMatchingSequenceQuestion({ answers: payload, taskId });
             } else {
-              await doUpdateMatchingSequenceQuestion({ answers: payload, taskId});
+              await doUpdateMatchingSequenceQuestion({ answers: payload, taskId });
             }
           }
           break;
@@ -469,7 +491,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
             }
 
             if (_.isEmpty(task?.user_match_corresponding_answer)) {
-              await doSubmitMatchingCorrespondingQuestion({ answers: payload, taskId});
+              await doSubmitMatchingCorrespondingQuestion({ answers: payload, taskId });
             } else {
               await doUpdateMatchingCorrespondingQuestion({ answers: payload, taskId });
             }
@@ -481,11 +503,11 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
           }
           break;
         case TaskCategory.DOCUMENT:
-          await doSubmitDocument({ taskId});
+          await doSubmitDocument({ taskId });
         default:
           break;
       }
-      await onFetchQuestionAnswer({checklistId: task?.task?.checklistId, taskId});
+      await onFetchQuestionAnswer({ checklistId: task?.task?.checklistId, taskId });
     } catch (error) {
 
     }
@@ -522,7 +544,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
           return <>
             <Title> {task?.task?.document?.title}</Title>
             <div className='taskitem--document__html' id='taskitem--document__html'>
-            Alo 123123</div>
+              Alo 123123</div>
           </>;
         case TaskCategory.ASSIGNMENT:
           const props = {
@@ -571,12 +593,12 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
                 </div>
               </Card>
             </div>}
-            {isTaken&&<div>
+            {isTaken && <div>
               <Title level={3}>Status assignment</Title>
               <InlineValue title='Status assignment' value='Submited.' />
               <InlineValue title='Time remaining' value='2 hours' />
               <InlineValue title='Lastest modify at' value={(new Date()).toDateString()} />
-              <InlineValue title='Your assignment' value={<a target='_blank' href={task?.task?.assignment?.fileList[0].presignUrl} rel="noreferrer">{task?.task?.assignment?.fileList[0].keyFileName}</a>} />
+              <InlineValue title='Your assignment' value={<a target='_blank' href={task?.task?.assignment?.fileList[ 0 ].presignUrl} rel="noreferrer">{task?.task?.assignment?.fileList[ 0 ].keyFileName}</a>} />
             </div>}
           </>;
         case TaskCategory.MULTIPLE_CHOICES:
