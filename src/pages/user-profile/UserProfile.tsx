@@ -153,6 +153,7 @@ export default function UserProfile() {
         message.success('Updated!', 0.5);
       }
       await fetchUserProfile();
+      setEdit(false);
     });
   };
 
