@@ -21,6 +21,7 @@ import FresherLeaderboard from './pages/fresher-leaderboard/FresherLeaderboard';
 import UserProfile from './pages/user-profile/UserProfile';
 import Messages from './pages/messages/messages';
 import ForgotPassword from "./pages/forgot-password/ForgotPassword";
+import { Notifications } from './pages/notifications/notifications';
 //import io from "socket.io-client";
 
 const Home = () => {
@@ -81,6 +82,7 @@ function App() {
       <Route path="/" element={<Navigate to="/planets" />} />
       <Route path="planets" element={<Home />} />
       <Route path="messages" element={<Messages />} />
+      <Route path="notifications" element={<Notifications />} />
       <Route path="planets/:planetId" element={<PlanetView />} />
 
       <Route path="/leaderboard" element={<FresherLeaderboard />} />

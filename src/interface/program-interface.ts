@@ -2,6 +2,7 @@ import { string } from "yup";
 import { AttachmentStatus, TaskCategory, TaskStatus } from "../utilities/enum-utils";
 
 export interface IPhase {
+  phase?: IPhaseDetail;
   id: string;
   index: string;
   title: string;
@@ -15,6 +16,18 @@ export interface IPhase {
   name: string;
   checklists?: ICheckList[];
 }
+
+export interface IPhaseDetail{
+  id: string;
+  index: string;
+  title: string;
+  isCompleted: boolean;
+  createAt: string;
+  updateAt: string;
+  imageId: number;
+  programId: number;
+  image: IImage;
+}
 export interface ICheckList {
   id: number;
   index: number;
@@ -26,15 +39,11 @@ export interface ICheckList {
   phaseId: string;
   tasks?: ITask[];
 }
-
-export interface ITask {
+export interface ITask{
   id: number;
   title: string;
   index: string;
   point: number;
-  isComplete: boolean;
-  isChecked: boolean;
-  isActive: boolean;
   createdAt: string;
   updatedAt: string;
   checklistId: string;
@@ -45,16 +54,27 @@ export interface ITask {
   true_false_question_options: IBinaryTask[];
   match_sequence_options: ISequenceTask[];
   match_corresponding_answers: ICorrespondingTassk[];
-  assignment_question: IAssignemtTask;
-  document_question: IDocumentTask;
+  assignment: IAssignemtTask;
+  document: IDocumentTask;
   
-  answersSelectedQuestion: IAnswerSelectedQuestion;
-  answerConstructedQuestion: IAnswerContructedQuestion;
-  answerBinaryQuestion: IAnswerBinaryQuestion;
-  answerMatchingSequenceQuestion: IAnswerMatchingSequenceQuestion;
-  answerMatchingCorrespondingQuestion: IAnswerMatchingCorrespondingQuestion;
-  answerDocument: IAnswerDocument;
-  answerAssignment: IAnswerAssignment;
+}
+export interface ISelectedTask {
+  id: number;
+  taskId: number;
+  userId: string;
+  isCompleted: boolean;
+  isRight: boolean;
+  pointByMentor: number;
+
+  task: ITask;
+  
+  user_selected_question_answer: IAnswerSelectedQuestion;
+  user_constructed_question_answer: IAnswerContructedQuestion;
+  user_true_false_question_answer: IAnswerBinaryQuestion;
+  user_match_sequence_answer: IAnswerMatchingSequenceQuestion;
+  user_match_corresponding_answer: IAnswerMatchingCorrespondingQuestion;
+  user_document_answer: IAnswerDocument;
+  user_assignment_answer: IAnswerAssignment;
 }
 
 export interface IAssignmentFile {

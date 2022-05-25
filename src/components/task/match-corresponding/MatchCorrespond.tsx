@@ -4,6 +4,7 @@ import { Card, Col, Row, Space } from "antd";
 import { CloseOutlined } from "@mui/icons-material";
 
 import { IMatchingSequencePair } from "../TaskItem";
+import { INT_ONE, INT_ZERO } from "../../../constant";
 
 export const MatchCorrespond = memo(({
   isEdit,
@@ -22,23 +23,24 @@ export const MatchCorrespond = memo(({
   onChooseNewPair: any,
   onRemovePair: any,
 }) => {
+  console.log(matchingCorespondingData);
   return <>
     {(!isTaken || isEdit) && <Row>
       <Col span={10}>
         <Space direction='vertical' style={{ width: '100%' }}>
-          {_.map(matchingCorespondingData[ 0 ], card => <Card
-            onClick={() => { onChooseNewPair({ item: card, column: 0 }) }}
+          {_.map(matchingCorespondingData[ INT_ZERO ], card => <Card
+            onClick={() => { onChooseNewPair({ item: card, column: INT_ZERO }) }}
             size='small' key={card.id}
-            className={`matching__card${card.id === pairIds[ 0 ] ? '-clicked' : ''}`}>{card.content}</Card>)}
+            className={`matching__card${card.id === pairIds[ INT_ZERO ] ? '-clicked' : ''}`}>{card.content}</Card>)}
         </Space>
       </Col>
       <Col span={4} />
       <Col span={10}>
         <Space direction='vertical' style={{ width: '100%' }}>
-          {_.map(matchingCorespondingData[ 1 ], card => <Card
-            onClick={() => { onChooseNewPair({ item: card, column: 1 }) }}
+          {_.map(matchingCorespondingData[ INT_ONE ], card => <Card
+            onClick={() => { onChooseNewPair({ item: card, column: INT_ONE }) }}
             size='small' key={card.id}
-            className={`matching__card${card.id === pairIds[ 1 ] ? '-clicked' : ''}`}>{card.content}</Card>)}
+            className={`matching__card${card.id === pairIds[ INT_ONE ] ? '-clicked' : ''}`}>{card.content}</Card>)}
         </Space>
       </Col>
     </Row>}
