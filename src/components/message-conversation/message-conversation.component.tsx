@@ -14,6 +14,7 @@ import { IUser } from "../../store/user/user-interface";
 import { useSelector } from "react-redux";
 import { IRootStore } from "../../store/store";
 import { ChatType } from "../../utilities/enum-utils";
+import { MessageMembersModal } from "../message/message-member-modal/message-member-modal";
 
 export const MessageDetail = memo(({
   isLoading,
@@ -30,6 +31,7 @@ export const MessageDetail = memo(({
 }) => {
   const [ messageString, setMessage ] = useState<string>('');
   const [ socket, setSocket ] = useState(io());
+  const [ isOpenMembersModal, setOpenMembersModal ] = useState<boolean>(false);
   const [ conversationId, setConversationId ] = useState('');
   const [ isEditTitle, setIsEditTitle ] = useState<boolean>(false);
   const [ title, setTitle ] = useState<string>("");
@@ -61,7 +63,7 @@ export const MessageDetail = memo(({
     }
 
     setMessage('');
-  }, [conversationId, messageString, socket]);
+  }, [ conversationId, messageString, socket ]);
 
   const handleChangeTitle = useCallback((event: any) => {
     const value = event.target.value;
@@ -106,8 +108,14 @@ export const MessageDetail = memo(({
 
             </Form>}
           <Dropdown key="more" overlay={<Menu>
+            <Menu.Item onClick={() => setOpenMembersModal(true)}>
+              View members
+            </Menu.Item>
             <Menu.Item onClick={() => setIsEditTitle(!isEditTitle)}>
               Edit title
+            </Menu.Item>
+            <Menu.Item onClick={() => setIsEditTitle(!isEditTitle)}>
+              Add member
             </Menu.Item>
           </Menu>
           } placement="bottomRight" className="right icon">
@@ -122,7 +130,13 @@ export const MessageDetail = memo(({
           <SendOutlined onClick={onSendMessage} color="primary" className="icon" style={{ cursor: 'pointer' }} />
         </div>
       </section>
-
+      <MessageMembersModal
+        onCancel={() => { setOpenMembersModal(false) }}
+        isOpen={isOpenMembersModal}
+        onSubmit={() => { }}
+        isLoading={false}
+        isAddMember
+      />
     </>
 });
 
