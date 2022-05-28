@@ -59,12 +59,12 @@ const HeaderInternal = ({ textColorClassName }: { textColorClassName?: string })
         <div className="item-space"></div>
 
         <div className="header-item">
-          <Link className={textColorClassName} to="/">
+          <Link className={textColorClassName} to="/notifications">
             <span className="logo-item">
               <div className="logo-img">
                 <img src="/contact.png" alt="Onboarding icon" />
               </div>
-              <span>Contacts</span>
+              <span>Notifications</span>
             </span>
           </Link>
         </div>

@@ -3,6 +3,7 @@ import 'antd/dist/antd.css';
 //import './index.css';
 import { Layout, Menu, Breadcrumb, notification, Spin, Card, Skeleton } from 'antd';
 import {
+  CheckOutlined,
   NotificationOutlined,
 } from '@ant-design/icons';
 import FooterFresher from '../../components/layouts/footer/FooterFresher';
@@ -31,11 +32,18 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
   };
 
   componentDidMount = async () => {
-    const { doFetchDetailsPhase } = this.props;
+    const { doFetchUserPhaseDetail, doFetchProgram, doFetchUserChecklist, program } = this.props;
     const id = _.replace(window.location.pathname, '/planets/', '');
     //do fetch phase with programId
     try {
-      doFetchDetailsPhase({ programId: 1, phaseId: id });
+      if (_.isEmpty(program)) {
+        await doFetchProgram();
+      }
+      if(program?.programId){
+
+        await doFetchUserPhaseDetail({ programId: program?.programId, phaseId: id });
+        await doFetchUserChecklist({ phaseId: id });
+      }
     } catch (error) {
       notification.error({ message: 'Failed to fetch this phase.' });
     }
@@ -45,58 +53,15 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
 
   }
 
-  private _onFetchTasks({ checklistId }: { checklistId: number }) {
-
-    try {
-      this.props.doFetchTasks({ checklistId });
-
-    } catch (error) {
-      notification.error({ message: "Failed to fetch tasks." });
-    }
-
-  }
-
-  private _onFetchFetchQuestionAnswer(task: ITask) {
-    switch (task.typeId) {
-      case TaskCategory.SINGLE_CHOICE:
-      case TaskCategory.MULTIPLE_CHOICES:
-        this.props.doFetchSelectedQuestionAnswer({ taskId: task.id });
-        break;
-      case TaskCategory.WRITTING:
-        this.props.doFetchContructedQuestionAnswer({ taskId: task.id });
-        break;
-      case TaskCategory.BINARY:
-        this.props.doFetchBinaryQuestionAnswer({ taskId: task.id });
-        break;
-      case TaskCategory.MATCH_SEQUENCE:
-        this.props.doFetchMatchingSequenceQuestionAnswer({ taskId: task.id });
-        break;
-      case TaskCategory.MATCH_CORESPONSE:
-        this.props.doFetchMatchingCorrespondingQuestionAnswer({ taskId: task.id });
-        break;
-      case TaskCategory.ASSIGNMENT:
-        this.props.doFetchUserAnswerAssignment({ taskId: task.id });
-        break;
-      case TaskCategory.DOCUMENT:
-        this.props.doFetchUserAnswerDocument({ taskId: task.id });
-        break;
-      default:
-        break;
-    }
-  }
-
-  private _onChangeSelectedTask(task: ITask) {
-
-    if (task) {
-
-      this.props.setSeletedTask(task);
-      this._onFetchFetchQuestionAnswer(task);
-    }
+  private async _onChangeSelectedTask({checklistId, taskId}:{checklistId: number, taskId: number}) {
+   await this.props.doFetchUserTask({checklistId, taskId});
   }
 
   render() {
     const {
       selectedPhase,
+
+      doFetchUserTask,
 
       doSubmitBinaryQuestion,
       doSubmitContructedQuestion,
@@ -137,23 +102,26 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
             defaultOpenKeys={[ defaultOpenKeys ]}
             style={{ height: '100%', overflowY: 'auto', overflowX: 'hidden' }}
           >
-            {_.map(selectedPhase.checklists, (checklist) => (
+            {_.map(selectedPhase.userChecklists, (userChecklist) => {
+              const {checklist} = userChecklist;
+              return(
               <SubMenu
-                key={checklist.id}
+                key={checklist?.id}
                 icon={<NotificationOutlined />}
-                title={checklist.title}
-                onTitleClick={this._onFetchTasks.bind(this, { checklistId: checklist.id })}
+                title={checklist?.title}
               >
-                {isFetchingChecklist && _.isEmpty(checklist) ? <Skeleton active={true} /> : _.map(checklist.tasks, (task) => (
-                  <Menu.Item
-                    key={task.id}
-                    onClick={this._onChangeSelectedTask.bind(this, task)}
+                {_.isEmpty(checklist) ? <Skeleton active={true} /> : _.map(userChecklist?.tasks, (task) => {
+                  const userTask = _.find(userChecklist?.userTasks, {taskId: task?.id});
+                  return <Menu.Item
+                    key={task?.id}
+                    onClick={this._onChangeSelectedTask.bind(this,{ checklistId: userChecklist?.checklistId, taskId:task?.id })}
+                    icon={userTask?.isCompleted&& <CheckOutlined color='green'/>}
                   >
-                    {task.title}
+                    {task?.title}
                   </Menu.Item>
-                ))}
+            })}
               </SubMenu>
-            ))}
+            )})}
           </Menu>
         </Sider>
         <Content style={{ padding: '0 24px', minHeight: 280 }}>
@@ -176,7 +144,7 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
               doUpdateMatchingCorrespondingQuestion={doUpdateMatchingCorrespondingQuestion}
               doUpdateAssignment={doUpdateAssignment}
 
-              onFetchQuestionAnswer={this._onFetchFetchQuestionAnswer.bind(this)}
+              onFetchQuestionAnswer={doFetchUserTask}
               isLoading={isFetchingTask}
               isFetchingAnswer={isFetchingAnswer}
               isSubmitingAnswer={isSubmitingAnswer}
@@ -188,7 +156,7 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
 
     if (isFetchingPhase) {
       content = <Spin size='large' />
-    } else if (!_.isEmpty(selectedPhase) && _.isEmpty(selectedPhase.checklists) && !isFetchingTask) {
+    } else if (!_.isEmpty(selectedPhase) && _.isEmpty(selectedPhase.userChecklists) && !isFetchingTask) {
       content = <EmptyResult message={"Opps, we don't have any checklist here."} />
     }
     return (
@@ -214,10 +182,14 @@ const mapStateToProps = (state: IRootStore) => ({
 });
 
 const mapDispatchToProps = (dispatch: IRootDispatch) => ({
-  doSubmitTask: dispatch.programStore.doSubmitTask,
-  doFetchDetailsPhase: dispatch.programStore.doFetchDetailsPhase,
-  doFetchTasks: dispatch.programStore.doFetchTasks,
   setSeletedTask: dispatch.programStore.setSeletedTask,
+  
+  doSubmitTask: dispatch.programStore.doSubmitTask,
+  doFetchProgram: dispatch.programStore.doFetchProgram,
+  doFetchUserPhaseDetail: dispatch.programStore.doFetchUserPhaseDetail,
+  doFetchUserChecklist: dispatch.programStore.doFetchUserChecklist,
+  doFetchTasks: dispatch.programStore.doFetchTasks,
+  doFetchUserTask: dispatch.programStore.doFetchUserTask,
 
   doFetchSelectedQuestionAnswer: dispatch.programStore.doFetchSelectedQuestionAnswer,
   doFetchContructedQuestionAnswer: dispatch.programStore.doFetchContructedQuestionAnswer,

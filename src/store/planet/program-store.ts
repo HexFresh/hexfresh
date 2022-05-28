@@ -50,12 +50,15 @@ export const programStore: any = createModel<IRootStore>()({
   },
   effects: (dispatch: IRootDispatch) => ({
 
-    async doFetchProgram({ id }) {
-      const endpoint = `program/${id}`;
+    async doFetchProgram() {
+      const endpoint = `user/current-program`;
       dispatch.programStore.setIsFetchingProgram(true);
       try {
         const response = await axiosClient.get(endpoint);
         dispatch.programStore.setProgram(response.data);
+        const { programId } = response.data;
+
+        dispatch.programStore.doFetchUserPhase({ programId });
       } catch (error) {
         dispatch.programStore.setIsFetchingProgram(false);
         throw new Error('Failed to fetch program.');
@@ -87,6 +90,33 @@ export const programStore: any = createModel<IRootStore>()({
       }
       dispatch.programStore.setIsFetchingPhase(false);
     },
+    async doFetchUserPhase({ programId }) {
+      const endpoint = `user/program/${programId}/phase`;
+      dispatch.programStore.setIsFetchingPhase(true);
+      try {
+        const response = await axiosClient.get(endpoint);
+        const program = _.cloneDeep(rootStore.getState().programStore.program);
+
+        dispatch.programStore.setProgram({ ...program, userPhases: response.data });
+      } catch (error) {
+        dispatch.programStore.setIsFetchingPhase(false);
+        throw new Error('Failed to fetch phase.');
+      }
+      dispatch.programStore.setIsFetchingPhase(false);
+    },
+
+    async doFetchUserPhaseDetail({ programId, phaseId }) {
+      const endpoint = `user/program/${programId}/phase/${phaseId}`;
+      dispatch.programStore.setIsFetchingPhase(true);
+      try {
+        const response = await axiosClient.get(endpoint);
+        dispatch.programStore.setSelectedPhase(response.data);
+      } catch (error) {
+        dispatch.programStore.setIsFetchingPhase(false);
+        throw new Error('Failed to fetch phase.');
+      }
+      dispatch.programStore.setIsFetchingPhase(false);
+    },
 
     async doFetchChecklists({ phaseId }) {
       const endpoint = `phase/${phaseId}/checklist`;
@@ -95,6 +125,34 @@ export const programStore: any = createModel<IRootStore>()({
         const response = await axiosClient.get(endpoint);
         dispatch.programStore.setChecklists(response.data);
       } catch (error) {
+        throw new Error('Failed to fetch checklists.');
+      }
+    },
+
+    async doFetchUserChecklist({ phaseId }) {
+      const endpoint = `user/phase/${phaseId}/checklist`;
+      dispatch.programStore.setIsFetchingPhase(true);
+      try {
+        const response = await axiosClient.get(endpoint);
+        const selectedPhase = _.cloneDeep(rootStore.getState().programStore.selectedPhase);
+        dispatch.programStore.setSelectedPhase({ ...selectedPhase, userChecklists: response.data });
+      } catch (error) {
+        dispatch.programStore.setIsFetchingPhase(false);
+        throw new Error('Failed to fetch checklists.');
+      }
+      dispatch.programStore.setIsFetchingPhase(false);
+    },
+
+    async doFetchUserTask({ checklistId, taskId }) {
+      const endpoint = `user/checklist/${checklistId}/task/${taskId}`;
+      dispatch.programStore.setIsFetchingTask(true);
+      try {
+        const response = await axiosClient.get(endpoint);
+        dispatch.programStore.setSeletedTask(response.data);
+        dispatch.programStore.setIsFetchingTask(false);
+
+      } catch (error) {
+        dispatch.programStore.setIsFetchingTask(false);
         throw new Error('Failed to fetch checklists.');
       }
     },
@@ -453,7 +511,7 @@ export const programStore: any = createModel<IRootStore>()({
 
         const payload = {
           answer: "",
-          fileList: [ {id: id} ]
+          fileList: [ { id: id } ]
         }
 
         await axiosClient.post(endpoint, payload);

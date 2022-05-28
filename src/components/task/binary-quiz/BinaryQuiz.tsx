@@ -3,18 +3,20 @@ import _ from "lodash";
 import { List, Radio, Space } from "antd";
 import Text from 'antd/lib/typography/Text';
 
-import { ITask } from "../../../interface/program-interface";
+import { IAnswerBinaryQuestion, ITask } from "../../../interface/program-interface";
 
 export const BinaryQuiz = memo(({
     isEdit,
     isTaken,
     task,
+    answerBinaryQuestion,
     binaryChoices,
     onChangeBinaryChoices
 }: {
     isEdit: boolean,
     isTaken: boolean,
     task: ITask,
+    answerBinaryQuestion: IAnswerBinaryQuestion,
     binaryChoices: any[],
     onChangeBinaryChoices: any
 })=>{
@@ -26,7 +28,7 @@ export const BinaryQuiz = memo(({
     <List
       dataSource={task.true_false_question_options}
       renderItem={(item) => {
-        const answer = _.find(task?.answerBinaryQuestion?.answers, ['optionId', item.id]);
+        const answer = _.find(answerBinaryQuestion?.answers, ['optionId', item.id]);
         const currentValue = (isEdit || !isEdit && !isTaken) ? (_.find(binaryChoices, ['id', item.id])) : (
           { id: answer?.optionId, userAnswer: answer?.userAnswer }
         );
