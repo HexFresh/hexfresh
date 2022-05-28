@@ -1,7 +1,9 @@
 import React, {useState} from "react";
-import {Button, Input, Typography} from 'antd'
+import {Button, Input, message, Typography} from 'antd'
 import './forgot-password.css';
 import ReCAPTCHA from "react-google-recaptcha";
+import {sendVerificationCodeByEmail, verifyForgotPasswordRequest} from "../../api/verificationApi"
+import {useNavigate} from "react-router-dom";
 
 const siteKey = "6LeWfRYgAAAAAOWfVJB9f0PjyujtfmyQt6K1NOXY";
 const {Text} = Typography;
@@ -13,12 +15,40 @@ export default function ForgotPassword() {
   const [verifyCode, setVerifyCode] = useState('');
   const [captcha, setCaptcha] = useState('');
 
+  const navigate = useNavigate();
+
   function onReCAPTCHAChange(value: any) {
     setCaptcha(value);
   }
 
   function onReCAPTCHAExpired() {
     setCaptcha('');
+  }
+
+  const handleGetVerification = () => {
+    message.loading({content: 'Sending verification code...', key: 'verification'}).then(async () => {
+      const response = await sendVerificationCodeByEmail(email);
+      if (response) {
+        message.success('Verification code sent to your email');
+      } else {
+        message.error('Email not found');
+      }
+    });
+  }
+
+  const handleVerifyForgotPasswordRequest = () => {
+    message.loading({content: 'Verifying...', key: 'verification'}).then(async () => {
+      const response = await verifyForgotPasswordRequest(email, newPassword, verifyCode);
+      if (response) {
+        message.success('Verification successful, please sign in');
+        setTimeout(() => {
+            navigate('/signin')
+          }
+          , 2000);
+      } else {
+        message.error('Problem with your code, please try again');
+      }
+    });
   }
 
   return (
@@ -62,8 +92,10 @@ export default function ForgotPassword() {
             <Input type={"danger"} disabled={email === ''} onChange={(e) => setVerifyCode(e.target.value)}
                    className="field__verify__input"
                    placeholder={"Verify code"}/>
-            <Button disabled={email === ''} type={"primary"} className="field__verify__get-btn">Get
-              verification</Button>
+            <Button onClick={handleGetVerification} disabled={email === '' || !email.includes("@")}
+                    type={"primary"}
+                    className="field__verify__get-btn">
+              Get verification</Button>
           </div>
         </div>
 
@@ -73,7 +105,7 @@ export default function ForgotPassword() {
           onExpired={onReCAPTCHAExpired}
         />
         <div className="field">
-          <Button style={{
+          <Button onClick={handleVerifyForgotPasswordRequest} style={{
             width: '100%',
           }} type={"primary"} className="confirm-btn"
                   disabled={newPassword === '' || confirmPassword === '' || captcha === '' || !email.includes('@') || newPassword !== confirmPassword}>Confirm

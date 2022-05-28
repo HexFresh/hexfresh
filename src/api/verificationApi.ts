@@ -7,7 +7,7 @@ export const sendVerificationCodeByEmail = async (email: string) => {
     const {data} = response;
     return data;
   } catch (error) {
-    return error.response;
+    console.log(error);
   }
 }
 
@@ -18,7 +18,7 @@ export const verifyForgotPasswordRequest = async (email: string, newPassword: st
     const {data} = response;
     return data;
   } catch (error) {
-    return error;
+    console.log(error);
   }
 }
 
