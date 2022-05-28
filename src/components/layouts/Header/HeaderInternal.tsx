@@ -1,5 +1,5 @@
 import { Avatar, Dropdown, Menu } from 'antd';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { IRootDispatch } from '../../../store/store';
@@ -19,9 +19,6 @@ const HeaderInternal = ({ textColorClassName }: { textColorClassName?: string })
         navigate('/user/profile');
         break;
       case '2':
-        navigate('/user/change-password');
-        break;
-      case '3':
         logoutHandler();
         break;
       default:
@@ -32,8 +29,7 @@ const HeaderInternal = ({ textColorClassName }: { textColorClassName?: string })
   const menu = (
     <Menu onClick={onClickMenu}>
       <Menu.Item key="1">My Profile</Menu.Item>
-      <Menu.Item key="2">Change Password</Menu.Item>
-      <Menu.Item key="3">Sign out</Menu.Item>
+      <Menu.Item key="2">Sign out</Menu.Item>
     </Menu>
   );
   return (

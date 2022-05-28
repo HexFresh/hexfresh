@@ -16,6 +16,7 @@ import axios from 'axios';
 import moment from 'moment';
 import {IUserProfile, IUserAccount, IDegree, IDistrict, IJobPosition, IProvince, IWard} from './interface';
 import HeaderInternal from '../../components/layouts/Header/HeaderInternal';
+import {verifyResetPasswordRequest} from "../../api/verificationApi";
 
 const dateFormat = 'YYYY-MM-DD';
 const BASE_ADDRESS_API_URL = 'https://provinces.open-api.vn/api';
@@ -47,12 +48,23 @@ export default function UserProfile() {
     setIsModalVisible(true);
   };
 
-  const handleOk = () => {
-    setIsModalVisible(false);
+  const handleOk = async () => {
+    message.loading('Processing...').then(async () => {
+      const response = await verifyResetPasswordRequest(oldPassword, newPassword);
+      if (response) {
+        message.success('Change password successfully');
+        handleCancel()
+      } else {
+        message.error('Wrong old password');
+        setOldPassword('');
+      }
+    });
   };
 
   const handleCancel = () => {
-
+    setOldPassword('');
+    setNewPassword('');
+    setConfirmPassword('');
     setIsModalVisible(false);
   };
 
@@ -90,6 +102,7 @@ export default function UserProfile() {
       await fetchUserProfile();
     } else {
       setUserProfile(result);
+      console.log(result)
       setDisplayFirstName(result.firstName || '');
       setDisplayLastName(result.lastName || '');
       setSelectedProvince(result?.address?.province || null);
@@ -109,14 +122,12 @@ export default function UserProfile() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      await fetchUserAccount();
-      await fetchUserProfile();
-      await fetchProvinces();
-      await fetchAllDegree();
-      await fetchAllJobPosition();
+      await Promise.all([fetchUserAccount(), fetchUserProfile(), fetchAllDegree(), fetchAllJobPosition()])
       setLoading(false);
     };
-    fetchData();
+    fetchData().then(() => {
+      setLoading(false);
+    });
   }, []);
 
   const uploadNewAvatar = async (file: any) => {
@@ -493,28 +504,39 @@ export default function UserProfile() {
           <Button key="back" onClick={handleCancel}>
             Cancel
           </Button>,
-          <Button disabled={oldPassword === '' || newPassword === '' || confirmPassword === ''} key="submit"
-                  type="primary" onClick={handleOk}>
+          <Button
+            disabled={oldPassword === '' || newPassword === '' || confirmPassword === '' || newPassword !== confirmPassword}
+            key="submit"
+            type="primary" onClick={handleOk}>
             Change Password
           </Button>,
         ]}
       >
-        <div className="form">
+        <div className="change-password-form">
           <div className="field">
-            <label>Old password</label>
-            <Input type="password" style={{width: '100%', marginTop: '10px'}} value={oldPassword}
-                   onChange={(e) => setOldPassword(e.target.value)}/>
+            <div className={"title"}>Old password</div>
+            <Input.Password style={{width: '100%', marginTop: '10px', marginBottom: "20px"}} value={oldPassword}
+                            onChange={(e) => setOldPassword(e.target.value)}/>
           </div>
           <div className="field">
-            <label>New password</label>
-            <Input type="password" style={{width: '100%', marginTop: '10px'}} value={newPassword}
-                   onChange={(e) => setNewPassword(e.target.value)}/>
+            <div className={"title"}>New password</div>
+            <Input.Password style={{width: '100%', marginTop: '10px', marginBottom: "20px"}} value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}/>
           </div>
           <div className="field">
-            <label>Confirm password</label>
-            <Input type="password" style={{width: '100%', marginTop: '10px'}}
-                   value={confirmPassword}
-                   onChange={(e) => setConfirmPassword(e.target.value)}/>
+            <div className={"title"}>Confirm password</div>
+            <div className={"input"}>
+              <Input.Password
+                style={{width: '100%', marginTop: '10px', marginBottom: "20px"}}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}/>
+              {(confirmPassword !== newPassword && confirmPassword !== "" && newPassword !== "") && (
+                <div style={{
+                  marginTop: '-15px',
+                  color: 'red',
+                }} className={"validate"}>The password confirmation does not match</div>)}
+            </div>
+
           </div>
         </div>
       </Modal>

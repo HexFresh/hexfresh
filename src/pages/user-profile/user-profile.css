@@ -10,7 +10,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 0 300px 0 300px;
+  padding: 0 200px 0 200px;
   background-color: #f1f2f7;
   overflow-y: scroll;
   margin-bottom: 20px;
@@ -34,6 +34,7 @@
   font-size: 22px;
   font-weight: bold;
   margin-bottom: 10px;
+  text-align: center;
 }
 
 .user-profile__container .breadcrumb {
@@ -182,4 +183,12 @@
   align-items: center;
   grid-gap: 10px;
   margin-bottom: 20px;
+}
+
+.ant-modal-body .change-password-form {
+
+}
+
+.ant-modal-body .change-password-form .field .title {
+  font-weight: bold;
 }
