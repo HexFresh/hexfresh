@@ -1,4 +1,4 @@
-import { SendOutlined, MoreVert, MoreOutlined } from "@mui/icons-material";
+import { SendOutlined, MoreOutlined } from "@mui/icons-material";
 import { Avatar, Button, Dropdown, Form, Input, Menu, Skeleton } from "antd";
 import { memo, useCallback, useEffect, useState } from "react"
 import _ from 'lodash';
@@ -18,20 +18,27 @@ import { MessageMembersModal } from "../message/message-member-modal/message-mem
 
 export const MessageDetail = memo(({
   isLoading,
+  isAddingMember,
   conversation,
   profileRecipients,
   doRenameConversation,
   doRecieveMessage,
+  doAddMember,
+  doLeaveConversation,
 }: {
   isLoading: boolean,
+  isAddingMember: boolean,
   conversation: IConversation,
-  profileRecipients: IUser,
+  profileRecipients: IUser[],
   doRenameConversation: any,
   doRecieveMessage: any,
+  doAddMember: any,
+  doLeaveConversation: any,
 }) => {
   const [ messageString, setMessage ] = useState<string>('');
   const [ socket, setSocket ] = useState(io());
   const [ isOpenMembersModal, setOpenMembersModal ] = useState<boolean>(false);
+  const [ isAddingModal, setIsAddingModal ] = useState<boolean>(false);
   const [ conversationId, setConversationId ] = useState('');
   const [ isEditTitle, setIsEditTitle ] = useState<boolean>(false);
   const [ title, setTitle ] = useState<string>("");
@@ -71,6 +78,17 @@ export const MessageDetail = memo(({
     !_.isEmpty(value) && setTitle(value);
   }, [])
 
+  const handleAddMember = useCallback(
+    async recipientIds => {
+      await doAddMember({ recipientIds, conversationId });
+      setOpenMembersModal(false);
+    }, [ conversationId, doAddMember ]
+  )
+
+  const handleLeaveConversation = useCallback(async ()=>{
+    await doLeaveConversation({conversationId});
+  },[conversationId, doLeaveConversation])
+
   useEffect(() => {
     const newSocket = socketInstance;
     setSocket(newSocket);
@@ -108,14 +126,17 @@ export const MessageDetail = memo(({
 
             </Form>}
           <Dropdown key="more" overlay={<Menu>
-            <Menu.Item onClick={() => setOpenMembersModal(true)}>
+            <Menu.Item onClick={() => { setOpenMembersModal(true); setIsAddingModal(false); }}>
               View members
             </Menu.Item>
             <Menu.Item onClick={() => setIsEditTitle(!isEditTitle)}>
               Edit title
             </Menu.Item>
-            <Menu.Item onClick={() => setIsEditTitle(!isEditTitle)}>
+            <Menu.Item onClick={() => { setOpenMembersModal(true); setIsAddingModal(true); }}>
               Add member
+            </Menu.Item>
+            <Menu.Item onClick={handleLeaveConversation} className='text-red'>
+             Leave
             </Menu.Item>
           </Menu>
           } placement="bottomRight" className="right icon">
@@ -131,11 +152,12 @@ export const MessageDetail = memo(({
         </div>
       </section>
       <MessageMembersModal
+        users={profileRecipients}
         onCancel={() => { setOpenMembersModal(false) }}
         isOpen={isOpenMembersModal}
-        onSubmit={() => { }}
-        isLoading={false}
-        isAddMember
+        onSubmit={handleAddMember}
+        isLoading={isAddingMember}
+        isAddMember={isAddingModal}
       />
     </>
 });

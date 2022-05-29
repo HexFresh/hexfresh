@@ -10,11 +10,11 @@ import ListFresher from './pages/list-fresher/ListFresher';
 import PlanetView from './pages/planet/PlanetView';
 import ListPhase from './pages/list-phase/ListPhase';
 import PhaseDetail from './pages/phase-detail/PhaseDetail';
-import rootStore, {IRootDispatch, IRootStore} from './store/store';
-import {useDispatch, useSelector} from 'react-redux';
-import {useEffect} from 'react';
-import {IUserStore} from './store/user/user-store';
-import {getCurrentToken, onMessageListener} from './utils/firebaseInit';
+import { IRootDispatch, IRootStore } from './store/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { IUserStore } from './store/user/user-store';
+import { getCurrentToken, onMessageListener } from './utils/firebaseInit';
 import FresherListPhase from './pages/fresher-list-phase/FresherListPhase';
 import ReviewTask from './pages/review-task/ReviewTask';
 import FresherLeaderboard from './pages/fresher-leaderboard/FresherLeaderboard';
@@ -47,14 +47,13 @@ function App() {
   const roleId: number = Number(useSelector<IRootStore>((state) => state.user.roleId)) || Number(localStorage.getItem('roleId')) || 0;
 
   if (!auth.token && location.pathname !== '/signin' && location.pathname !== '/planets' && location.pathname !== '/') {
-    console.log(location.pathname + location.search, 'inititate...');
     dispatch.location.startAt(location.pathname + location.search);
   }
 
   useEffect(() => {
 
     const initialFunc = async () => {
-      await dispatch.user.checkAutoLoginV2({dispatch, navigate, location});
+      await dispatch.user.checkAutoLoginV2({ dispatch, navigate, location });
       await dispatch.user.fetchProfileUsers();
       // push notification
       onMessageListener()

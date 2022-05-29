@@ -1,6 +1,9 @@
 import { Avatar, Button, List, Modal, Select, Typography } from "antd";
 import { isEmpty, map } from "lodash";
 import { memo, useCallback, useState } from "react";
+import { useSelector } from "react-redux";
+import { IRootStore } from "../../../store/store";
+import { IQuickUser, IUser } from "../../../store/user/user-interface";
 
 export const MessageMembersModal = memo((
   {
@@ -11,18 +14,18 @@ export const MessageMembersModal = memo((
     isLoading,
     isAddMember = false
   }: {
-    users?: any,
+    users: IUser[],
     onSubmit: any,
     onCancel: any,
     isLoading: boolean,
     isOpen: boolean,
     isAddMember: boolean
   }) => {
-
+  const userList = useSelector((state: IRootStore) => state.user?.users) as IQuickUser[];
   const [ recipientIds, setRecipientIds ] = useState<string[]>([]);
   const handleSubmitForm = useCallback(() => {
-
-  }, []);
+    isAddMember ? onSubmit(recipientIds) : onCancel();
+  }, [ isAddMember, onCancel, onSubmit, recipientIds ]);
 
   function handleChange(value: any) {
     !isEmpty(value) && setRecipientIds(value);
@@ -35,10 +38,10 @@ export const MessageMembersModal = memo((
     onCancel={onCancel}
     footer={[
       <Button key="back" onClick={onCancel}>
-        Return
+        Cancel
       </Button>,
       <Button key="submit" type="primary" loading={isLoading} onClick={handleSubmitForm}>
-        Submit
+        {isAddMember ? 'Submit' : 'Cancel'}
       </Button>
     ]}
   >
@@ -46,20 +49,21 @@ export const MessageMembersModal = memo((
       bordered
       dataSource={users}
       renderItem={(item) => (
-        <List.Item>
-          <Typography.Text mark>[ITEM]</Typography.Text> {item}
+        <List.Item key={item.userId}>
+          <Typography.Text mark></Typography.Text> {(item.lastName && item.firstName) ? `${item.lastName} ${item.firstName}` : item.username}
         </List.Item>
       )}
     />
 
-    <Select
+    {isAddMember && <Select
       mode="multiple"
       style={{ width: '100%' }}
       placeholder="Select your user"
       onChange={handleChange}
       optionLabelProp="label"
+      className="mt-large-x2"
     >
-      {!isEmpty(users) && map(users, userInfo => (<Select.Option value={userInfo.id} label={userInfo.username}>
+      {!isEmpty(userList) && map(userList, userInfo => (<Select.Option value={userInfo.id} label={userInfo.username}>
         <div className="demo-option-label-item">
           <span role="img" aria-label="China" className="mv-small">
             <Avatar>{userInfo.username[ 0 ]}</Avatar>
@@ -68,7 +72,7 @@ export const MessageMembersModal = memo((
         </div>
       </Select.Option>))}
 
-    </Select>
+    </Select>}
   </Modal>
 });
 

@@ -86,8 +86,9 @@ export const user: any = {
           navigate('/', {replace: true});
         }
       } catch (error) {
-        notification.error({
-          message: 'Login failed!',
+       
+				notification.error({
+          message:'Login failed!',
           description: error.message,
         });
         throw new Error('Failed to login.');

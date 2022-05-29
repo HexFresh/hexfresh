@@ -109,7 +109,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
 
   componentDidUpdate(prevProps: ICarouselProps, prevState: ICarouselStates) {
     if (!_.isEqual(prevProps, this.props)) {
-      this.setState({ items: this.props.program.userPhases });
+      this.setState({ items: this.props.program.userPhases, isLoading: this.props.isFetchingPhase });
     }
   }
 
@@ -140,6 +140,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
 const mapStateToProps = (state: IRootStore) => ({
   program: state.programStore.program,
   imageList: state.programStore.imageList,
+  isFetchingPhase: state.programStore.isFetchingPhase,
 });
 
 const mapDispatchToPprops = (dispatch: IRootDispatch) => ({
