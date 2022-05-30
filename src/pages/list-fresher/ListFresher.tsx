@@ -33,7 +33,7 @@ interface IProgram {
   title: string;
 }
 
-const nPerPage = 4;
+const nPerPage = 5;
 
 const { Option } = Select;
 
@@ -282,7 +282,7 @@ export default function ListProgram() {
             ) : (
               <div className="freshers__container">
                 <Table className="table" columns={columns} dataSource={freshers} pagination={false} />
-                <div className="pagination">
+                <div className="lf-pagination">
                   <Pagination
                     current={page}
                     total={count}

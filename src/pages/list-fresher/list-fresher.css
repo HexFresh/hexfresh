@@ -174,7 +174,7 @@
   flex-direction: column;
 }
 
-.list-fresher .container .page-content .pagination {
+.list-fresher .container .page-content .lf-pagination {
   flex: 1;
   width: 100%;
   display: flex;
