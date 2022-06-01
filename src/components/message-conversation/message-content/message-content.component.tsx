@@ -20,8 +20,7 @@ export const MessageContent = React.memo(({
 
   useEffect(() => {
     isEqual(userId, message?.from) && setIsResponseMessage(true);
-    console.log(userId, message?.from)
-    const user = find(profileRecipients, [ 'userId', userId ]) as unknown as IUser;
+    const user = find(profileRecipients, [ 'userId', message?.from ]) as unknown as IUser;
 
     !isEmpty(user) && setAvatar(user.avatar);
 

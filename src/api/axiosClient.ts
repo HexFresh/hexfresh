@@ -13,8 +13,20 @@ const axiosClient = axios.create({
 axiosClient.interceptors.request.use(function (config) {
   // Do something before request is sent
   return config;
-}, function (error) {
+}, async (error) => {
   // Do something with request error
+  const originalConfig = error.config;
+  if(originalConfig.url !== '/signin'&& error.response){
+    //Access token expired
+    if(error.response.status === 401 && !originalConfig._retry){
+      originalConfig._retry= true;
+      try {
+        return originalConfig;
+      } catch (_error) {
+        return Promise.reject(_error);
+      }
+    }
+  }
   return Promise.reject(error);
 });
 

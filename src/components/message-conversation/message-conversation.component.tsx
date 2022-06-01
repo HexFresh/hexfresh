@@ -43,6 +43,7 @@ export const MessageDetail = memo(({
   const [ isEditTitle, setIsEditTitle ] = useState<boolean>(false);
   const [ title, setTitle ] = useState<string>("");
   const userId = useSelector((state: IRootStore) => state.user?.id);
+  const token = useSelector<IRootStore>((state) => state.user?.token);
   const [ form ] = Form.useForm();
 
   const onFinish = async () => {
@@ -56,7 +57,7 @@ export const MessageDetail = memo(({
 
   const onChangeMessage = (event: any) => {
     const { value } = event.target;
-    !_.isEmpty(value) && setMessage(value);
+    setMessage(value);
   };
 
   const onSendMessage = useCallback(() => {
@@ -65,17 +66,20 @@ export const MessageDetail = memo(({
         conversationId,
         data: messageString,
       };
-
+      if(socket.disconnected){
+        socket.io.opts.query = "token=" + token as any;
+        socket.connect();
+      }
       socket.emit(`send message`, messagePayload);
     }
 
     setMessage('');
-  }, [ conversationId, messageString, socket ]);
+  }, [conversationId, messageString, socket, token]);
 
   const handleChangeTitle = useCallback((event: any) => {
     const value = event.target.value;
 
-    !_.isEmpty(value) && setTitle(value);
+    setTitle(value);
   }, [])
 
   const handleAddMember = useCallback(
