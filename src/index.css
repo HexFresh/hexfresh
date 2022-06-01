@@ -167,3 +167,7 @@ code {
 .pointer{
   cursor: pointer;
 }
+
+.text-red{
+  color: red !important;
+}

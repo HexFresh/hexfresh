@@ -36,6 +36,8 @@ const Messages: FC<MessageProps> = ({
   doRenameConversation,
   doFetchRecipientsProfile,
   doRecieveMessage,
+  doAddMember,
+  doLeaveConversation,
 
   selectedConversation,
   conversations,
@@ -43,6 +45,8 @@ const Messages: FC<MessageProps> = ({
   isFetchingConversations,
   isFetchingConversation,
   isFetchingRecipients,
+  isAddingMember,
+  isLeavingConversation,
 }) => {
   const [ state, setState ] = useState<typeof initialState>(initialState);
   const [ isActiveModal, setActiveModal ] = useState<boolean>(false);
@@ -91,14 +95,14 @@ const Messages: FC<MessageProps> = ({
     , []);
 
   const handleSubmitModal = useCallback((recipientIds, title) => {
-    const createConversation =  async ()=>{
+    const createConversation = async () => {
       await doCreateConversation({ recipients: recipientIds, title });
       await doFetchAllConversation();
     }
     createConversation();
     setActiveModal(false);
   }
-    , [doCreateConversation, doFetchAllConversation]);
+    , [ doCreateConversation, doFetchAllConversation ]);
 
   useEffect(() => {
     !_.isEmpty(selectedConversation?.recipients) && doFetchRecipientsProfile({ recipients: selectedConversation?.recipients })
@@ -141,8 +145,11 @@ const Messages: FC<MessageProps> = ({
                   doRecieveMessage={doRecieveMessage}
                   profileRecipients={profileRecipients}
                   isLoading={isFetchingConversation || isFetchingRecipients}
+                  isAddingMember={isAddingMember}
                   conversation={selectedConversation}
                   doRenameConversation={doRenameConversation}
+                  doAddMember={doAddMember}
+                  doLeaveConversation={doLeaveConversation}
                 />
               </Card>
             </Content>
@@ -167,6 +174,8 @@ const mapStateToProps = (state: IRootStore) => ({
   isFetchingConversations: state.message.isFetchingConversations,
   isFetchingConversation: state.message.isFetchingConversation,
   isFetchingRecipients: state.message.isFetchingRecipients,
+  isAddingMember: state.message.isAddingMember,
+  isLeavingConversation: state.message.isLeavingConversation,
 });
 
 const mapDispatchToProps = (dispatch: IRootDispatch) => ({
@@ -176,6 +185,8 @@ const mapDispatchToProps = (dispatch: IRootDispatch) => ({
   doRenameConversation: dispatch.message.doRenameConversation,
   doFetchRecipientsProfile: dispatch.message.doFetchRecipientsProfile,
   doRecieveMessage: dispatch.message.doRecieveMessage,
+  doAddMember: dispatch.message.doAddMember,
+  doLeaveConversation: dispatch.message.doLeaveConversation,
 });
 
 type MessageStateProps = ReturnType<typeof mapStateToProps>;

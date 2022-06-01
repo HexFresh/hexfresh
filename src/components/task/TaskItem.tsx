@@ -166,7 +166,6 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
             id: item.id,
             content: item.content
           }
-          console.log(item);
           item.index === INT_ONE && firstColumn.push(tempValue);
           item.index === INT_TWO && secondColumn.push(tempValue);
         }
@@ -227,7 +226,6 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
       if (pairIds.length === 2) {
         const firstItem = _.find(matchingCorespondingData[ 0 ], [ 'id', pairIds[ 0 ] ]);
         const secondItem = _.find(matchingCorespondingData[ 1 ], [ 'id', pairIds[ 1 ] ]);
-        console.log(firstItem, secondItem);
         if (firstItem && secondItem) {
           const newPair = {
             id: matchingSequencePairs.length,
@@ -304,7 +302,6 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
     this.setState((state) => {
       const newPair = _.cloneDeep(this.state.pairIds);
       newPair[ column ] = item.id;
-      console.log(newPair);
 
       return {
         pairIds: newPair
@@ -381,7 +378,6 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
     try {
       switch (task?.task?.typeId) {
         case TaskCategory.SINGLE_CHOICE:
-          console.log(radioValue);
           if (radioValue) {
 
             payload = {
@@ -389,7 +385,6 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
                 { choiceId: radioValue }
               ]
             };
-            console.log(payload, 'payload');
             if (_.isEmpty(task.user_selected_question_answer)) {
               await doSubmitSelectedQuestionAnswer({ answers: payload, taskId });
             } else {
@@ -409,7 +404,6 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
             let payload = {
               answers: [ ...mapResult ]
             };
-            console.log(payload, 'payload');
             if (_.isEmpty(task.user_selected_question_answer)) {
               await doSubmitSelectedQuestionAnswer({ answers: payload, taskId });
             } else {
@@ -422,7 +416,6 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
           if (!_.isEmpty(inputTextArea)) {
 
             payload = { answer: inputTextArea };
-            console.log(payload, 'payload');
             if (_.isEmpty(task.user_constructed_question_answer)) {
               await doSubmitContructedQuestion({ answers: payload, taskId });
             } else {
@@ -444,7 +437,6 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
             payload = {
               answers: [ ...uploadValue ]
             }
-            console.log(payload, 'payload');
             if (_.isEmpty(task?.user_true_false_question_answer)) {
               await doSubmitBinaryQuestion({ answers: payload, taskId });
             } else {

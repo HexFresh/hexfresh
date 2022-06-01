@@ -15,6 +15,8 @@ export const messageStore: any = {
     isFetchingConversations: false,
     isFetchingConversation: false,
     isFetchingRecipients: false,
+    isAddingMember: false,
+    isLeavingConversation: false,
   },
   reducers: {
     setIsFetchingConversation: (state: IRootStore, payload: any) => ({ ...state, isFetchingConversation: payload }),
@@ -23,6 +25,8 @@ export const messageStore: any = {
     setConversations: (state: IRootStore, payload: any) => ({ ...state, conversations: payload }),
     setuserProfiles: (state: IRootStore, payload: any) => ({ ...state, profileRecipients: payload }),
     setIsFetchingRecipients: (state: IRootStore, payload: any) => ({ ...state, isFetchingRecipients: payload }),
+    setIsAddingMember: (state: IRootStore, payload: any)=>({...state, isAddingMember: payload}),
+    setIsLeavingConversation: (state: IRootStore, payload: any)=>({...state, isLeavingConversation: payload}),
   },
   effects: (dispatch: IRootDispatch) => ({
     async doCreateConversation({ recipients, title }: { recipients: string[], title: string }) {
@@ -107,7 +111,6 @@ export const messageStore: any = {
     async doFetchRecipientsProfile({ recipients }: { recipients: string[] }) {
 
       dispatch.message.setIsFetchingRecipients(true);
-      dispatch.message.setuserProfiles([]);
 
       try {
         const promises = _.map(recipients,
@@ -128,7 +131,17 @@ export const messageStore: any = {
               return {} as IUser;
             }
           });
-          dispatch.message.setuserProfiles(recipients);
+          const profileRecipients = _.cloneDeep(rootStore.getState().message.profileRecipients);
+
+          _.forEach(recipients, user => {
+            const foundIndex = _.findIndex(profileRecipients, [ 'userId', user?.userId ])
+            if (foundIndex < 0) {
+              profileRecipients.unshift(user);
+            } else {
+              profileRecipients[ foundIndex ] = user;
+            }
+          })
+          dispatch.message.setuserProfiles(profileRecipients);
         });
         dispatch.message.setIsFetchingRecipients(false);
 
@@ -164,6 +177,61 @@ export const messageStore: any = {
           messages
         };
         dispatch.message.setSelectedConversation(updatedSelectedConversation);
+      }
+    },
+
+    async doAddMember({ recipientIds, conversationId }: { recipientIds: string[], conversationId: string }) {
+      const endpoint = `conversation/${conversationId}/recipient`;
+      dispatch.message.setIsAddingMember(true);
+      try {
+        await axiosMessage.put(endpoint,{recipient: recipientIds[INT_ZERO]});
+        dispatch.message.setIsAddingMember(false);
+        const selectedConversation = _.cloneDeep(rootStore.getState().message.selectedConversation);
+        const recipients = selectedConversation.recipients;
+        const updatedRecipients = [...recipients, recipientIds[INT_ZERO]];
+        const updatedSelectedConversation = {...selectedConversation, recipients: updatedRecipients};
+
+        dispatch.message.setSelectedConversation(updatedSelectedConversation);
+
+        notification.success({
+          message: 'Add user to conversation successfully.',
+          description: `User can join the conversation from now.`
+        });
+      } catch (error) {
+        dispatch.message.setIsAddingMember(false);
+        notification.error({
+          message: 'Failed to add new member to conversation.',
+          description: error,
+        });
+        throw new Error(error);
+      }
+    },
+
+    async doLeaveConversation({conversationId}:{conversationId: string}){
+      const endpoint = `conversation/${conversationId}/leave`;
+      dispatch.message.setIsLeavingConversation(true);
+      try {
+        await axiosMessage.put(endpoint);
+        notification.success({
+          message: 'Leave successfully.',
+          description: `You can not see any more message from this comversation`
+        });
+        //update conversations.
+        const conversations = rootStore.getState().message.conversations;
+        const updatedConversations = _.filter(conversations, conversation=> conversation._id!==conversationId);
+        dispatch.message.setConversations(updatedConversations);
+        //update selectedConversation
+        dispatch.message.setSelectedConversation({});
+        dispatch.message.setIsLeavingConversation(false);
+
+      } catch (error) {
+        notification.error({
+          message: 'Failed to leave this conversation.',
+          description: error,
+        });
+        dispatch.message.setIsLeavingConversation(false);
+
+        throw new Error(error);
       }
     }
 
