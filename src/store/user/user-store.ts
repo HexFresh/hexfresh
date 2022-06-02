@@ -1,10 +1,11 @@
-import {NavigateFunction} from "react-router-dom";
+import { NavigateFunction } from "react-router-dom";
 import axiosClient from "../../api/axiosClient";
-import rootStore, {IRootDispatch, IRootStore} from "../store";
-import {retrieveStoredToken} from '../../utils/calc';
-import {socketInstance} from "../../utils/socketioInit";
-import {notification} from "antd";
-import {setAuthToken} from "../../api/axiosMessage";
+import rootStore, { IRootDispatch, IRootStore } from "../store";
+import { retrieveStoredToken } from '../../utils/calc';
+import { socketInstance } from "../../utils/socketioInit";
+import { notification } from "antd";
+import { setAuthToken } from "../../api/axiosMessage";
+import { DoorSlidingOutlined } from "@mui/icons-material";
 
 let logoutTimer: NodeJS.Timeout;
 const initialState = {
@@ -25,7 +26,8 @@ export const user: any = {
     loginSucces: (state: IRootStore, payload: any) => {
       const socket = socketInstance;
       socket.io.opts.query = "token=" + payload.token as any;
-
+      console.log("🚀 ~ file: user-store.ts ~ line 29 ~ payload.token", payload.token)
+      socket.connect();
       socket.emit('signin', 'Hi from signin')
       return {
         ...state,
@@ -40,11 +42,11 @@ export const user: any = {
       }
     },
     logout: (state: IRootStore) => {
-      return {...initialState}
+      return { ...initialState }
     },
 
-    setUsers: (state: IRootStore, payload: any) => ({...state, users: payload}),
-    setIsFetchingUsers: (state: IRootStore, payload: any) => ({...state, isFetchingUsers: payload}),
+    setUsers: (state: IRootStore, payload: any) => ({ ...state, users: payload }),
+    setIsFetchingUsers: (state: IRootStore, payload: any) => ({ ...state, isFetchingUsers: payload }),
 
   },
   effects: (dispatch: IRootDispatch) => ({
@@ -58,7 +60,7 @@ export const user: any = {
       const endpoint = `/auth/login`;
       try {
         const response = await axiosClient.post(endpoint, `username=${email}&password=${password}`);
-        const {data} = response;
+        const { data } = response;
         dispatch.user.loginSucces({
           body: {
             ...data.user
@@ -74,19 +76,18 @@ export const user: any = {
         await dispatch.user.fetchProfileUsers();
 
         localStorage.setItem('token', data.token);
-        localStorage.setItem('userId', data.user.id);
-        localStorage.setItem('username', data.user.username);
+        localStorage.setItem('userId', data.userId);
         sessionStorage.setItem("token", data.token as string)
         localStorage.setItem("roleId", data.user.roleId as string)
 
-        console.log(data);
         if (preLocation) {
           dispatch.location.arrivedStartLocation();
-          navigate(preLocation, {replace: true});
+          navigate(preLocation, { replace: true });
         } else {
-          navigate('/', {replace: true});
+          navigate('/', { replace: true });
         }
       } catch (error) {
+
         notification.error({
           message: 'Login failed!',
           description: error.message,
@@ -95,48 +96,47 @@ export const user: any = {
       }
     },
     runLogoutTimer({
-                     dispatch,
-                     timer,
-                     navigate
-                   }: { dispatch: IRootDispatch, timer: number, navigate: NavigateFunction }) {
+      dispatch,
+      timer,
+      navigate
+    }: { dispatch: IRootDispatch, timer: number, navigate: NavigateFunction }) {
       logoutTimer = setTimeout(() => {
-        this.signOut({navigate});
+        this.signOut({ navigate });
       }, timer);
     },
-    logoutHandlerAction({dispatch, navigate}: { dispatch: IRootDispatch, navigate: NavigateFunction }) {
-      if (logoutTimer) {
-        clearTimeout(logoutTimer);
-      }
-      this.signOut({navigate});
+    logoutHandlerAction({ dispatch, navigate }: { dispatch: IRootDispatch, navigate: NavigateFunction }) {
+      logoutTimer && clearTimeout(logoutTimer);
+      localStorage.clear();
+      socketInstance.close();
+      this.signOut({ navigate });
     },
-    signOut({navigate}: { navigate: NavigateFunction }) {
+    signOut({ navigate }: { navigate: NavigateFunction }) {
       dispatch.user.logout();
       localStorage.removeItem('token');
       localStorage.removeItem('userId');
       sessionStorage.removeItem("token");
       localStorage.removeItem("roleId");
       localStorage.removeItem("_grecaptcha")
-      localStorage.removeItem("username")
-      navigate('/signin', {replace: true});
+      navigate('/signin', { replace: true });
     },
     checkAutoLogin({
-                     dispatch,
-                     navigate,
-                     location
-                   }: { dispatch: IRootDispatch, navigate: NavigateFunction, location: any }) {
+      dispatch,
+      navigate,
+      location
+    }: { dispatch: IRootDispatch, navigate: NavigateFunction, location: any }) {
       const tokenData = retrieveStoredToken();
       if (tokenData) {
         dispatch.user.retrieveToken(tokenData.token);
         const timer = tokenData.duration;
-        this.runLogoutTimer({dispatch, timer, navigate});
+        this.runLogoutTimer({ dispatch, timer, navigate });
         navigate(location.pathname + location.search);
       }
     },
     async checkAutoLoginV2({
-                             dispatch,
-                             navigate,
-                             location
-                           }: { dispatch: IRootDispatch, navigate: NavigateFunction, location: any }) {
+      dispatch,
+      navigate,
+      location
+    }: { dispatch: IRootDispatch, navigate: NavigateFunction, location: any }) {
       const endpoint = `program/1`;
       //const token = localStorage.getItem('token');
       const token = sessionStorage.getItem('token');
@@ -176,7 +176,7 @@ export const user: any = {
         }
 
       } catch (error) {
-        this.signOut({navigate});
+        this.signOut({ navigate });
         console.log(error, 'error');
       }
 
@@ -193,7 +193,20 @@ export const user: any = {
       } catch (error) {
         console.log(error);
       }
-    }
+    },
+
+    async doLogOut() {
+      const endpoint = 'auth/logout';
+
+      try {
+        await axiosClient.get(endpoint);
+      } catch (error) {
+        notification.error({
+          description: error,
+          message: 'Log out failed.'
+        });
+      }
+    },
 
   }),
 }

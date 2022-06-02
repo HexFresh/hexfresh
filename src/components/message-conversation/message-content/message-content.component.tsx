@@ -12,7 +12,7 @@ export const MessageContent = React.memo(({
   profileRecipients,
 }: {
   message: IMessage,
-  profileRecipients: IUser,
+  profileRecipients: IUser[],
 }) => {
   const userId = useSelector((state: IRootStore) => state.user?.id);
   const [ isResponseMessage, setIsResponseMessage ] = useState<boolean>(false);
@@ -20,10 +20,9 @@ export const MessageContent = React.memo(({
 
   useEffect(() => {
     isEqual(userId, message?.from) && setIsResponseMessage(true);
-    console.log(userId, message?.from)
-    const user = find(profileRecipients, [ 'userId', userId ]) as unknown as IUser;
+    const user = find(profileRecipients, [ 'userId', message?.from ]) as unknown as IUser;
 
-    !isEmpty(user) && setAvatar(user?.avatar);
+    !isEmpty(user) && setAvatar(user.avatar);
 
   }, [ message.from, profileRecipients, userId ])
 
@@ -35,7 +34,7 @@ export const MessageContent = React.memo(({
       </div>
     </div> :
       <div className="message">
-        {!isEmpty(avatar) ? <div className="photo" style={{ backgroundImage: `${avatar}` }}>
+        {!isEmpty(avatar) ? <div className="photo" style={{ backgroundImage: `url(${avatar})` }}>
           <div className="online"></div>
         </div> : <Avatar size='large' >U</Avatar>}
         <p className="text">{message?.data}</p>

@@ -23,7 +23,6 @@ export const MatchCorrespond = memo(({
   onChooseNewPair: any,
   onRemovePair: any,
 }) => {
-  console.log(matchingCorespondingData);
   return <>
     {(!isTaken || isEdit) && <Row>
       <Col span={10}>

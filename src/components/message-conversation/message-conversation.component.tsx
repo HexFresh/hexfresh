@@ -1,4 +1,4 @@
-import { SendOutlined, MoreVert, MoreOutlined } from "@mui/icons-material";
+import { SendOutlined, MoreOutlined } from "@mui/icons-material";
 import { Avatar, Button, Dropdown, Form, Input, Menu, Skeleton } from "antd";
 import { memo, useCallback, useEffect, useState } from "react"
 import _ from 'lodash';
@@ -18,24 +18,32 @@ import { MessageMembersModal } from "../message/message-member-modal/message-mem
 
 export const MessageDetail = memo(({
   isLoading,
+  isAddingMember,
   conversation,
   profileRecipients,
   doRenameConversation,
   doRecieveMessage,
+  doAddMember,
+  doLeaveConversation,
 }: {
   isLoading: boolean,
+  isAddingMember: boolean,
   conversation: IConversation,
-  profileRecipients: IUser,
+  profileRecipients: IUser[],
   doRenameConversation: any,
   doRecieveMessage: any,
+  doAddMember: any,
+  doLeaveConversation: any,
 }) => {
   const [ messageString, setMessage ] = useState<string>('');
   const [ socket, setSocket ] = useState(io());
   const [ isOpenMembersModal, setOpenMembersModal ] = useState<boolean>(false);
+  const [ isAddingModal, setIsAddingModal ] = useState<boolean>(false);
   const [ conversationId, setConversationId ] = useState('');
   const [ isEditTitle, setIsEditTitle ] = useState<boolean>(false);
   const [ title, setTitle ] = useState<string>("");
   const userId = useSelector((state: IRootStore) => state.user?.id);
+  const token = useSelector<IRootStore>((state) => state.user?.token);
   const [ form ] = Form.useForm();
 
   const onFinish = async () => {
@@ -49,7 +57,7 @@ export const MessageDetail = memo(({
 
   const onChangeMessage = (event: any) => {
     const { value } = event.target;
-    !_.isEmpty(value) && setMessage(value);
+    setMessage(value);
   };
 
   const onSendMessage = useCallback(() => {
@@ -58,18 +66,32 @@ export const MessageDetail = memo(({
         conversationId,
         data: messageString,
       };
-
+      if(socket.disconnected){
+        socket.io.opts.query = "token=" + token as any;
+        socket.connect();
+      }
       socket.emit(`send message`, messagePayload);
     }
 
     setMessage('');
-  }, [ conversationId, messageString, socket ]);
+  }, [conversationId, messageString, socket, token]);
 
   const handleChangeTitle = useCallback((event: any) => {
     const value = event.target.value;
 
-    !_.isEmpty(value) && setTitle(value);
+    setTitle(value);
   }, [])
+
+  const handleAddMember = useCallback(
+    async recipientIds => {
+      await doAddMember({ recipientIds, conversationId });
+      setOpenMembersModal(false);
+    }, [ conversationId, doAddMember ]
+  )
+
+  const handleLeaveConversation = useCallback(async ()=>{
+    await doLeaveConversation({conversationId});
+  },[conversationId, doLeaveConversation])
 
   useEffect(() => {
     const newSocket = socketInstance;
@@ -108,14 +130,17 @@ export const MessageDetail = memo(({
 
             </Form>}
           <Dropdown key="more" overlay={<Menu>
-            <Menu.Item onClick={() => setOpenMembersModal(true)}>
+            <Menu.Item onClick={() => { setOpenMembersModal(true); setIsAddingModal(false); }}>
               View members
             </Menu.Item>
             <Menu.Item onClick={() => setIsEditTitle(!isEditTitle)}>
               Edit title
             </Menu.Item>
-            <Menu.Item onClick={() => setIsEditTitle(!isEditTitle)}>
+            <Menu.Item onClick={() => { setOpenMembersModal(true); setIsAddingModal(true); }}>
               Add member
+            </Menu.Item>
+            <Menu.Item onClick={handleLeaveConversation} className='text-red'>
+             Leave
             </Menu.Item>
           </Menu>
           } placement="bottomRight" className="right icon">
@@ -131,11 +156,12 @@ export const MessageDetail = memo(({
         </div>
       </section>
       <MessageMembersModal
+        users={profileRecipients}
         onCancel={() => { setOpenMembersModal(false) }}
         isOpen={isOpenMembersModal}
-        onSubmit={() => { }}
-        isLoading={false}
-        isAddMember
+        onSubmit={handleAddMember}
+        isLoading={isAddingMember}
+        isAddMember={isAddingModal}
       />
     </>
 });

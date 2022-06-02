@@ -201,7 +201,6 @@ export const programStore: any = createModel<IRootStore>()({
         await axiosClient.post(endpoint, answers);
 
       } catch (error) {
-        console.log(error);
         dispatch.programStore.setIsSubmitingAnswer(false);
         notification.error({
           message: 'Failed to submit answer',
@@ -276,7 +275,6 @@ export const programStore: any = createModel<IRootStore>()({
     async doUpdateSubmitContructedQuestion({ answers, taskId }: { answers: { question: string }, taskId: number }) {
       const endpoint = `user/task/${taskId}/quiz/constructed-question/answer`;
       dispatch.programStore.setIsSubmitingAnswer(true);
-      console.log(answers);
       try {
         await axiosClient.put(endpoint, answers);
 
