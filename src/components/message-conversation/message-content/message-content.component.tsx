@@ -1,5 +1,6 @@
 import { Avatar } from "antd";
 import { find, isEmpty, isEqual } from "lodash";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -30,7 +31,7 @@ export const MessageContent = React.memo(({
     {isResponseMessage ? <div className="message text-only">
       <div className="response">
         <p className="text">{message.data}</p>
-        <p className="response-time time"> {new Date(message?.createdAt).toLocaleDateString()}</p>
+        <p className="response-time time"> {`${moment(new Date(message?.createdAt)).fromNow()}`}</p>
       </div>
     </div> :
       <div className="message">
@@ -38,7 +39,7 @@ export const MessageContent = React.memo(({
           <div className="online"></div>
         </div> : <Avatar size='large' >U</Avatar>}
         <p className="text">{message?.data}</p>
-        <p className="time"> {new Date(message?.createdAt).toTimeString()}</p>
+        <p className="time"> {`${moment(new Date(message?.createdAt)).fromNow()}`}</p>
       </div>}
   </>;
 });

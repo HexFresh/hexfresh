@@ -1,5 +1,6 @@
-import { Avatar, List, Skeleton } from "antd";
+import { Avatar, List, Skeleton, Typography } from "antd";
 import _ from "lodash";
+import moment from "moment";
 import { memo } from "react";
 import { IConversation } from "../../store/message/message-interface";
 
@@ -37,9 +38,9 @@ export const MessagesList = memo(({
           <List.Item.Meta
             avatar={<Avatar src={''} />}
             title={<p >{item.title}</p>}
-            description={item?.lastestMessage?.data}
+            description={<Typography.Text ellipsis={true} >{item?.lastestMessage?.data}</Typography.Text>}
           />
-          <div>{(new Date(item.lastestMessage.createdAt)).toDateString()}</div>
+          <div>{`${moment(new Date(item.lastestMessage.createdAt)).fromNow()}`}</div>
           {/* </Skeleton> */}
         </List.Item>
       )}
