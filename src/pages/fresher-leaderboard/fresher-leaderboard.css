@@ -5,6 +5,20 @@
   position: relative;
 }
 
+.no-leaderboard {
+  width: 100vw;
+  height: 100vh;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 2.5rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 .fresher-leaderboard .back {
   position: absolute;
   top: 10px;
@@ -19,6 +33,7 @@
   background-color: white;
   padding: 5px 10px;
   border-radius: 10px;
+  z-index: 100;
 }
 
 .fresher-leaderboard .back:hover {

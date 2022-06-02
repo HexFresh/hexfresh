@@ -74,7 +74,8 @@ export const user: any = {
         await dispatch.user.fetchProfileUsers();
 
         localStorage.setItem('token', data.token);
-        localStorage.setItem('userId', data.userId);
+        localStorage.setItem('userId', data.user.id);
+        localStorage.setItem('username', data.user.username);
         sessionStorage.setItem("token", data.token as string)
         localStorage.setItem("roleId", data.user.roleId as string)
 
@@ -115,6 +116,7 @@ export const user: any = {
       sessionStorage.removeItem("token");
       localStorage.removeItem("roleId");
       localStorage.removeItem("_grecaptcha")
+      localStorage.removeItem("username")
       navigate('/signin', {replace: true});
     },
     checkAutoLogin({
