@@ -22,7 +22,6 @@ export default function FresherLeaderboard() {
 
   const fetchLeaderboard = async (limit: number, offset: number) => {
     const result = await getFresherLeaderboard({limit, offset});
-    console.log(result);
     if (result) {
       setLeaderboard(result);
     }
@@ -62,12 +61,12 @@ export default function FresherLeaderboard() {
           <div className="fresher-leaderboard__container">
             <div className="top-three">
               <div className="top-three__item side">
-                {leaderboard?.user_leaderboards[1] && (
+                {leaderboard?.user_leaderboards.rows[1] && (
                   <>
                     <div className="top-three__avt">
                       <img
                         className="avt"
-                        src={leaderboard?.user_leaderboards[1].user.user_information.avatar || "https://i.pinimg.com/236x/8f/33/30/8f3330d6163782b88b506d396f5d156f.jpg"}
+                        src={leaderboard?.user_leaderboards.rows[1].user.user_information.avatar || "https://i.pinimg.com/236x/8f/33/30/8f3330d6163782b88b506d396f5d156f.jpg"}
                         alt="avt"
                       />
                     </div>
@@ -75,18 +74,18 @@ export default function FresherLeaderboard() {
                       <img className="medal" src="./medal2.png" alt="medal"/>
                     </div>
                     <div
-                      className="top-three__name">{renderName(leaderboard?.user_leaderboards[1].user.user_information.firstName, leaderboard?.user_leaderboards[1].user.user_information.lastName, leaderboard?.user_leaderboards[1].user.username)}</div>
-                    <div className="top-three__point">{leaderboard?.user_leaderboards[1]?.point}</div>
+                      className="top-three__name">{renderName(leaderboard?.user_leaderboards.rows[1].user.user_information.firstName, leaderboard?.user_leaderboards.rows[1].user.user_information.lastName, leaderboard?.user_leaderboards.rows[1].user.username)}</div>
+                    <div className="top-three__point">{leaderboard?.user_leaderboards.rows[1]?.point}</div>
                   </>
                 )}
               </div>
               <div className="top-three__item">
-                {leaderboard?.user_leaderboards[0] && (
+                {leaderboard?.user_leaderboards.rows[0] && (
                   <>
                     <div className="top-three__avt">
                       <img
                         className="avt"
-                        src={leaderboard?.user_leaderboards[0].user.user_information.avatar || "https://i.pinimg.com/236x/8f/33/30/8f3330d6163782b88b506d396f5d156f.jpg"}
+                        src={leaderboard?.user_leaderboards.rows[0].user.user_information.avatar || "https://i.pinimg.com/236x/8f/33/30/8f3330d6163782b88b506d396f5d156f.jpg"}
                         alt="avt"
                       />
                     </div>
@@ -94,18 +93,18 @@ export default function FresherLeaderboard() {
                       <img className="medal" src="./medal1.png" alt="medal"/>
                     </div>
                     <div
-                      className="top-three__name">{renderName(leaderboard?.user_leaderboards[0].user.user_information.firstName, leaderboard?.user_leaderboards[0].user.user_information.lastName, leaderboard?.user_leaderboards[0].user.username)}</div>
-                    <div className="top-three__point">{leaderboard?.user_leaderboards[0]?.point}</div>
+                      className="top-three__name">{renderName(leaderboard?.user_leaderboards.rows[0].user.user_information.firstName, leaderboard?.user_leaderboards.rows[0].user.user_information.lastName, leaderboard?.user_leaderboards.rows[0].user.username)}</div>
+                    <div className="top-three__point">{leaderboard?.user_leaderboards.rows[0]?.point}</div>
                   </>
                 )}
               </div>
               <div className="top-three__item side">
-                {leaderboard?.user_leaderboards[2] && (
+                {leaderboard?.user_leaderboards.rows[2] && (
                   <>
                     <div className="top-three__avt">
                       <img
                         className="avt"
-                        src={leaderboard?.user_leaderboards[2].user.user_information.avatar || "https://i.pinimg.com/236x/8f/33/30/8f3330d6163782b88b506d396f5d156f.jpg"}
+                        src={leaderboard?.user_leaderboards.rows[2].user.user_information.avatar || "https://i.pinimg.com/236x/8f/33/30/8f3330d6163782b88b506d396f5d156f.jpg"}
                         alt="avt"
                       />
                     </div>
@@ -113,8 +112,8 @@ export default function FresherLeaderboard() {
                       <img className="medal" src="./medal3.png" alt="medal"/>
                     </div>
                     <div
-                      className="top-three__name">{renderName(leaderboard?.user_leaderboards[2].user.user_information.firstName, leaderboard?.user_leaderboards[2].user.user_information.lastName, leaderboard?.user_leaderboards[2].user.username)}</div>
-                    <div className="top-three__point">{leaderboard?.user_leaderboards[2]?.point}</div>
+                      className="top-three__name">{renderName(leaderboard?.user_leaderboards.rows[2].user.user_information.firstName, leaderboard?.user_leaderboards.rows[2].user.user_information.lastName, leaderboard?.user_leaderboards.rows[2].user.username)}</div>
+                    <div className="top-three__point">{leaderboard?.user_leaderboards.rows[2]?.point}</div>
                   </>
                 )}
               </div>
@@ -122,7 +121,7 @@ export default function FresherLeaderboard() {
 
             <div className="out-three">
               {
-                leaderboard?.user_leaderboards.map((item, index) => (
+                leaderboard?.user_leaderboards.rows.map((item, index) => (
                   <div className="out-three__item" key={index}>
                     <div className="left">
                       <div className="left__content">{`#${index + 1}`}</div>
@@ -150,7 +149,7 @@ export default function FresherLeaderboard() {
             <div className="pagination">
               <Pagination
                 current={count === 0 ? undefined : page}
-                total={6}
+                total={leaderboard?.user_leaderboards?.count}
                 pageSize={nPerPage}
                 onChange={handleChangePage}
                 hideOnSinglePage

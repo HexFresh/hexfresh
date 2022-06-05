@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
-import {ILeaderboard, IUserLeaderboard} from "../fresher-leaderboard/interface";
+import {ILeaderboard, IUserLeaderboardRow} from "../fresher-leaderboard/interface";
 import {findAllUsersInLeaderboard} from "./api";
 import Avatar from "@mui/material/Avatar";
 import {CircularProgress} from "@mui/material";
@@ -22,7 +22,9 @@ export default function Leaderboard(props: any) {
       await Promise.all([fetchLeaderboard()]);
       setLoading(false);
     }
-    fetchData();
+    fetchData().then(r => {
+      console.log(r);
+    });
   }, [programId]);
 
   const renderRank = (rank: number) => {
@@ -54,7 +56,7 @@ export default function Leaderboard(props: any) {
       {
         loading ? (<CircularProgress className={"circular-progress"}/>) : (
           <div className="leaderboard__container__content">
-            {leaderboard?.user_leaderboards.map((item: IUserLeaderboard, index: number) => (
+            {leaderboard?.user_leaderboards.rows.map((item: IUserLeaderboardRow, index: number) => (
               <Link to={`/mentor/freshers/${item.userId}`} className="leaderboard__container__content__item"
                     key={index}>
                 <div className="leaderboard__container__content__item--left">

@@ -1,8 +1,13 @@
 export interface ILeaderboard {
-  user_leaderboards: IUserLeaderboard[];
+  user_leaderboards: IUserLeaderboard;
 }
 
 export interface IUserLeaderboard {
+  count: number;
+  rows: IUserLeaderboardRow[];
+}
+
+export interface IUserLeaderboardRow {
   point: number;
   user: IUser;
   userId: string;
