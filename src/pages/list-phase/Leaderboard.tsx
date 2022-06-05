@@ -1,66 +1,48 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-
-const data = [
-  {
-    id: 'fa39f170-c6be-11ec-8cd5-bd10d9131985',
-    name: 'Nguyễn Văn A',
-    point: '100',
-    avatar: 'https://i.pinimg.com/originals/f4/b7/b1/f4b7b1c8f9f9f9f9.jpg',
-    rank: 1,
-  },
-  {
-    id: '11',
-    name: 'Nguyễn Văn B',
-    point: '90',
-    avatar: 'https://i.pinimg.com/originals/f4/b7/b1/f4b7b1c8f9f9f9f9.jpg',
-    rank: 2,
-  },
-
-  {
-    id: '11',
-    name: 'Nguyễn Văn C',
-    point: '80',
-    avatar: 'https://i.pinimg.com/originals/f4/b7/b1/f4b7b1c8f9f9f9f9.jpg',
-    rank: 3,
-  },
-  {
-    id: '11',
-    name: 'Nguyễn Văn D',
-    point: '70',
-    avatar: 'https://i.pinimg.com/originals/f4/b7/b1/f4b7b1c8f9f9f9f9.jpg',
-    rank: 4,
-  },
-  {
-    id: '11',
-    name: 'Nguyễn Văn E',
-    point: '60',
-    avatar: 'https://i.pinimg.com/originals/f4/b7/b1/f4b7b1c8f9f9f9f9.jpg',
-    rank: 5,
-  },
-];
+import React, {useEffect, useState} from 'react';
+import {Link} from 'react-router-dom';
+import {ILeaderboard, IUserLeaderboard} from "../fresher-leaderboard/interface";
+import {findAllUsersInLeaderboard} from "./api";
+import Avatar from "@mui/material/Avatar";
+import {CircularProgress} from "@mui/material";
 
 export default function Leaderboard(props: any) {
-  const [leaderboard, setLeaderboard] = useState(data);
-  const { programId } = props;
+  const [leaderboard, setLeaderboard] = useState<ILeaderboard | null>(null);
+  const [loading, setLoading] = useState(false);
+  const {programId} = props;
+
+  const fetchLeaderboard = async () => {
+    const result = await findAllUsersInLeaderboard(programId);
+    console.log(result);
+    setLeaderboard(result);
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      await Promise.all([fetchLeaderboard()]);
+      setLoading(false);
+    }
+    fetchData();
+  }, [programId]);
+
   const renderRank = (rank: number) => {
     switch (rank) {
       case 1:
         return (
           <div className="rank">
-            <img className="medal" src="https://img.icons8.com/color/48/000000/gold-medal.png" />
+            <img className="medal" src="https://img.icons8.com/color/48/000000/gold-medal.png" alt={"medal"}/>
           </div>
         );
       case 2:
         return (
           <div className="rank">
-            <img className="medal" src="https://img.icons8.com/color/48/000000/silver-medal.png" />
+            <img className="medal" src="https://img.icons8.com/color/48/000000/silver-medal.png" alt={"medal"}/>
           </div>
         );
       case 3:
         return (
           <div className="rank">
-            <img className="medal" src="https://img.icons8.com/color/48/000000/bronze-medal.png" />
+            <img className="medal" src="https://img.icons8.com/color/48/000000/bronze-medal.png" alt={"medal"}/>
           </div>
         );
       default:
@@ -69,25 +51,30 @@ export default function Leaderboard(props: any) {
   };
   return (
     <div className="leaderboard__container">
-      <div className="leaderboard__container__content">
-        {leaderboard.map((item: any, index: number) => (
-          <Link to={`/mentor/freshers/${item.id}`} className="leaderboard__container__content__item" key={index}>
-            <div className="leaderboard__container__content__item--left">
-              <div className="leaderboard__container__content__item__rank">{renderRank(item.rank)}</div>
-              <div className="leaderboard__container__content__item__avatar">
-                <img
-                  src="https://demoda.vn/wp-content/uploads/2022/01/anh-nen-toi-gian-minimalist-hoat-hinh.jpg"
-                  alt="avt"
-                />
-              </div>
-              <div className="leaderboard__container__content__item__name">{item.name}</div>
-            </div>
-            <div className="leaderboard__container__content__item--right">
-              <div className="leaderboard__container__content__item__point">{item.point}</div>
-            </div>
-          </Link>
-        ))}
-      </div>
+      {
+        loading ? (<CircularProgress className={"circular-progress"}/>) : (
+          <div className="leaderboard__container__content">
+            {leaderboard?.user_leaderboards.map((item: IUserLeaderboard, index: number) => (
+              <Link to={`/mentor/freshers/${item.userId}`} className="leaderboard__container__content__item"
+                    key={index}>
+                <div className="leaderboard__container__content__item--left">
+                  <div className="leaderboard__container__content__item__rank">{renderRank(index + 1)}</div>
+                  <div className="leaderboard__container__content__item__avatar">
+                    <Avatar style={{
+                      width: '50px', height: '50px', objectFit: 'cover', borderRadius: '50%', border: 'none'
+                    }}
+                            src={item?.user?.user_information.avatar}
+                            alt=""/>
+                  </div>
+                  <div className="leaderboard__container__content__item__name">{item.user.username}</div>
+                </div>
+                <div className="leaderboard__container__content__item--right">
+                  <div className="leaderboard__container__content__item__point">{item.point}</div>
+                </div>
+              </Link>
+            ))}
+          </div>)
+      }
     </div>
   );
 }

@@ -5,6 +5,7 @@ export interface ILeaderboard {
 export interface IUserLeaderboard {
   point: number;
   user: IUser;
+  userId: string;
 }
 
 export interface IUser {

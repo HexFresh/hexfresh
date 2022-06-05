@@ -22,6 +22,7 @@ export default function FresherLeaderboard() {
 
   const fetchLeaderboard = async (limit: number, offset: number) => {
     const result = await getFresherLeaderboard({limit, offset});
+    console.log(result);
     if (result) {
       setLeaderboard(result);
     }
@@ -131,7 +132,7 @@ export default function FresherLeaderboard() {
                         <div className="mid__avt">
                           <img
                             className="avt"
-                            src="https://i.pinimg.com/236x/8f/33/30/8f3330d6163782b88b506d396f5d156f.jpg"
+                            src={item.user.user_information.avatar || "https://i.pinimg.com/236x/8f/33/30/8f3330d6163782b88b506d396f5d156f.jpg"}
                             alt="avt"
                           />
                         </div>
