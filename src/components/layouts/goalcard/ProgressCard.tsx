@@ -16,7 +16,7 @@ const ProgressCard = () => {
         <div className="img">
           <img src="https://res.cloudinary.com/droruloek/image/upload/v1643119273/hexfresh/planet-09_jvied4.png" alt="your planet" />
         </div>
-        <Progress percent={program?.completedPercentage*100} size={'default'} strokeColor={'yellow'} status="active" />
+        <Progress percent={Math.ceil(program?.completedPercentage*100)} size={'default'} strokeColor={'yellow'} status="active" />
         </div>
       </Card>
     </div>

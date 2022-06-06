@@ -1,0 +1,8 @@
+.badges-row{
+  height: calc(100vh - 125px);
+  overflow-y: scroll;
+  .badge-item{
+    display: flex;
+    justify-content: center;
+  }
+}

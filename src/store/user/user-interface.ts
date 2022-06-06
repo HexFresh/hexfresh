@@ -40,4 +40,17 @@ export interface IQuickUser{
 	email: string,
 	roleId: number,
 	isActive: boolean,
+	user_information: IUser;
+}
+
+export interface IUserInformation{
+	firstName: string,
+	lastName: string,
+	gender: string,
+	dateOfBirth: string,
+	phoneNumber: string,
+  avatar: string,
+  username: string,
+  degreeId: IDegree,
+  jobPosition: IJobPosition,
 }

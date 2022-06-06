@@ -74,7 +74,7 @@ const HeaderInternal = ({ textColorClassName }: { textColorClassName?: string })
           <Link className={textColorClassName} to="/messages">
             <span className="logo-item">
               <div className="logo-img">
-                <img src="/more.png" alt="Onboarding icon" />
+                <img src="https://res.cloudinary.com/droruloek/image/upload/v1654316954/hexfresh/chat_kl9pdo.png" alt="Onboarding icon" />
               </div>
               <span>Message</span>
             </span>
@@ -83,13 +83,13 @@ const HeaderInternal = ({ textColorClassName }: { textColorClassName?: string })
         <div className="item-space"></div>
 
         <div className="header-item">
-          <Link className={textColorClassName} to="/">
+          <Link className={textColorClassName} to="/badges">
             <span className="logo-item">
-              {/* <div className="logo-img">
+              <div className="logo-img">
 
-                <img src="/star.png" alt='Onboarding icon' />
-              </div> */}
-              <span>11105 points</span>
+                <img src="https://res.cloudinary.com/droruloek/image/upload/v1654317056/hexfresh/medal_exmzvb.png" alt='Onboarding icon' />
+              </div>
+              <span>Your badges</span>
             </span>
           </Link>
         </div>
