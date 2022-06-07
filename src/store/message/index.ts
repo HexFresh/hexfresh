@@ -12,6 +12,8 @@ export const messageStore: any = {
     selectedConversation: null,
     conversations: null,
     profileRecipients: [],
+    counter: null,
+
     isFetchingConversations: false,
     isFetchingConversation: false,
     isFetchingRecipients: false,
@@ -24,6 +26,8 @@ export const messageStore: any = {
     setSelectedConversation: (state: IRootStore, payload: any) => ({ ...state, selectedConversation: payload }),
     setConversations: (state: IRootStore, payload: any) => ({ ...state, conversations: payload }),
     setuserProfiles: (state: IRootStore, payload: any) => ({ ...state, profileRecipients: payload }),
+    setCounter: (state: IRootStore, payload: any) =>({...state, counter: payload}),
+
     setIsFetchingRecipients: (state: IRootStore, payload: any) => ({ ...state, isFetchingRecipients: payload }),
     setIsAddingMember: (state: IRootStore, payload: any)=>({...state, isAddingMember: payload}),
     setIsLeavingConversation: (state: IRootStore, payload: any)=>({...state, isLeavingConversation: payload}),
@@ -231,6 +235,18 @@ export const messageStore: any = {
         });
         dispatch.message.setIsLeavingConversation(false);
 
+        throw new Error(error);
+      }
+    },
+
+    async doFetchAmountUnreadMessages({conversationId}:{conversationId: string}){
+      const endpoint = `conversation/counter`;
+
+      try {
+        const response = await axiosMessage.get(endpoint);
+        dispatch.message.setCounter(response?.data);
+      } catch (error) {
+        
         throw new Error(error);
       }
     }

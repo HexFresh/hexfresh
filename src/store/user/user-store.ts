@@ -7,7 +7,6 @@ import { notification } from "antd";
 import { setAuthToken } from "../../api/axiosMessage";
 import { DoorSlidingOutlined } from "@mui/icons-material";
 
-let logoutTimer: NodeJS.Timeout;
 const initialState = {
   token: null,
   id: null,
@@ -95,17 +94,7 @@ export const user: any = {
         throw new Error('Failed to login.');
       }
     },
-    runLogoutTimer({
-      dispatch,
-      timer,
-      navigate
-    }: { dispatch: IRootDispatch, timer: number, navigate: NavigateFunction }) {
-      logoutTimer = setTimeout(() => {
-        this.signOut({ navigate });
-      }, timer);
-    },
     logoutHandlerAction({ dispatch, navigate }: { dispatch: IRootDispatch, navigate: NavigateFunction }) {
-      logoutTimer && clearTimeout(logoutTimer);
       localStorage.clear();
       socketInstance.close();
       this.signOut({ navigate });
@@ -127,8 +116,6 @@ export const user: any = {
       const tokenData = retrieveStoredToken();
       if (tokenData) {
         dispatch.user.retrieveToken(tokenData.token);
-        const timer = tokenData.duration;
-        this.runLogoutTimer({ dispatch, timer, navigate });
         navigate(location.pathname + location.search);
       }
     },
@@ -176,7 +163,6 @@ export const user: any = {
         }
 
       } catch (error) {
-        this.signOut({ navigate });
         console.log(error, 'error');
       }
 

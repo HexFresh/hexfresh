@@ -33,17 +33,17 @@ export const MessagesList = memo(({
       loadMore={loadMore}
       dataSource={conversations}
       style={{ height: '100%', overflowY: 'auto', overflowX: 'hidden' }}
-      renderItem={item => (
+      renderItem={item => {
+        return (
         <List.Item onClick={onClickItem.bind(null, item)} className='messages--item pv-medium'>
           <List.Item.Meta
-            avatar={<Avatar src={''} />}
             title={<p >{item.title}</p>}
             description={<Typography.Text ellipsis={true} >{item?.lastestMessage?.data}</Typography.Text>}
           />
           <div>{`${moment(new Date(item.lastestMessage.createdAt)).fromNow()}`}</div>
           {/* </Skeleton> */}
-        </List.Item>
-      )}
+        </List.Item>)
+      }}
     /> : <Skeleton avatar title={false} loading={isLoading} active />)
 });
 
