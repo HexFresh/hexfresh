@@ -1,5 +1,5 @@
-import { SendOutlined, MoreOutlined } from "@mui/icons-material";
-import { Avatar, Button, Dropdown, Form, Input, Menu, Skeleton, Typography } from "antd";
+import { SendOutlined, MoreOutlined, Warning } from "@mui/icons-material";
+import { Avatar, Button, Dropdown, Form, Input, Menu, Modal, Skeleton, Typography } from "antd";
 import { memo, useCallback, useEffect, useState } from "react"
 import _ from 'lodash';
 import { io } from "socket.io-client";
@@ -109,6 +109,17 @@ export const MessageDetail = memo(({
     })
   }, [ doRecieveMessage, socket ])
 
+  const confirmModal = () =>{
+    Modal.confirm({
+      title:'Do you want to leave this conversation',
+      icon: <Warning/>,
+      content: 'You will not receive messages from this converstaion anymore.',
+      okText: 'Leave',
+      cancelText:'Cancel',
+      onOk: handleLeaveConversation,
+    })
+  }
+
   if (_.isEmpty(conversation)) { return <EmptyResult message="Your conversation will display here." /> }
 
   return isLoading ?
@@ -140,7 +151,7 @@ export const MessageDetail = memo(({
             <Menu.Item onClick={() => { setOpenMembersModal(true); setIsAddingModal(true); }}>
               Add member
             </Menu.Item>
-            <Menu.Item onClick={handleLeaveConversation} className='text-red'>
+            <Menu.Item onClick={confirmModal} className='text-red'>
               Leave
             </Menu.Item>
           </Menu>
