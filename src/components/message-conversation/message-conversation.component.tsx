@@ -25,6 +25,7 @@ export const MessageDetail = memo(({
   doRecieveMessage,
   doAddMember,
   doLeaveConversation,
+  doFetchRecipientsProfile
 }: {
   isLoading: boolean,
   isAddingMember: boolean,
@@ -34,6 +35,7 @@ export const MessageDetail = memo(({
   doRecieveMessage: any,
   doAddMember: any,
   doLeaveConversation: any,
+  doFetchRecipientsProfile: any
 }) => {
   const [ messageString, setMessage ] = useState<string>('');
   const [ socket, setSocket ] = useState(io());
@@ -160,7 +162,14 @@ export const MessageDetail = memo(({
           </Dropdown>
         </div>
         <div className="messages-chat">
-          {_.reverse(_.map(conversation?.messages, message => <MessageContent profileRecipients={profileRecipients} message={message?.message} />))}
+          {_.reverse(_.map(conversation?.messages, 
+            message => <MessageContent 
+            profileRecipients={profileRecipients} 
+            message={message?.message} 
+            doFetchRecipientsProfile={doFetchRecipientsProfile}
+            />)
+            )
+            }
         </div>
         <div className="footer-chat">
           <Input onChange={onChangeMessage} onPressEnter={onSendMessage} value={messageString} className="write-message" placeholder="Type your message here"></Input>

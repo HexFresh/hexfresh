@@ -119,18 +119,18 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
     const { isLoading } = this.state;
 
     if (_.isEmpty(program) || _.isEmpty(imageList) || isLoading) {
-      return <Spin size="large" />
+      return <Spin className="spin" size="large" />
     }
     return (
       <div id="carousel" className="noselect">
         <div className="arrow arrow-left" onClick={this.leftClick}>
-        <LeftOutlined style={{color:'white'}} />
+          <LeftOutlined style={{ color: 'white' }} />
         </div>
         <TransitionGroup transitionName={this.state.direction}>
           {this.generateItems()}
         </TransitionGroup>
         <div className="arrow arrow-right" onClick={this.rightClick}>
-          <RightOutlined style={{color:'white'}} />
+          <RightOutlined style={{ color: 'white' }} />
         </div>
 
       </div>

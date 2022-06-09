@@ -12,6 +12,7 @@ export interface IMessage{
   from: string,
   createdAt: string,
   type: string,
+  seen?: string[],
 }
 
 export interface IMessageDetail{
