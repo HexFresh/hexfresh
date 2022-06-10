@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState, useRef } from 'react';
-import { isEmpty } from 'lodash';
+import React, {useEffect, useState, useRef} from 'react';
+import {isEmpty} from 'lodash';
 import './user-profile.css';
 import {
   createCurrentNewEmptyUserProfile,
@@ -10,48 +10,48 @@ import {
   getAllDegree,
   getAllJobPosition,
 } from '../../api/userProfile';
-import { CircularProgress } from '@mui/material';
-import { Button, message, Input, DatePicker, Select, Modal, Tabs } from 'antd';
-import { AndroidOutlined, AppleOutlined, EditOutlined } from '@ant-design/icons';
+import {CircularProgress} from '@mui/material';
+import {Button, message, Input, DatePicker, Select, Modal, Tabs} from 'antd';
+import {AndroidOutlined, AppleOutlined, EditOutlined} from '@ant-design/icons';
 import axios from 'axios';
 import moment from 'moment';
-import { IUserProfile, IUserAccount, IDegree, IDistrict, IJobPosition, IProvince, IWard } from './interface';
+import {IUserProfile, IUserAccount, IDegree, IDistrict, IJobPosition, IProvince, IWard} from './interface';
 import HeaderInternal from '../../components/layouts/Header/HeaderInternal';
-import { verifyResetPasswordRequest } from "../../api/verificationApi";
-import { useDispatch, useSelector } from 'react-redux';
-import { IRootDispatch, IRootStore } from '../../store/store';
-import { BadgeList } from '../../components/badges/badge-list/badge-list.component';
-import { EmptyResult } from '../../components/results';
+import {verifyResetPasswordRequest} from "../../api/verificationApi";
+import {useDispatch, useSelector} from 'react-redux';
+import {IRootDispatch, IRootStore} from '../../store/store';
+import {BadgeList} from '../../components/badges/badge-list/badge-list.component';
+import {EmptyResult} from '../../components/results';
 
 const dateFormat = 'YYYY-MM-DD';
 const BASE_ADDRESS_API_URL = 'https://provinces.open-api.vn/api';
 
 export default function UserProfile() {
-  const [ loading, setLoading ] = useState<boolean>(false);
-  const [ userAccount, setUserAccount ] = useState<IUserAccount | null>(null);
-  const [ userProfile, setUserProfile ] = useState<IUserProfile | null>(null);
-  const [ displayFirstName, setDisplayFirstName ] = useState<string>('');
-  const [ displayLastName, setDisplayLastName ] = useState<string>('');
-  const [ displayEmail, setDisplayEmail ] = useState<string>('');
-  const [ provinces, setProvinces ] = useState<IProvince[] | []>([]);
-  const [ districts, setDistricts ] = useState<IDistrict[] | []>([]);
-  const [ wards, setWards ] = useState<IWard[] | []>([]);
-  const [ selectedProvince, setSelectedProvince ] = useState<string | null>(null);
-  const [ selectedDistrict, setSelectedDistrict ] = useState<string | null>(null);
-  const [ selectedWard, setSelectedWard ] = useState<string | null>(null);
-  const [ selectedStreet, setSelectedStreet ] = useState<string>('');
-  const [ degrees, setDegrees ] = useState<IDegree[] | []>([]);
-  const [ jobPositions, setJobPositions ] = useState<IJobPosition[] | []>([]);
-  const [ edit, setEdit ] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [userAccount, setUserAccount] = useState<IUserAccount | null>(null);
+  const [userProfile, setUserProfile] = useState<IUserProfile | null>(null);
+  const [displayFirstName, setDisplayFirstName] = useState<string>('');
+  const [displayLastName, setDisplayLastName] = useState<string>('');
+  const [displayEmail, setDisplayEmail] = useState<string>('');
+  const [provinces, setProvinces] = useState<IProvince[] | []>([]);
+  const [districts, setDistricts] = useState<IDistrict[] | []>([]);
+  const [wards, setWards] = useState<IWard[] | []>([]);
+  const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
+  const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
+  const [selectedWard, setSelectedWard] = useState<string | null>(null);
+  const [selectedStreet, setSelectedStreet] = useState<string>('');
+  const [degrees, setDegrees] = useState<IDegree[] | []>([]);
+  const [jobPositions, setJobPositions] = useState<IJobPosition[] | []>([]);
+  const [edit, setEdit] = useState(false);
 
-  const [ isModalVisible, setIsModalVisible ] = useState(false);
-  const [ oldPassword, setOldPassword ] = useState('');
-  const [ newPassword, setNewPassword ] = useState('');
-  const [ confirmPassword, setConfirmPassword ] = useState('');
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const refInput = useRef<HTMLInputElement>(null);
 
   const dispatch = useDispatch<IRootDispatch>();
-  const badge = useSelector((state:IRootStore)=>(state.badge));
+  const badge = useSelector((state: IRootStore) => (state.badge));
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -118,10 +118,10 @@ export default function UserProfile() {
       setSelectedWard(result?.address?.ward || null);
       setSelectedStreet(result?.address?.street || '');
       await fetchProvinces();
-      if (result?.address?.province?.split(',')[ 0 ]) {
-        await fetchDistricts(result?.address?.province?.split(',')[ 0 ]);
-        if (result?.address?.district.split(',')[ 0 ]) {
-          await fetchWards(result?.address?.district?.split(',')[ 0 ]);
+      if (result?.address?.province?.split(',')[0]) {
+        await fetchDistricts(result?.address?.province?.split(',')[0]);
+        if (result?.address?.district.split(',')[0]) {
+          await fetchWards(result?.address?.district?.split(',')[0]);
         }
       }
     }
@@ -136,7 +136,7 @@ export default function UserProfile() {
         const res = await axios.post(`https://api.cloudinary.com/v1_1/hexfresh/image/upload`, data);
         if (res) {
           message.success('Uploaded!', 0.5);
-          await updateCurrentUserProfile({ avatar: res.data.secure_url });
+          await updateCurrentUserProfile({avatar: res.data.secure_url});
           await fetchUserProfile();
         }
       });
@@ -166,7 +166,7 @@ export default function UserProfile() {
   };
 
   const onDateOfBirthChange = (date: any, dateString: string) => {
-    const newUserProfile = { ...userProfile, dateOfBirth: dateString };
+    const newUserProfile = {...userProfile, dateOfBirth: dateString};
     setUserProfile(newUserProfile as IUserProfile);
   };
 
@@ -176,24 +176,24 @@ export default function UserProfile() {
   };
 
   const fetchDistricts = async (provinceCode: any) => {
-    const rdata = await axios.get(`${BASE_ADDRESS_API_URL}/p/${provinceCode}`, { params: { depth: 2 } });
+    const rdata = await axios.get(`${BASE_ADDRESS_API_URL}/p/${provinceCode}`, {params: {depth: 2}});
     setDistricts(rdata.data.districts || []);
   };
   const fetchWards = async (districtCode: any) => {
-    const rdata = await axios.get(`${BASE_ADDRESS_API_URL}/d/${districtCode}`, { params: { depth: 2 } });
+    const rdata = await axios.get(`${BASE_ADDRESS_API_URL}/d/${districtCode}`, {params: {depth: 2}});
     setWards(rdata.data.wards || []);
   };
 
   const handleChangeProvince = async (value: string) => {
     setSelectedProvince(value);
-    await fetchDistricts(value.split(',')[ 0 ]);
+    await fetchDistricts(value.split(',')[0]);
     setSelectedDistrict(null);
     setSelectedWard(null);
   };
 
   const handleChangeDistrict = async (value: string) => {
     setSelectedDistrict(value);
-    await fetchWards(value.split(',')[ 0 ]);
+    await fetchWards(value.split(',')[0]);
     setSelectedWard(null);
   };
 
@@ -204,7 +204,7 @@ export default function UserProfile() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      await Promise.all([ fetchUserAccount(), fetchUserProfile(), fetchAllDegree(), fetchAllJobPosition() ])
+      await Promise.all([fetchUserAccount(), fetchUserProfile(), fetchAllDegree(), fetchAllJobPosition()])
       setLoading(false);
     };
     fetchData().then(() => {
@@ -215,13 +215,14 @@ export default function UserProfile() {
 
   return (
     <div className="user-profile-main">
-      <HeaderInternal textColorClassName='txt-color-black' />
+      <HeaderInternal textColorClassName='txt-color-black'/>
       <div className="user-profile">
         {loading ? (
-          <CircularProgress />
+          <CircularProgress/>
         ) : (
           <>
             <div className="user-profile__container">
+
               <div className="page-name">Your Profile</div>
               <div className="card-body">
                 <div className="cover-img">
@@ -236,17 +237,17 @@ export default function UserProfile() {
                           refInput.current?.click();
                         }}
                         className="edit-btn"
-                        icon={<EditOutlined />}
+                        icon={<EditOutlined/>}
                         shape="circle"
                       >
                         <input
                           ref={refInput}
-                          style={{ display: 'none' }}
+                          style={{display: 'none'}}
                           type="file"
                           accept="image/*"
                           onChange={(event) => {
                             if (event.target.files) {
-                              uploadNewAvatar(event.target.files[ 0 ]);
+                              uploadNewAvatar(event.target.files[0]);
                             }
                           }}
                         />
@@ -271,7 +272,7 @@ export default function UserProfile() {
                   <Tabs.TabPane
                     tab={
                       <span>
-                        <AppleOutlined />
+                        <AppleOutlined/>
                         Persional Information
                       </span>
                     }
@@ -282,7 +283,7 @@ export default function UserProfile() {
                         <div className="info__title">Personal Information</div>
                         <div className="field">
                           <div className="field__title">Username</div>
-                          <Input disabled value={userAccount?.username} className="input" placeholder="Username" />
+                          <Input disabled value={userAccount?.username} className="input" placeholder="Username"/>
                         </div>
                         <div className="field">
                           <div className="field__title">First Name</div>
@@ -290,7 +291,7 @@ export default function UserProfile() {
                             disabled={!edit}
                             value={userProfile?.firstName}
                             onChange={(e) => {
-                              const newUserProfile = { ...userProfile, firstName: e.target.value };
+                              const newUserProfile = {...userProfile, firstName: e.target.value};
                               setUserProfile(newUserProfile as IUserProfile);
                             }}
                             className="input"
@@ -303,7 +304,7 @@ export default function UserProfile() {
                             disabled={!edit}
                             value={userProfile?.lastName || ''}
                             onChange={(e) => {
-                              const newUserProfile = { ...userProfile, lastName: e.target.value };
+                              const newUserProfile = {...userProfile, lastName: e.target.value};
                               setUserProfile(newUserProfile as IUserProfile);
                             }}
                             className="input"
@@ -333,7 +334,7 @@ export default function UserProfile() {
                             className="input"
                             placeholder="Gender"
                             onChange={(value) => {
-                              const newUserProfile = { ...userProfile, gender: value };
+                              const newUserProfile = {...userProfile, gender: value};
                               setUserProfile(newUserProfile as IUserProfile);
                             }}
                             value={userProfile?.gender}
@@ -362,7 +363,7 @@ export default function UserProfile() {
                             placeholder="Degree"
                             className="input"
                             onChange={(value) => {
-                              const newUserProfile = { ...userProfile, degreeId: value };
+                              const newUserProfile = {...userProfile, degreeId: value};
                               setUserProfile(newUserProfile as IUserProfile);
                             }}
                             value={userProfile?.degree?.id}
@@ -387,7 +388,7 @@ export default function UserProfile() {
                             className="input"
                             placeholder="Job position"
                             onChange={(value) => {
-                              const newUserProfile = { ...userProfile, jobPositionId: value };
+                              const newUserProfile = {...userProfile, jobPositionId: value};
                               setUserProfile(newUserProfile as IUserProfile);
                             }}
                             value={userProfile?.job_position?.id}
@@ -404,7 +405,7 @@ export default function UserProfile() {
                         <div className="info__title">Contact Information</div>
                         <div className="field">
                           <div className="field__title">Email</div>
-                          <Input disabled value={userAccount?.email || ''} className="input" />
+                          <Input disabled value={userAccount?.email || ''} className="input"/>
                         </div>
                         <div className="field">
                           <div className="field__title">Phone</div>
@@ -412,7 +413,7 @@ export default function UserProfile() {
                             disabled={!edit}
                             value={userProfile?.phoneNumber || ''}
                             onChange={(e) => {
-                              const newUserProfile = { ...userProfile, phoneNumber: e.target.value };
+                              const newUserProfile = {...userProfile, phoneNumber: e.target.value};
                               setUserProfile(newUserProfile as IUserProfile);
                             }}
                             className="input"
@@ -512,14 +513,15 @@ export default function UserProfile() {
                   <Tabs.TabPane
                     tab={
                       <span>
-                        <AndroidOutlined />
+                        <AndroidOutlined/>
                         Badges
                       </span>
                     }
                     key="2"
                   >
                     <div className="card-body__container">
-                    {isEmpty(badge?.badges) && !badge?.isFetchingBadges ? <EmptyResult message="Your badges will displayed here." /> : <BadgeList badges={badge?.badges} />}
+                      {isEmpty(badge?.badges) && !badge?.isFetchingBadges ?
+                        <EmptyResult message="Your badges will displayed here."/> : <BadgeList badges={badge?.badges}/>}
                     </div>
                   </Tabs.TabPane>
                 </Tabs>
@@ -549,21 +551,21 @@ export default function UserProfile() {
         <div className="change-password-form">
           <div className="field">
             <div className={"title"}>Old password</div>
-            <Input.Password style={{ width: '100%', marginTop: '10px', marginBottom: "20px" }} value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)} />
+            <Input.Password style={{width: '100%', marginTop: '10px', marginBottom: "20px"}} value={oldPassword}
+                            onChange={(e) => setOldPassword(e.target.value)}/>
           </div>
           <div className="field">
             <div className={"title"}>New password</div>
-            <Input.Password style={{ width: '100%', marginTop: '10px', marginBottom: "20px" }} value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)} />
+            <Input.Password style={{width: '100%', marginTop: '10px', marginBottom: "20px"}} value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}/>
           </div>
           <div className="field">
             <div className={"title"}>Confirm password</div>
             <div className={"input"}>
               <Input.Password
-                style={{ width: '100%', marginTop: '10px', marginBottom: "20px" }}
+                style={{width: '100%', marginTop: '10px', marginBottom: "20px"}}
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)} />
+                onChange={(e) => setConfirmPassword(e.target.value)}/>
               {(confirmPassword !== newPassword && confirmPassword !== "" && newPassword !== "") && (
                 <div style={{
                   marginTop: '-15px',
