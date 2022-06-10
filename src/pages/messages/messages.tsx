@@ -150,6 +150,7 @@ const Messages: FC<MessageProps> = ({
                   doRenameConversation={doRenameConversation}
                   doAddMember={doAddMember}
                   doLeaveConversation={doLeaveConversation}
+                  doFetchRecipientsProfile={doFetchRecipientsProfile}
                 />
               </Card>
             </Content>

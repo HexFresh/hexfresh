@@ -1,5 +1,5 @@
-import { SendOutlined, MoreOutlined } from "@mui/icons-material";
-import { Avatar, Button, Dropdown, Form, Input, Menu, Skeleton } from "antd";
+import { SendOutlined, MoreOutlined, Warning } from "@mui/icons-material";
+import { Avatar, Button, Dropdown, Form, Input, Menu, Modal, Skeleton, Typography } from "antd";
 import { memo, useCallback, useEffect, useState } from "react"
 import _ from 'lodash';
 import { io } from "socket.io-client";
@@ -25,6 +25,7 @@ export const MessageDetail = memo(({
   doRecieveMessage,
   doAddMember,
   doLeaveConversation,
+  doFetchRecipientsProfile
 }: {
   isLoading: boolean,
   isAddingMember: boolean,
@@ -34,6 +35,7 @@ export const MessageDetail = memo(({
   doRecieveMessage: any,
   doAddMember: any,
   doLeaveConversation: any,
+  doFetchRecipientsProfile: any
 }) => {
   const [ messageString, setMessage ] = useState<string>('');
   const [ socket, setSocket ] = useState(io());
@@ -66,7 +68,7 @@ export const MessageDetail = memo(({
         conversationId,
         data: messageString,
       };
-      if(socket.disconnected){
+      if (socket.disconnected) {
         socket.io.opts.query = "token=" + token as any;
         socket.connect();
       }
@@ -74,7 +76,7 @@ export const MessageDetail = memo(({
     }
 
     setMessage('');
-  }, [conversationId, messageString, socket, token]);
+  }, [ conversationId, messageString, socket, token ]);
 
   const handleChangeTitle = useCallback((event: any) => {
     const value = event.target.value;
@@ -89,9 +91,9 @@ export const MessageDetail = memo(({
     }, [ conversationId, doAddMember ]
   )
 
-  const handleLeaveConversation = useCallback(async ()=>{
-    await doLeaveConversation({conversationId});
-  },[conversationId, doLeaveConversation])
+  const handleLeaveConversation = useCallback(async () => {
+    await doLeaveConversation({ conversationId });
+  }, [ conversationId, doLeaveConversation ])
 
   useEffect(() => {
     const newSocket = socketInstance;
@@ -109,6 +111,17 @@ export const MessageDetail = memo(({
     })
   }, [ doRecieveMessage, socket ])
 
+  const confirmModal = () =>{
+    Modal.confirm({
+      title:'Do you want to leave this conversation',
+      icon: <Warning/>,
+      content: 'You will not receive messages from this converstaion anymore.',
+      okText: 'Leave',
+      cancelText:'Cancel',
+      onOk: handleLeaveConversation,
+    })
+  }
+
   if (_.isEmpty(conversation)) { return <EmptyResult message="Your conversation will display here." /> }
 
   return isLoading ?
@@ -117,7 +130,8 @@ export const MessageDetail = memo(({
       <section className="chat">
         <div className="header-chat">
           <Avatar size='large' >Y</Avatar>
-          {!isEditTitle ? <p className="name">{conversation?.title}</p> :
+          {!isEditTitle ?
+            <Typography.Text className="name" ellipsis={true} >{conversation?.title}</Typography.Text> :
             <Form
               form={form}
               layout="vertical"
@@ -139,8 +153,8 @@ export const MessageDetail = memo(({
             <Menu.Item onClick={() => { setOpenMembersModal(true); setIsAddingModal(true); }}>
               Add member
             </Menu.Item>
-            <Menu.Item onClick={handleLeaveConversation} className='text-red'>
-             Leave
+            <Menu.Item onClick={confirmModal} className='text-red'>
+              Leave
             </Menu.Item>
           </Menu>
           } placement="bottomRight" className="right icon">
@@ -148,7 +162,14 @@ export const MessageDetail = memo(({
           </Dropdown>
         </div>
         <div className="messages-chat">
-          {_.reverse(_.map(conversation?.messages, message => <MessageContent profileRecipients={profileRecipients} message={message?.message} />))}
+          {_.reverse(_.map(conversation?.messages, 
+            message => <MessageContent 
+            profileRecipients={profileRecipients} 
+            message={message?.message} 
+            doFetchRecipientsProfile={doFetchRecipientsProfile}
+            />)
+            )
+            }
         </div>
         <div className="footer-chat">
           <Input onChange={onChangeMessage} onPressEnter={onSendMessage} value={messageString} className="write-message" placeholder="Type your message here"></Input>

@@ -5,6 +5,7 @@ import {messageStore} from "./message/index";
 import { Models } from "@rematch/core"
 import { programStore } from "./planet/program-store"
 import { notificationStore } from "./notification";
+import { badgeStore } from "./badge";
 
 export interface RootModel extends Models<RootModel> {
   user: typeof user,
@@ -12,6 +13,7 @@ export interface RootModel extends Models<RootModel> {
   location: typeof locationStore,
   message: typeof messageStore,
   notification: typeof notificationStore,
+  badge: typeof badgeStore,
 }
  
 export const models:RootModel = {
@@ -19,4 +21,5 @@ export const models:RootModel = {
   location: locationStore,
   message: messageStore,
   notification:notificationStore,
+  badge: badgeStore,
 }

@@ -1,7 +1,12 @@
-import { Avatar, List, Skeleton } from "antd";
-import _ from "lodash";
+import { List, Skeleton, Typography } from "antd";
+import _, { includes } from "lodash";
+import moment from "moment";
 import { memo } from "react";
+import { useSelector } from "react-redux";
 import { IConversation } from "../../store/message/message-interface";
+import { MessageType } from "../../store/message/message.constant";
+import { getLastChatMessage } from "../../store/message/message.service";
+import { IRootStore } from "../../store/store";
 
 import './MessagesList.scss';
 
@@ -23,6 +28,8 @@ export const MessagesList = memo(({
   className?: string | undefined;
 }) => {
 
+  const userId = useSelector((state:IRootStore)=> state.user.id);
+
   return isLoading ?
     <Skeleton avatar title={false} loading={isLoading} active /> :
     (!_.isEmpty(conversations) ? <List
@@ -32,17 +39,20 @@ export const MessagesList = memo(({
       loadMore={loadMore}
       dataSource={conversations}
       style={{ height: '100%', overflowY: 'auto', overflowX: 'hidden' }}
-      renderItem={item => (
-        <List.Item onClick={onClickItem.bind(null, item)} className='messages--item pv-medium'>
+      renderItem={item => {
+        const isUnreadMessage = includes(item.lastestMessage?.seen, userId);
+        const isChatMessage = item.lastestMessage.type === MessageType.CHAT;
+        const content = isChatMessage?item?.lastestMessage?.data: getLastChatMessage(item.messages);
+        return (
+        <List.Item onClick={onClickItem.bind(null, item)} className={`messages--item pv-medium ${isUnreadMessage?'unread':''}`}>
           <List.Item.Meta
-            avatar={<Avatar src={''} />}
             title={<p >{item.title}</p>}
-            description={item?.lastestMessage?.data}
+            description={<Typography.Text ellipsis={true} >{content}</Typography.Text>}
           />
-          <div>{(new Date(item.lastestMessage.createdAt)).toDateString()}</div>
+          <div className="time">{`${moment(new Date(item.lastestMessage.createdAt)).fromNow()}`}</div>
           {/* </Skeleton> */}
-        </List.Item>
-      )}
+        </List.Item>)
+      }}
     /> : <Skeleton avatar title={false} loading={isLoading} active />)
 });
 

@@ -1,6 +1,6 @@
 import { Avatar, Button, List, Modal, Select, Typography } from "antd";
 import { isEmpty, map } from "lodash";
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { IRootStore } from "../../../store/store";
 import { IQuickUser, IUser } from "../../../store/user/user-interface";
@@ -24,26 +24,33 @@ export const MessageMembersModal = memo((
   const userList = useSelector((state: IRootStore) => state.user?.users) as IQuickUser[];
   const [ recipientIds, setRecipientIds ] = useState<string[]>([]);
   const handleSubmitForm = useCallback(() => {
-    isAddMember ? onSubmit(recipientIds) : onCancel();
+    isAddMember&&!isEmpty(recipientIds) ? onSubmit(recipientIds) : onCancel();
   }, [ isAddMember, onCancel, onSubmit, recipientIds ]);
 
   function handleChange(value: any) {
     !isEmpty(value) && setRecipientIds(value);
   }
+  const addMemberActions = useMemo(() => ([
+    <Button key="back" onClick={onCancel}>
+      Cancel
+    </Button>,
+    <Button key="submit" type="primary" loading={isLoading} onClick={handleSubmitForm}>
+      Submit
+    </Button>
+  ]), [ handleSubmitForm, isLoading, onCancel ]);
+
+  const viewMemberActions = useMemo(() => ([
+    <Button key="back" onClick={onCancel}>
+      Close
+    </Button>
+  ]), [ onCancel ])
 
   return <Modal
     title={isAddMember ? 'Add New Member' : 'View Members'}
     visible={isOpen}
     onOk={handleSubmitForm}
     onCancel={onCancel}
-    footer={[
-      <Button key="back" onClick={onCancel}>
-        Cancel
-      </Button>,
-      <Button key="submit" type="primary" loading={isLoading} onClick={handleSubmitForm}>
-        {isAddMember ? 'Submit' : 'Cancel'}
-      </Button>
-    ]}
+    footer={isAddMember ? addMemberActions : viewMemberActions}
   >
     <List
       bordered

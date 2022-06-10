@@ -9,6 +9,7 @@ import { programStore } from "../../../store/planet/program-store";
 import { RematchDispatch, RematchDispatcher } from "@rematch/core";
 import { message, notification, Progress, Spin } from "antd";
 import _ from "lodash";
+import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
 type ICarouselProps = StateProps & DispatchProps;
 
@@ -118,18 +119,18 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
     const { isLoading } = this.state;
 
     if (_.isEmpty(program) || _.isEmpty(imageList) || isLoading) {
-      return <Spin size="large" />
+      return <Spin className="spin" size="large" />
     }
     return (
       <div id="carousel" className="noselect">
         <div className="arrow arrow-left" onClick={this.leftClick}>
-          {/* <FontAwesomeIcon icon={'arrow-alt-circle-left'} size='xs' /> */}
+          <LeftOutlined style={{ color: 'white' }} />
         </div>
         <TransitionGroup transitionName={this.state.direction}>
           {this.generateItems()}
         </TransitionGroup>
         <div className="arrow arrow-right" onClick={this.rightClick}>
-          {/* <FontAwesomeIcon icon={'arrow-alt-circle-right'} size='xs'/> */}
+          <RightOutlined style={{ color: 'white' }} />
         </div>
 
       </div>
@@ -181,7 +182,6 @@ class ItemClass extends React.Component<IItemProps, IItemStates> {
     const className = "item level" + this.props.level;
     const backgroundSize = this.props.level === 0 ? '400px' : 'auto';
     const { program, navigate, image } = this.props;
-    console.log(program);
 
     return (
       <>

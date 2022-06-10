@@ -4,4 +4,13 @@
 
 .messages--item{
   cursor: pointer;
+  .time,
+  .ant-list-item-meta-description
+  {
+    font-size: 12px;
+  }
+}
+
+.unread{
+  font-weight: 700;
 }

@@ -1,18 +1,23 @@
-import { Avatar } from "antd";
 import { find, isEmpty, isEqual } from "lodash";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
+import { NotificationMessage, RecieiveMessage, ResponseMessage } from "./message-item.component";
 import { IMessage } from "../../../store/message/message-interface";
+import { MessageType } from "../../../store/message/message.constant";
 import { IRootStore } from "../../../store/store";
 import { IUser } from "../../../store/user/user-interface";
 
 export const MessageContent = React.memo(({
   message,
   profileRecipients,
+
+  doFetchRecipientsProfile
 }: {
   message: IMessage,
   profileRecipients: IUser[],
+
+  doFetchRecipientsProfile: any,
 }) => {
   const userId = useSelector((state: IRootStore) => state.user?.id);
   const [ isResponseMessage, setIsResponseMessage ] = useState<boolean>(false);
@@ -26,20 +31,27 @@ export const MessageContent = React.memo(({
 
   }, [ message.from, profileRecipients, userId ])
 
+  useEffect(() => {
+    if (message?.type !== MessageType.CHAT) {
+      message?.data && doFetchRecipientsProfile({ recipients: [ message.data ] })
+    }
+  }, [doFetchRecipientsProfile, message.data, message?.type])
+
+  const renderMessage = useMemo(() => {
+    switch (message?.type) {
+      case MessageType.CHAT:
+        return isResponseMessage ? <ResponseMessage message={message} /> : <RecieiveMessage message={message} avatar={avatar} />
+      case MessageType.ADD_RECIPIENT:
+        return <NotificationMessage message={message}/>;
+      case MessageType.LEAVE:
+        return <NotificationMessage message={message}/>;
+      default:
+        break;
+    }
+  }, [ avatar, isResponseMessage, message ])
+
   return <>
-    {isResponseMessage ? <div className="message text-only">
-      <div className="response">
-        <p className="text">{message.data}</p>
-        <p className="response-time time"> {new Date(message?.createdAt).toLocaleDateString()}</p>
-      </div>
-    </div> :
-      <div className="message">
-        {!isEmpty(avatar) ? <div className="photo" style={{ backgroundImage: `url(${avatar})` }}>
-          <div className="online"></div>
-        </div> : <Avatar size='large' >U</Avatar>}
-        <p className="text">{message?.data}</p>
-        <p className="time"> {new Date(message?.createdAt).toTimeString()}</p>
-      </div>}
+    {renderMessage}
   </>;
 });
 

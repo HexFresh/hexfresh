@@ -47,8 +47,7 @@ body {
 .arrow {
     position: absolute;
     width: 60px;
-    height: 100%;
-    background-color: transparent;
+    height: 30%;
     text-align: center;
     font-size: 2em;
     cursor: pointer;
@@ -335,3 +334,10 @@ body {
     outline-offset: 15px;
     text-shadow: 1px 1px 2px #427388; 
   }
+
+.spin.ant-spin-spinning{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+}
