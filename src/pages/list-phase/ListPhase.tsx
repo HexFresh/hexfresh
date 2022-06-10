@@ -112,8 +112,8 @@ export default function ListPhase() {
       };
       const handleCreatePhase = async () => {
         message.loading({content: 'Creating...'}).then(async () => {
-          await createPhase(Number(programId), newPhase);
-          await fetchPhases();
+          const result = await createPhase(Number(programId), newPhase);
+          setPhases(result);
           message.success({content: 'Created', key: 'success'});
           setIsModalVisible(false);
           setName('');

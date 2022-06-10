@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {Link, useParams} from 'react-router-dom';
 import './list-phase.css';
-import { Modal, Button, message, Select, Input } from 'antd';
+import {Modal, Button, message, Select, Input} from 'antd';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
@@ -9,9 +9,9 @@ import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { deletePhase, updatePhase, getImages } from '../../api/mentor/mentorApi';
+import {deletePhase, updatePhase, getImages} from '../../api/mentor/mentorApi';
 
-const { Option } = Select;
+const {Option} = Select;
 
 interface Iphase {
   id: string;
@@ -27,7 +27,7 @@ interface IImage {
 }
 
 export default function PhaseItem(props: any) {
-  const { phase, updatePhases } = props;
+  const {phase, updatePhases} = props;
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -59,11 +59,11 @@ export default function PhaseItem(props: any) {
   };
 
   const handleOk = () => {
-    const data = { ...updatedPhase, imageId: Number(updatedPhase.imageId) };
+    const data = {...updatedPhase, imageId: Number(updatedPhase.imageId)};
     const handleUpdatePhase = async () => {
-      message.loading({ content: 'Updating...', key: 'update' }).then(async () => {
+      message.loading({content: 'Updating...', key: 'update'}).then(async () => {
         await updatePhase(Number(programId), Number(phase.id), data);
-        message.success({ content: 'Updated', key: 'update' });
+        message.success({content: 'Updated', key: 'update'});
         updatePhases();
         setIsModalVisible(false);
       });
@@ -76,10 +76,10 @@ export default function PhaseItem(props: any) {
   };
 
   const handleDeletePhase = async () => {
-    message.loading({ content: 'Deleting...' }).then(async () => {
+    message.loading({content: 'Deleting...'}).then(async () => {
       await deletePhase(Number(programId), Number(phase.id));
       updatePhases();
-      message.success({ content: 'Deleted', duration: 2 });
+      message.success({content: 'Deleted', duration: 2});
     });
   };
 
@@ -88,7 +88,7 @@ export default function PhaseItem(props: any) {
       <div className="phase">
         <div className="left">
           <div className="cover-photo">
-            <img src={phase?.image?.imageLink} alt="cover" />
+            <img src={phase?.image?.imageLink} alt="cover"/>
           </div>
           <Link to={`/mentor/programs/${programId}/phases/${phase.id}`}>
             <div className="phase-name">{phase.title}</div>
@@ -96,7 +96,7 @@ export default function PhaseItem(props: any) {
         </div>
         <div className="right">
           <IconButton aria-label="delete" size="small" onClick={handleClick}>
-            <MoreHorizIcon fontSize="small" />
+            <MoreHorizIcon fontSize="small"/>
           </IconButton>
         </div>
       </div>
@@ -119,10 +119,10 @@ export default function PhaseItem(props: any) {
             <label>Title</label>
             <Input
               value={updatedPhase.title}
-              style={{ marginBottom: '25px', marginTop: '6px' }}
+              style={{marginBottom: '25px', marginTop: '6px'}}
               onChange={(e) => {
                 setDisableTitle(phase.title === e.target.value);
-                setUpdatedPhase({ ...updatedPhase, title: e.target.value });
+                setUpdatedPhase({...updatedPhase, title: e.target.value});
               }}
             />
           </div>
@@ -130,10 +130,10 @@ export default function PhaseItem(props: any) {
             <label>Choose planet</label>
             <Select
               value={updatedPhase.imageId.toString()}
-              style={{ width: '100%', marginBottom: '25px', marginTop: '6px' }}
+              style={{width: '100%', marginBottom: '25px', marginTop: '6px'}}
               onChange={(value) => {
                 setDisableImage(phase.imageId === Number(value));
-                setUpdatedPhase({ ...updatedPhase, imageId: value });
+                setUpdatedPhase({...updatedPhase, imageId: value});
               }}
             >
               {images.map((image) => (
@@ -194,18 +194,18 @@ export default function PhaseItem(props: any) {
             },
           },
         }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        transformOrigin={{horizontal: 'right', vertical: 'top'}}
+        anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
       >
         <MenuItem onClick={showModal}>
           <ListItemIcon>
-            <EditIcon fontSize="small" />
+            <EditIcon fontSize="small"/>
           </ListItemIcon>
           {`Edit ${phase.title}`}
         </MenuItem>
         <MenuItem onClick={handleDeletePhase}>
           <ListItemIcon>
-            <DeleteIcon fontSize="small" />
+            <DeleteIcon fontSize="small"/>
           </ListItemIcon>
           {`Delete ${phase.title}`}
         </MenuItem>

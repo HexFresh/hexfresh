@@ -10,11 +10,11 @@ import ListFresher from './pages/list-fresher/ListFresher';
 import PlanetView from './pages/planet/PlanetView';
 import ListPhase from './pages/list-phase/ListPhase';
 import PhaseDetail from './pages/phase-detail/PhaseDetail';
-import { IRootDispatch, IRootStore } from './store/store';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
-import { IUserStore } from './store/user/user-store';
-import { getCurrentToken, onMessageListener } from './utils/firebaseInit';
+import {IRootDispatch, IRootStore} from './store/store';
+import {useDispatch, useSelector} from 'react-redux';
+import {useEffect} from 'react';
+import {IUserStore} from './store/user/user-store';
+import { onMessageListener} from './utils/firebaseInit';
 import FresherListPhase from './pages/fresher-list-phase/FresherListPhase';
 import ReviewTask from './pages/review-task/ReviewTask';
 import FresherLeaderboard from './pages/fresher-leaderboard/FresherLeaderboard';
@@ -23,6 +23,7 @@ import Messages from './pages/messages/messages';
 import ForgotPassword from "./pages/forgot-password/ForgotPassword";
 import {Notifications} from './pages/notifications/notifications';
 import Badges from './pages/badges/badges';
+import ListChecklist from "./pages/list-checklist/ListChecklist";
 //import io from "socket.io-client";
 
 const Home = () => {
@@ -54,7 +55,7 @@ function App() {
   useEffect(() => {
 
     const initialFunc = async () => {
-      await dispatch.user.checkAutoLoginV2({ dispatch, navigate, location });
+      await dispatch.user.checkAutoLoginV2({dispatch, navigate, location});
       await dispatch.user.fetchProfileUsers();
       // push notification
       onMessageListener()
@@ -86,7 +87,8 @@ function App() {
 
           <Route path="/mentor/programs" element={<ListProgram/>}/>
           <Route path="/mentor/programs/:programId/phases" element={<ListPhase/>}/>
-          <Route path="/mentor/programs/:programId/phases/:phaseId" element={<PhaseDetail/>}/>
+          <Route path="/mentor/programs/:programId/phases/:phaseId" element={<ListChecklist/>}/>
+          <Route path="/mentor/programs/:programId/phases/:phaseId/edit" element={<PhaseDetail/>}/>
 
           <Route path="/mentor/freshers" element={<ListFresher/>}/>
           <Route path="/mentor/freshers/:fresherId" element={<FresherListPhase/>}/>
