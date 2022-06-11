@@ -1,4 +1,4 @@
-.list-checklist {
+.list-task {
   padding: 0;
   margin: 0;
   width: 100vw;
@@ -6,17 +6,17 @@
   background-color: darkgrey;
 }
 
-.list-checklist .link.apps {
+.list-task .link.apps {
   color: white;
 }
 
-.list-checklist .container {
+.list-task .container {
   width: 100%;
   height: 100%;
   display: flex;
 }
 
-.list-checklist .container .menu {
+.list-task .container .menu {
   width: 70px;
   height: 100vh;
   background-color: #0f171f;
@@ -26,7 +26,7 @@
   position: relative;
 }
 
-.list-checklist .container .menu .logo {
+.list-task .container .menu .logo {
   margin-top: 10px;
   padding: 5px;
   background-color: white;
@@ -34,7 +34,7 @@
   margin-bottom: 30px;
 }
 
-.list-checklist .container .menu .menu-item {
+.list-task .container .menu .menu-item {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -45,13 +45,13 @@
   cursor: pointer;
 }
 
-.list-checklist .container .menu .menu-item.active {
+.list-task .container .menu .menu-item.active {
   position: relative;
   opacity: 1;
   color: white;
 }
 
-.list-checklist .container .menu .menu-item.active:before {
+.list-task .container .menu .menu-item.active:before {
   content: '';
   position: absolute;
   top: 0;
@@ -63,11 +63,11 @@
   border-top-left-radius: 5px;
 }
 
-.list-checklist .container .menu .menu-item:hover {
+.list-task .container .menu .menu-item:hover {
   opacity: 1;
 }
 
-.list-checklist .container .menu .bottom {
+.list-task .container .menu .bottom {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -77,26 +77,26 @@
   grid-gap: 20px;
 }
 
-.list-checklist .container .menu .bottom .folder,
-.list-checklist .container .menu .bottom .settings {
+.list-task .container .menu .bottom .folder,
+.list-task .container .menu .bottom .settings {
   color: white;
   opacity: 0.5;
   cursor: pointer;
 }
 
-.list-checklist .container .menu .bottom .folder:hover,
-.list-checklist .container .menu .bottom .settings:hover {
+.list-task .container .menu .bottom .folder:hover,
+.list-task .container .menu .bottom .settings:hover {
   opacity: 1;
 }
 
-.list-checklist .container .page-content {
+.list-task .container .page-content {
   width: calc(100vw - 70px);
   height: 100vh;
   background-color: #f6f7f8;
   overflow-y: hidden;
 }
 
-.list-checklist .container .page-content .topbar {
+.list-task .container .page-content .topbar {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -105,14 +105,14 @@
   border-bottom: 1px solid #f6f7f8;
 }
 
-.list-checklist .container .page-content .topbar p {
+.list-task .container .page-content .topbar p {
   font-size: 20px;
   color: #364d79;
   font-weight: bold;
   margin: 0 0 0 10px;
 }
 
-.list-checklist .container .page-content .name-page {
+.list-task .container .page-content .name-page {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -123,11 +123,11 @@
   padding: 20px 0;
 }
 
-.list-checklist .container .page-content .name-page .container {
+.list-task .container .page-content .name-page .container {
   padding: 0 130px;
 }
 
-.list-checklist .container .page-content .filter-search {
+.list-task .container .page-content .filter-search {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -135,18 +135,18 @@
   background-color: white;
 }
 
-.list-checklist .container .page-content .filter-search .container {
+.list-task .container .page-content .filter-search .container {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 10px 130px;
 }
 
-.list-checklist .container .page-content .filter-search .container .search {
+.list-task .container .page-content .filter-search .container .search {
 
 }
 
-.list-checklist .container .list-checklist-content {
+.list-task .container .list-task-content {
   margin-top: 20px;
   height: calc(100vh - 210px);
   padding: 0 130px;
@@ -156,12 +156,25 @@
   align-items: center;
 }
 
-.list-checklist .container .list-checklist-content .checklists {
+.checklists-content-container-no {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.list-task .container .list-task-content .checklists {
   flex: 1;
   height: 100%;
 }
 
-.list-checklist .container .list-checklist-content .badges {
+.list-task .container .list-task-content .badges {
   flex: 1;
   height: 100%;
 }
@@ -190,19 +203,6 @@
   background-color: white;
   padding: 10px;
   border-radius: 10px;
-}
-
-.checklists-content-container-no {
-  width: 100%;
-  height: 100%;
-  background-color: white;
-  padding: 10px;
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 20px;
-  font-weight: bold;
 }
 
 .checklists-content-container .checklist {

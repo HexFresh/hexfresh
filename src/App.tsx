@@ -14,7 +14,7 @@ import {IRootDispatch, IRootStore} from './store/store';
 import {useDispatch, useSelector} from 'react-redux';
 import {useEffect} from 'react';
 import {IUserStore} from './store/user/user-store';
-import { onMessageListener} from './utils/firebaseInit';
+import {onMessageListener} from './utils/firebaseInit';
 import FresherListPhase from './pages/fresher-list-phase/FresherListPhase';
 import ReviewTask from './pages/review-task/ReviewTask';
 import FresherLeaderboard from './pages/fresher-leaderboard/FresherLeaderboard';
@@ -24,6 +24,7 @@ import ForgotPassword from "./pages/forgot-password/ForgotPassword";
 import {Notifications} from './pages/notifications/notifications';
 import Badges from './pages/badges/badges';
 import ListChecklist from "./pages/list-checklist/ListChecklist";
+import ListTask from "./pages/list-task/ListTask";
 //import io from "socket.io-client";
 
 const Home = () => {
@@ -89,6 +90,7 @@ function App() {
           <Route path="/mentor/programs/:programId/phases" element={<ListPhase/>}/>
           <Route path="/mentor/programs/:programId/phases/:phaseId" element={<ListChecklist/>}/>
           <Route path="/mentor/programs/:programId/phases/:phaseId/edit" element={<PhaseDetail/>}/>
+          <Route path="/mentor/programs/:programId/phases/:phaseId/checklist/:checklistId" element={<ListTask/>}/>
 
           <Route path="/mentor/freshers" element={<ListFresher/>}/>
           <Route path="/mentor/freshers/:fresherId" element={<FresherListPhase/>}/>

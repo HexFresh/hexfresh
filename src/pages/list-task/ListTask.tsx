@@ -5,12 +5,12 @@ import {Link, useNavigate, useParams} from 'react-router-dom';
 import {Apps, School, Settings, Folder} from '@mui/icons-material';
 import {Avatar, CircularProgress} from '@mui/material';
 import {Tooltip, Menu, Dropdown, Button, Modal, Select, message, Input} from 'antd';
-import './list-checklist.css';
+import './list-task.css';
 import {
-  getAllChecklist,
-  getAllBadgesOfPhase,
+  getAllTask,
+  getAllBadgesOfChecklist,
   getBadges,
-  addAvailableBadgeToPhase, addNewBadgeToPhase, removeBadgeFromPhase
+  addAvailableBadgeToChecklist, addNewBadgeToChecklist, removeBadgeFromChecklist
 } from "./api";
 import {IRootDispatch} from '../../store/store';
 import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
@@ -18,10 +18,10 @@ import axios from "axios";
 
 const {Option} = Select;
 
-interface IChecklist {
+interface ITask {
   id: number;
   title: string;
-  numberOfTasks: number;
+  point: number;
 }
 
 interface IBadge {
@@ -30,10 +30,10 @@ interface IBadge {
   image: string;
 }
 
-export default function ListChecklist() {
+export default function ListTask() {
   const [checklistLoading, setChecklistLoading] = useState(false);
   const [badgesLoading, setBadgesLoading] = useState(false);
-  const [checklists, setChecklists] = useState<IChecklist[] | []>([]);
+  const [tasks, setTasks] = useState<ITask[] | []>([]);
   const [badges, setBadges] = useState<IBadge[] | []>([]);
   const [allBadges, setAllBadges] = useState<IBadge[] | []>([]);
 
@@ -46,7 +46,7 @@ export default function ListChecklist() {
 
   const dispatch = useDispatch<IRootDispatch>();
   const navigate = useNavigate();
-  const {phaseId, programId} = useParams<{ phaseId: string, programId: string }>();
+  const {phaseId, programId, checklistId} = useParams<{ phaseId: string, programId: string, checklistId: string }>();
   const refInput = useRef<HTMLInputElement>(null);
 
   const logoutHandler = React.useCallback(() => {
@@ -61,17 +61,16 @@ export default function ListChecklist() {
     </Menu>
   );
 
-  const fetchChecklists = async () => {
+  const fetchTasks = async () => {
     setChecklistLoading(true);
-    const result = await getAllChecklist(phaseId);
-    console.log('result: ', result);
-    setChecklists(result);
+    const result = await getAllTask(checklistId);
+    setTasks(result);
     setChecklistLoading(false);
   };
 
   const fetchBadges = async () => {
     setBadgesLoading(true);
-    const result = await getAllBadgesOfPhase(phaseId);
+    const result = await getAllBadgesOfChecklist(checklistId);
     setBadges(result);
     setBadgesLoading(false);
   }
@@ -83,7 +82,7 @@ export default function ListChecklist() {
 
   useEffect(() => {
     document.title = 'HexF - List Checklist';
-    fetchChecklists();
+    fetchTasks();
     fetchBadges();
     fetchAllBadges();
   }, []);
@@ -97,14 +96,14 @@ export default function ListChecklist() {
       if (!selectedBadge) {
         message.error({content: 'Please select a badge to add'});
       } else {
-        handleAddAvailableBadgeToPhase();
+        handleAddAvailableBadgeToChecklist();
       }
 
     } else {
       if (!title || !description || !imageFile) {
         message.error({content: 'Please fill all fields'});
       } else {
-        handleAddNewBadgeToPhase();
+        handleAddNewBadgeToChecklist();
       }
     }
   };
@@ -124,8 +123,8 @@ export default function ListChecklist() {
     }
   };
 
-  const handleAddAvailableBadgeToPhase = async () => {
-    const result = await addAvailableBadgeToPhase(phaseId, selectedBadge);
+  const handleAddAvailableBadgeToChecklist = async () => {
+    const result = await addAvailableBadgeToChecklist(checklistId, selectedBadge);
     if (result) {
       message.success('Add badge successfully', 0.5);
       await fetchBadges();
@@ -136,14 +135,14 @@ export default function ListChecklist() {
     }
   }
 
-  const handleAddNewBadgeToPhase = async () => {
+  const handleAddNewBadgeToChecklist = async () => {
     message.loading('Creating...').then(async () => {
       const data = new FormData();
       // @ts-ignore
       data.append('file', imageFile);
       data.append('upload_preset', 'qk9dvfij');
       const res = await axios.post(`https://api.cloudinary.com/v1_1/hexfresh/image/upload`, data);
-      const result = await addNewBadgeToPhase(phaseId, {
+      const result = await addNewBadgeToChecklist(checklistId, {
         title, description, image: res.data.secure_url
       })
       console.log(result);
@@ -157,14 +156,14 @@ export default function ListChecklist() {
   }
 
   const handleRemoveBadge = async (badgeId: any) => {
-    await removeBadgeFromPhase(phaseId, badgeId);
+    await removeBadgeFromChecklist(checklistId, badgeId);
     message.success('Remove badge successfully', 0.5);
     await fetchBadges();
     await fetchAllBadges();
   }
 
   return (
-    <div className="list-checklist">
+    <div className="list-task">
       <div className="container">
         <div className="menu">
           <div className="logo">
@@ -211,7 +210,7 @@ export default function ListChecklist() {
             <p>Hexfresh</p>
           </div>
           <div className="name-page">
-            <div className="container">Phase Detail</div>
+            <div className="container">Checklist Detail</div>
           </div>
           <div className="filter-search">
             <div className="container">
@@ -225,27 +224,27 @@ export default function ListChecklist() {
               </div>
             </div>
           </div>
-          <div className="list-checklist-content">
+          <div className="list-task-content">
             <div className="checklists">
-              <div className={"checklists-title"}>Checklists</div>
+              <div className={"checklists-title"}>Tasks</div>
               <div className="checklists-content">
                 {
-                  checklistLoading ? (<CircularProgress/>) : (checklists.length > 0 ? (
+                  checklistLoading ? (<CircularProgress/>) : (tasks.length > 0 ? (
                     <div className={"checklists-content-container"}>
                       {
-                        checklists.map((checklist, index) => (
+                        tasks.map((task, index) => (
                           <div className="checklist" key={index}
-                               onClick={() => navigate(`/mentor/programs/${programId}/phases/${phaseId}/checklist/${checklist.id}`)}>
+                          >
                             <div className="checklist-title">
-                              {checklist.title}
+                              {task.title}
                             </div>
                             <div className="checklist-number-of-tasks">
-                              {checklist.numberOfTasks} tasks
+                              {task.point} points
                             </div>
                           </div>
                         ))
                       }
-                    </div>) : (<div className={"checklists-content-container-no"}>No checklist found</div>))
+                    </div>) : (<div className={"checklists-content-container-no"}>No task found</div>))
                 }
               </div>
             </div>

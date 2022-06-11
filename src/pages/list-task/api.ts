@@ -1,7 +1,7 @@
 import axiosClient from "../../api/axiosClient";
 
-export const getAllChecklist = async (phaseId: any) => {
-  const endpoint = `phase/${phaseId}/checklist`;
+export const getAllTask = async (checklistId: any) => {
+  const endpoint = `checklist/${checklistId}/task`;
   try {
     const response = await axiosClient.get(endpoint);
     return response.data;
@@ -10,8 +10,8 @@ export const getAllChecklist = async (phaseId: any) => {
   }
 }
 
-export const getAllBadgesOfPhase = async (phaseId: any) => {
-  const endpoint = `phase/${phaseId}/badge`;
+export const getAllBadgesOfChecklist = async (checklistId: any) => {
+  const endpoint = `checklist/${checklistId}/badge`;
   try {
     const response = await axiosClient.get(endpoint);
     return response.data;
@@ -34,8 +34,8 @@ export const getBadges = async (query: any) => {
   }
 }
 
-export const addAvailableBadgeToPhase = async (phaseId: any, badgeId: any) => {
-  const endpoint = `phase/${phaseId}/badge/${badgeId}`;
+export const addAvailableBadgeToChecklist = async (checklistId: any, badgeId: any) => {
+  const endpoint = `checklist/${checklistId}/badge/${badgeId}`;
   try {
     const response = await axiosClient.post(endpoint);
     const {data} = response;
@@ -45,8 +45,8 @@ export const addAvailableBadgeToPhase = async (phaseId: any, badgeId: any) => {
   }
 }
 
-export const addNewBadgeToPhase = async (phaseId: any, badge: any) => {
-  const endpoint = `phase/${phaseId}/badge`;
+export const addNewBadgeToChecklist = async (checklistId: any, badge: any) => {
+  const endpoint = `checklist/${checklistId}/badge`;
   try {
     const response = await axiosClient.post(endpoint, badge);
     const {data} = response;
@@ -56,8 +56,8 @@ export const addNewBadgeToPhase = async (phaseId: any, badge: any) => {
   }
 }
 
-export const removeBadgeFromPhase = async (phaseId: any, badgeId: any) => {
-  const endpoint = `phase/${phaseId}/badge/${badgeId}`;
+export const removeBadgeFromChecklist = async (checklistId: any, badgeId: any) => {
+  const endpoint = `checklist/${checklistId}/badge/${badgeId}`;
   try {
     const response = await axiosClient.delete(endpoint);
     const {data} = response;
