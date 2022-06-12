@@ -21,8 +21,8 @@ export const MessageMembersModal = memo((
     isOpen: boolean,
     isAddMember: boolean
   }) => {
-  const userList = useSelector((state: IRootStore) => state.user?.users) as IQuickUser[];
   const [ recipientIds, setRecipientIds ] = useState<string[]>([]);
+
   const handleSubmitForm = useCallback(() => {
     isAddMember&&!isEmpty(recipientIds) ? onSubmit(recipientIds) : onCancel();
   }, [ isAddMember, onCancel, onSubmit, recipientIds ]);
@@ -30,6 +30,7 @@ export const MessageMembersModal = memo((
   function handleChange(value: any) {
     !isEmpty(value) && setRecipientIds(value);
   }
+
   const addMemberActions = useMemo(() => ([
     <Button key="back" onClick={onCancel}>
       Cancel
@@ -70,7 +71,7 @@ export const MessageMembersModal = memo((
       optionLabelProp="label"
       className="mt-large-x2"
     >
-      {!isEmpty(userList) && map(userList, userInfo => (<Select.Option value={userInfo.id} label={userInfo.username}>
+      {!isEmpty(users) && map(users, userInfo => (<Select.Option value={userInfo.id} label={userInfo.username}>
         <div className="demo-option-label-item">
           <span role="img" aria-label="China" className="mv-small">
             <Avatar>{userInfo.username[ 0 ]}</Avatar>

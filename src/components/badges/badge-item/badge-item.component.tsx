@@ -9,6 +9,7 @@ export const BadgeItem = memo(({badge}:{badge: IBadge})=>{
   style={{
     width: 300,
   }}
+  size="small"
   cover={
     <img
       alt="badge"

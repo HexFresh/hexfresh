@@ -1,20 +1,21 @@
-import './App.css';
+import { useEffect, useState } from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import { io } from 'socket.io-client';
+import {Navigate, Route, Routes, useLocation, useNavigate} from 'react-router-dom';
+
 import Carousel from './components/layouts/carousel/Carousel';
 import MeteorShower from './components/layouts/meteo-shower/MeteorShower';
 import HeaderInternal from './components/layouts/Header/HeaderInternal';
 import ProgressCard from './components/layouts/goalcard/ProgressCard';
-import {Navigate, Route, Routes, useLocation, useNavigate} from 'react-router-dom';
 import SignIn from './components/auth/SignIn';
+import { socketInstance } from './utils/socketioInit';
+import {onMessageListener} from './utils/firebaseInit';
+
 import ListProgram from './pages/list-program/ListProgram';
 import ListFresher from './pages/list-fresher/ListFresher';
 import PlanetView from './pages/planet/PlanetView';
 import ListPhase from './pages/list-phase/ListPhase';
 import PhaseDetail from './pages/phase-detail/PhaseDetail';
-import {IRootDispatch, IRootStore} from './store/store';
-import {useDispatch, useSelector} from 'react-redux';
-import {useEffect} from 'react';
-import {IUserStore} from './store/user/user-store';
-import {onMessageListener} from './utils/firebaseInit';
 import FresherListPhase from './pages/fresher-list-phase/FresherListPhase';
 import ReviewTask from './pages/review-task/ReviewTask';
 import FresherLeaderboard from './pages/fresher-leaderboard/FresherLeaderboard';
@@ -25,7 +26,11 @@ import {Notifications} from './pages/notifications/notifications';
 import Badges from './pages/badges/badges';
 import ListChecklist from "./pages/list-checklist/ListChecklist";
 import ListTask from "./pages/list-task/ListTask";
-//import io from "socket.io-client";
+
+import {IRootDispatch, IRootStore} from './store/store';
+import {IUserStore} from './store/user/user-store';
+
+import './App.css';
 
 const Home = () => {
   return (
@@ -48,6 +53,8 @@ function App() {
   const dispatch = useDispatch<IRootDispatch>();
   const auth: IUserStore = useSelector<IRootStore>((state) => state.user);
   const roleId: number = Number(useSelector<IRootStore>((state) => state.user.roleId)) || Number(localStorage.getItem('roleId')) || 0;
+  const [ socket, setSocket ] = useState(io());
+  const token = useSelector<IRootStore>((state) => state.user?.token);
 
   if (!auth.token && location.pathname !== '/signin' && location.pathname !== '/planets' && location.pathname !== '/') {
     dispatch.location.startAt(location.pathname + location.search);
@@ -68,8 +75,20 @@ function App() {
     }
 
     initialFunc();
-
+    const newSocket = socketInstance;
+    setSocket(newSocket);
   }, []);
+
+  useEffect(() => {
+    if (socket.disconnected) {
+      socket.io.opts.query = "token=" + token as any;
+      socket.connect();
+    }
+
+    socket.off("notification").on("notification", (data) => {
+      dispatch.notification.doPushNotif(data);
+    })
+  }, [dispatch.notification, socket, token])
 
   const routeWithoutSignIn = (
     <Routes>

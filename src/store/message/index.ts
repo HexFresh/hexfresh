@@ -1,11 +1,14 @@
+import { MessageOutlined } from "@ant-design/icons";
+import { style } from "@mui/system";
 import { notification } from "antd";
-import _, { values } from "lodash";
+import _, { find, isEmpty, isEqual, values } from "lodash";
 import axiosClient from "../../api/axiosClient";
 import axiosMessage from "../../api/axiosMessage";
 import { INT_ZERO } from "../../constant";
 import rootStore, { IRootDispatch, IRootStore } from "../store"
 import { IUser } from "../user/user-interface";
 import { IMessageDetail } from "./message-interface";
+import { MessageType } from "./message.constant";
 
 export const messageStore: any = {
   state: {
@@ -26,11 +29,11 @@ export const messageStore: any = {
     setSelectedConversation: (state: IRootStore, payload: any) => ({ ...state, selectedConversation: payload }),
     setConversations: (state: IRootStore, payload: any) => ({ ...state, conversations: payload }),
     setuserProfiles: (state: IRootStore, payload: any) => ({ ...state, profileRecipients: payload }),
-    setCounter: (state: IRootStore, payload: any) =>({...state, counter: payload}),
+    setCounter: (state: IRootStore, payload: any) => ({ ...state, counter: payload }),
 
     setIsFetchingRecipients: (state: IRootStore, payload: any) => ({ ...state, isFetchingRecipients: payload }),
-    setIsAddingMember: (state: IRootStore, payload: any)=>({...state, isAddingMember: payload}),
-    setIsLeavingConversation: (state: IRootStore, payload: any)=>({...state, isLeavingConversation: payload}),
+    setIsAddingMember: (state: IRootStore, payload: any) => ({ ...state, isAddingMember: payload }),
+    setIsLeavingConversation: (state: IRootStore, payload: any) => ({ ...state, isLeavingConversation: payload }),
   },
   effects: (dispatch: IRootDispatch) => ({
     async doCreateConversation({ recipients, title }: { recipients: string[], title: string }) {
@@ -140,7 +143,7 @@ export const messageStore: any = {
           _.forEach(recipients, user => {
             const foundIndex = _.findIndex(profileRecipients, [ 'userId', user?.userId ])
             if (foundIndex < 0) {
-              profileRecipients.unshift(user);
+              !isEmpty(user) && profileRecipients.unshift(user);
             } else {
               profileRecipients[ foundIndex ] = user;
             }
@@ -169,17 +172,35 @@ export const messageStore: any = {
         const updatedLastestMessage = { ...conversations[ conversationIndex ], lastestMessage: message }
         updatedConversations[ conversationIndex ] = updatedLastestMessage;
 
+        const { data, type } = message;
+        if (isEqual(type, MessageType.LEAVE)) {
+          const recipientIds = conversations[ conversationIndex ].recipients;
+          const newRecipients = _.filter(recipientIds, item => item !== data);
+          const updatedRecipients = { ...conversations[conversationIndex], recipients: newRecipients};
+          updatedConversations[conversationIndex] = updatedRecipients;
+        }
+
         dispatch.message.setConversations(updatedConversations);
       }
       //update message for selected Conversation.
       if (_.isEqual(conversationId, selectedConversation?._id)) {
         const messages = selectedConversation?.messages;
+        const { data, type } = message;
+
         messages.unshift(messagePayload);
-        const updatedSelectedConversation = {
+        let updatedSelectedConversation = {
           ...selectedConversation,
           lastestMessage: message,
           messages
         };
+
+        if (isEqual(type, MessageType.LEAVE)) {
+
+          const recipients = selectedConversation?.recipients;
+          const newRecipients = _.filter(recipients, item => item !== data);
+          updatedSelectedConversation = {...updatedSelectedConversation, recipients: newRecipients};
+        }
+
         dispatch.message.setSelectedConversation(updatedSelectedConversation);
       }
     },
@@ -188,15 +209,30 @@ export const messageStore: any = {
       const endpoint = `conversation/${conversationId}/recipient`;
       dispatch.message.setIsAddingMember(true);
       try {
-        await axiosMessage.put(endpoint,{recipient: recipientIds[INT_ZERO]});
+        await axiosMessage.put(endpoint, { recipient: recipientIds[ INT_ZERO ] });
         dispatch.message.setIsAddingMember(false);
+
+        //update recipients fo selected conversation.
         const selectedConversation = _.cloneDeep(rootStore.getState().message.selectedConversation);
         const recipients = selectedConversation.recipients;
-        const updatedRecipients = [...recipients, recipientIds[INT_ZERO]];
-        const updatedSelectedConversation = {...selectedConversation, recipients: updatedRecipients};
+        const updatedRecipients = [ ...recipients, recipientIds[ INT_ZERO ] ];
+        const updatedSelectedConversation = { ...selectedConversation, recipients: updatedRecipients };
 
         dispatch.message.setSelectedConversation(updatedSelectedConversation);
 
+        //add user to conversation list
+        const conversations = rootStore.getState().message.conversations;
+        const conversationIndex = _.findIndex(conversations, { _id: conversationId });
+        const updatedConversations = [ ...conversations ];   
+        
+        if (conversationIndex >= INT_ZERO) {
+          const updatedConversation = { ...conversations[ conversationIndex ], recipients: updatedRecipients}
+          updatedConversations[ conversationIndex ] = updatedConversation;
+
+          dispatch.message.setConversations(updatedConversations);
+        }
+
+        //notif
         notification.success({
           message: 'Add user to conversation successfully.',
           description: `User can join the conversation from now.`
@@ -211,7 +247,7 @@ export const messageStore: any = {
       }
     },
 
-    async doLeaveConversation({conversationId}:{conversationId: string}){
+    async doLeaveConversation({ conversationId }: { conversationId: string }) {
       const endpoint = `conversation/${conversationId}/leave`;
       dispatch.message.setIsLeavingConversation(true);
       try {
@@ -222,7 +258,7 @@ export const messageStore: any = {
         });
         //update conversations.
         const conversations = rootStore.getState().message.conversations;
-        const updatedConversations = _.filter(conversations, conversation=> conversation._id!==conversationId);
+        const updatedConversations = _.filter(conversations, conversation => conversation._id !== conversationId);
         dispatch.message.setConversations(updatedConversations);
         //update selectedConversation
         dispatch.message.setSelectedConversation({});
@@ -239,16 +275,26 @@ export const messageStore: any = {
       }
     },
 
-    async doFetchAmountUnreadMessages({conversationId}:{conversationId: string}){
+    async doFetchAmountUnreadMessages({ conversationId }: { conversationId: string }) {
       const endpoint = `conversation/counter`;
 
       try {
         const response = await axiosMessage.get(endpoint);
         dispatch.message.setCounter(response?.data);
       } catch (error) {
-        
+
         throw new Error(error);
       }
+    },
+
+    doPushNotificationMessage(messagePayload:IMessageDetail){
+      if(isEmpty(messagePayload)) return;
+      const profileRecipients = rootStore.getState().message.profileRecipients;
+      notification.open({
+        message: `New message from ${messagePayload.conversationId}`,
+        description:messagePayload.message.data,
+        icon: MessageOutlined,
+      });
     }
 
   })
