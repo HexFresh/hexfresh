@@ -260,7 +260,7 @@ export default function ListTask() {
                               <div className="badge-left">
                                 <div className="badge-avatar">
                                   <img style={{
-                                    width: '130px', height: '130px', objectFit: 'cover',
+                                    maxWidth: '100px', maxHeight: '100px', objectFit: 'cover',
                                   }}
                                        src={badge.image}
                                        alt=""/>
