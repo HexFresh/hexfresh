@@ -40,7 +40,7 @@ export const MessagesList = memo(({
       dataSource={conversations}
       style={{ height: '100%', overflowY: 'auto', overflowX: 'hidden' }}
       renderItem={item => {
-        const isUnreadMessage = includes(item.lastestMessage?.seen, userId);
+        const isUnreadMessage = !includes(item.lastestMessage?.seen, userId);
         const isChatMessage = item.lastestMessage.type === MessageType.CHAT;
         const content = isChatMessage?item?.lastestMessage?.data: getLastChatMessage(item.messages);
         return (

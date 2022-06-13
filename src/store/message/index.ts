@@ -1,7 +1,7 @@
 import { MessageOutlined } from "@ant-design/icons";
 import { style } from "@mui/system";
 import { notification } from "antd";
-import _, { find, isEmpty, isEqual, values } from "lodash";
+import _, { find, isEmpty, isEqual, NumericDictionaryIteratee, values } from "lodash";
 import axiosClient from "../../api/axiosClient";
 import axiosMessage from "../../api/axiosMessage";
 import { INT_ZERO } from "../../constant";
@@ -70,9 +70,8 @@ export const messageStore: any = {
       }
     },
 
-    async doFetchConversation({ conversationId, skip, limit }: { conversationId: number, skip: number, limit: number }) {
+    async doFetchConversation({ conversationId, skip, limit }: { conversationId: string, skip: number, limit: number }) {
       const endpoint = `conversation/${conversationId}`;
-
       try {
         dispatch.message.setIsFetchingConversation(true);
         const response = await axiosMessage.get(endpoint);
@@ -82,8 +81,8 @@ export const messageStore: any = {
 
       } catch (error) {
         dispatch.message.setIsFetchingConversation(false);
-
       }
+      this.doReadMessage(conversationId);
     },
 
     async doRenameConversation({ conversationId, payload }: { conversationId: number, payload: { title: string } }) {
@@ -176,8 +175,8 @@ export const messageStore: any = {
         if (isEqual(type, MessageType.LEAVE)) {
           const recipientIds = conversations[ conversationIndex ].recipients;
           const newRecipients = _.filter(recipientIds, item => item !== data);
-          const updatedRecipients = { ...conversations[conversationIndex], recipients: newRecipients};
-          updatedConversations[conversationIndex] = updatedRecipients;
+          const updatedRecipients = { ...conversations[ conversationIndex ], recipients: newRecipients };
+          updatedConversations[ conversationIndex ] = updatedRecipients;
         }
 
         dispatch.message.setConversations(updatedConversations);
@@ -198,7 +197,7 @@ export const messageStore: any = {
 
           const recipients = selectedConversation?.recipients;
           const newRecipients = _.filter(recipients, item => item !== data);
-          updatedSelectedConversation = {...updatedSelectedConversation, recipients: newRecipients};
+          updatedSelectedConversation = { ...updatedSelectedConversation, recipients: newRecipients };
         }
 
         dispatch.message.setSelectedConversation(updatedSelectedConversation);
@@ -223,10 +222,10 @@ export const messageStore: any = {
         //add user to conversation list
         const conversations = rootStore.getState().message.conversations;
         const conversationIndex = _.findIndex(conversations, { _id: conversationId });
-        const updatedConversations = [ ...conversations ];   
-        
+        const updatedConversations = [ ...conversations ];
+
         if (conversationIndex >= INT_ZERO) {
-          const updatedConversation = { ...conversations[ conversationIndex ], recipients: updatedRecipients}
+          const updatedConversation = { ...conversations[ conversationIndex ], recipients: updatedRecipients }
           updatedConversations[ conversationIndex ] = updatedConversation;
 
           dispatch.message.setConversations(updatedConversations);
@@ -287,15 +286,29 @@ export const messageStore: any = {
       }
     },
 
-    doPushNotificationMessage(messagePayload:IMessageDetail){
-      if(isEmpty(messagePayload)) return;
+    doPushNotificationMessage(messagePayload: IMessageDetail) {
+      if (isEmpty(messagePayload)) return;
       const profileRecipients = rootStore.getState().message.profileRecipients;
       notification.open({
         message: `New message from ${messagePayload.conversationId}`,
-        description:messagePayload.message.data,
+        description: messagePayload.message.data,
         icon: MessageOutlined,
       });
-    }
+    },
+
+    doReadMessage(conversationId: string) {
+      const conversations = rootStore.getState().message.conversations;
+      const userId = rootStore.getState().user.id;
+      const conversationIndex = _.findIndex(conversations, { _id: conversationId });
+      const updatedConversations = [ ...conversations ];
+      if (conversationIndex >= INT_ZERO) {
+        const selectedConversation = conversations[ conversationIndex ];
+        const updatedConversation = { ...selectedConversation, seen: [ ...selectedConversation.seen, userId ] };
+        updatedConversations[ conversationIndex ] = updatedConversation;
+
+        dispatch.message.setConversations(updatedConversations);
+      }
+    },
 
   })
 }

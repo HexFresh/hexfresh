@@ -172,3 +172,9 @@
 .clickable {
   cursor: pointer;
 }
+
+.message-detail{
+  .ant-card-body{
+    padding: 0px;
+  }
+}

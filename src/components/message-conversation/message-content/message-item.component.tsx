@@ -10,23 +10,31 @@ import { IRootStore } from "../../../store/store";
 import { IUser } from "../../../store/user/user-interface";
 import { getFullName } from "../../../store/user/user.service";
 
-export const NotificationMessage = memo(({ message }: { message: IMessage}) => {
-  const [profile, setProfile] = useState<IUser>();
-  const profileRecipients = useSelector((state:IRootStore)=>(state.message.profileRecipients));
+export const NotificationMessage = memo(({ message }: { message: IMessage }) => {
+  const [ profile, setProfile ] = useState<IUser>();
+  const profileRecipients = useSelector((state: IRootStore) => (state.message.profileRecipients));
 
-  useEffect(()=>{
+  useEffect(() => {
     const user = find(profileRecipients, [ 'userId', message?.data ]);
-    !isEmpty(user)&& setProfile(user);
-  },[message.data,profileRecipients])
+    !isEmpty(user) && setProfile(user);
+  }, [ message.data, profileRecipients ])
 
-  const renderMessageContent = useMemo(()=>{
-      if(message?.type===MessageType.ADD_RECIPIENT){
+  const renderMessageContent = useMemo(() => {
+    switch (message?.type) {
+      case MessageType.ADD_RECIPIENT:
         const actionBy = find(profileRecipients, [ 'userId', message?.from ]);
-        return `${getFullName(profile)} was added by ${getFullName(actionBy)}.`
-      }else{
-        return `${getFullName(profile)} was just leave to this conversation.`
-      }
-  },[message?.from, message?.type, profile, profileRecipients])
+        return `${getFullName(profile)} was added by ${getFullName(actionBy)}.`;
+      case MessageType.LEAVE:
+        return `${getFullName(profile)} was just leave to this conversation.`;
+      case MessageType.CREATE:
+        return `${getFullName(profile)} created this conversation.`;
+      case MessageType.RENAME:
+        return `${getFullName(profile)} has rename this conversation.`;
+      default:
+        break;
+    }
+
+  }, [ message?.from, message?.type, profile, profileRecipients ])
 
   return <div className="message-others">
     <div className="other">
@@ -47,16 +55,16 @@ export const ResponseMessage = memo(({ message }: { message: IMessage }) => {
   </div>
 });
 
-ResponseMessage.displayName='ResponseMessage';
+ResponseMessage.displayName = 'ResponseMessage';
 
 export const RecieiveMessage = memo(({ message, avatar }: { message: IMessage, avatar: string }) => {
   return <div className="message">
-  {!isEmpty(avatar) ? <div className="photo" style={{ backgroundImage: `url(${avatar})` }}>
-    <div className="online"></div>
-  </div> : <Avatar size='large' >U</Avatar>}
-  <p className="text">{message?.data}</p>
-  <p className="time"> {`${moment(new Date(message?.createdAt)).fromNow()}`}</p>
-</div>
+    {!isEmpty(avatar) ? <div className="photo" style={{ backgroundImage: `url(${avatar})` }}>
+      <div className="online"></div>
+    </div> : <Avatar size='large' >U</Avatar>}
+    <p className="text">{message?.data}</p>
+    <p className="time"> {`${moment(new Date(message?.createdAt)).fromNow()}`}</p>
+  </div>
 });
 
-RecieiveMessage.displayName='RecieiveMessage'
+RecieiveMessage.displayName = 'RecieiveMessage'

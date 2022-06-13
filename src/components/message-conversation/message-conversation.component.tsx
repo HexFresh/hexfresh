@@ -129,7 +129,7 @@ export const MessageDetail = memo(({
   return isLoading ?
     <Skeleton avatar title={false} loading={isLoading} active /> :
     <>
-      <section className="chat">
+      <section className="chat pv-medium">
         <div className="header-chat">
           <Avatar size='large' >Y</Avatar>
           {!isEditTitle ?

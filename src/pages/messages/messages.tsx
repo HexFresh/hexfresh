@@ -82,9 +82,9 @@ const Messages: FC<MessageProps> = ({
       </div>
     ) : null;
 
-  const onClickItem = async (item: IConversation) => {
+  const onClickItem = useCallback(async (item: IConversation) => {
     await doFetchConversation({ conversationId: item?._id, skip: 0, limit: 0 });
-  };
+  }, [ doFetchConversation ]);
 
   const handleAddChat = useCallback(() =>
     setActiveModal(true)
@@ -139,8 +139,8 @@ const Messages: FC<MessageProps> = ({
                 list={list}
                 loadMore={loadMore} />
             </Sider>
-            <Content style={{ padding: '0 24px', minHeight: 280 }}>
-              <Card style={{ height: '100%' }} className='task--item'>
+            <Content style={{ padding: '0 24px', minHeight: 280, overflowY: 'scroll' }}>
+              <Card className='message-detail'>
                 <MessageDetail
                   doRecieveMessage={doRecieveMessage}
                   profileRecipients={profileRecipients}
