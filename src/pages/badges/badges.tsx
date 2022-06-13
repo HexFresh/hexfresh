@@ -1,35 +1,38 @@
-import { Breadcrumb, Spin } from "antd";
+import { CircularProgress, Grid } from "@mui/material";
+import { Breadcrumb, Button, Pagination, Spin, Tooltip } from "antd";
 import { Content } from "antd/lib/layout/layout";
 import { isEmpty } from "lodash";
-import { FC, memo, useEffect } from "react";
+import { FC, Key, memo, ReactChild, ReactFragment, ReactPortal, useEffect, useState } from "react";
 import { connect } from 'react-redux'
+import { useNavigate } from "react-router-dom";
 
 import { BadgeList } from '../../components/badges/badge-list/badge-list.component';
 import HeaderInternal from "../../components/layouts/Header/HeaderInternal";
 import { EmptyResult } from "../../components/results";
+import { USER_PROFILE_TABS } from "../../constant";
 import { IRootDispatch, IRootStore } from "../../store/store";
 
 const Badges: FC<BadgesProps> = memo(({
   /* actions */
   doFetchBadges,
+  setSelectedUserTab,
 
   /* selectors */
   badges,
   isFetchingBadges,
 }) => {
+  const navigate = useNavigate();
+  const [ page, setPage ] = useState<number>(1);
+  const [ count, setCount ] = useState<number>(1);
 
   useEffect(() => {
-    doFetchBadges();
+    setSelectedUserTab(USER_PROFILE_TABS.BADGES);
+    navigate('/user/profile');
   }, [])
 
-  useEffect(()=>{
-    console.log("🚀 ~ file: badges.tsx ~ line 27 ~ useEffect ~ isEmpty(badges)", isEmpty(badges))
-    console.log("🚀 ~ file: badges.tsx ~ line 28 ~ badges", badges)
-  },[badges])
-
   if (isFetchingBadges) {
+    
     return <Spin size="large" />
-
   }
   return <>
     <HeaderInternal textColorClassName='txt-color-black' />
@@ -39,7 +42,8 @@ const Badges: FC<BadgesProps> = memo(({
         <Breadcrumb.Item href='/'>Home</Breadcrumb.Item>
         <Breadcrumb.Item>Badges</Breadcrumb.Item>
       </Breadcrumb>
-      {isEmpty(badges) && !isFetchingBadges ? <EmptyResult message="Your badges will displayed here." /> : <BadgeList badges={badges} />}
+      {isEmpty(badges) && !isFetchingBadges ? <EmptyResult message="Your badges will displayed here." /> :
+        <BadgeList badges={badges} count={count} page={page}/>}
     </Content>
   </>
 })
@@ -51,6 +55,7 @@ const mapStateToProps = (state: IRootStore) => ({
 
 const mapDispatchToProps = (dispatch: IRootDispatch) => ({
   doFetchBadges: dispatch.badge.doFetchBadges,
+  setSelectedUserTab: dispatch.app.setSelectedUserTab,
 });
 
 type BadgesStatesProps = ReturnType<typeof mapStateToProps>;
