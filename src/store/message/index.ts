@@ -303,7 +303,8 @@ export const messageStore: any = {
       const updatedConversations = [ ...conversations ];
       if (conversationIndex >= INT_ZERO) {
         const selectedConversation = conversations[ conversationIndex ];
-        const updatedConversation = { ...selectedConversation, seen: [ ...selectedConversation.seen, userId ] };
+        const updatedLastestMessage = { ...selectedConversation.lastestMessage, seen: [ ...selectedConversation?.lastestMessage?.seen, userId ] }
+        const updatedConversation = { ...selectedConversation, lastestMessage: updatedLastestMessage };
         updatedConversations[ conversationIndex ] = updatedConversation;
 
         dispatch.message.setConversations(updatedConversations);

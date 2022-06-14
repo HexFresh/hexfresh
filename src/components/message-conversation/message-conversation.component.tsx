@@ -13,7 +13,6 @@ import { EmptyResult } from "../results";
 import { IUser } from "../../store/user/user-interface";
 import { useSelector } from "react-redux";
 import { IRootStore } from "../../store/store";
-import { ChatType } from "../../utilities/enum-utils";
 import { MessageMembersModal } from "../message/message-member-modal/message-member-modal";
 import { getRecipients } from "../message/message-member-modal/message-member-modal.service";
 
