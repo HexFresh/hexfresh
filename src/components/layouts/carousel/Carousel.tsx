@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import { Link, NavigateFunction, useNavigate } from "react-router-dom";
 import { programStore } from "../../../store/planet/program-store";
 import { RematchDispatch, RematchDispatcher } from "@rematch/core";
-import { message, notification, Progress, Spin } from "antd";
+import { message, notification, Progress, Spin, Typography } from "antd";
 import _ from "lodash";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
@@ -93,13 +93,13 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
   }
 
   componentDidMount(): void {
-    const { doFetchProgram, doFetchImageList } = this.props;
+    const { doFetchProgram, doFetchImageList, program, imageList } = this.props;
 
     try {
       this.setState({ isLoading: true });
-      doFetchProgram();
+      _.isEmpty(program) && doFetchProgram();
 
-      doFetchImageList();
+      _.isEmpty(imageList) && doFetchImageList();
 
     } catch (error) {
       notification.error({ message: 'Failed to fetch list of phases.' });
@@ -109,8 +109,9 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
   }
 
   componentDidUpdate(prevProps: ICarouselProps, prevState: ICarouselStates) {
+    const { isFetchingImageList, isFetchingPhase } = this.props;
     if (!_.isEqual(prevProps, this.props)) {
-      this.setState({ items: this.props.program.userPhases, isLoading: this.props.isFetchingPhase });
+      this.setState({ items: this.props.program.userPhases, isLoading: isFetchingImageList || isFetchingPhase });
     }
   }
 
@@ -119,7 +120,10 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
     const { isLoading } = this.state;
 
     if (_.isEmpty(program) || _.isEmpty(imageList) || isLoading) {
-      return <Spin className="spin" size="large" />
+      return <div className="loading" >
+        <img src="/gifrocket-rocket.gif" alt="loading rocket" />
+        <Typography.Text className="text">Please wait a second...</Typography.Text>
+      </div>
     }
     return (
       <div id="carousel" className="noselect">
@@ -142,6 +146,7 @@ const mapStateToProps = (state: IRootStore) => ({
   program: state.programStore.program,
   imageList: state.programStore.imageList,
   isFetchingPhase: state.programStore.isFetchingPhase,
+  isFetchingImageList: state.programStore.isFetchingImageList,
 });
 
 const mapDispatchToPprops = (dispatch: IRootDispatch) => ({

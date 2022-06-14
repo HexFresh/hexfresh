@@ -164,25 +164,9 @@ export const messageStore: any = {
       const conversations = rootStore.getState().message.conversations;
       const selectedConversation = rootStore.getState().message.selectedConversation;
 
-      //update latedt message in conversations
-      const conversationIndex = _.findIndex(conversations, { _id: conversationId });
-      const updatedConversations = [ ...conversations ];
-      if (conversationIndex >= INT_ZERO) {
-        const updatedLastestMessage = { ...conversations[ conversationIndex ], lastestMessage: message }
-        updatedConversations[ conversationIndex ] = updatedLastestMessage;
-
-        const { data, type } = message;
-        if (isEqual(type, MessageType.LEAVE)) {
-          const recipientIds = conversations[ conversationIndex ].recipients;
-          const newRecipients = _.filter(recipientIds, item => item !== data);
-          const updatedRecipients = { ...conversations[ conversationIndex ], recipients: newRecipients };
-          updatedConversations[ conversationIndex ] = updatedRecipients;
-        }
-
-        dispatch.message.setConversations(updatedConversations);
-      }
+      const isSelectedConversation = _.isEqual(conversationId, selectedConversation?._id);
       //update message for selected Conversation.
-      if (_.isEqual(conversationId, selectedConversation?._id)) {
+      if (isSelectedConversation) {
         const messages = selectedConversation?.messages;
         const { data, type } = message;
 
@@ -201,6 +185,26 @@ export const messageStore: any = {
         }
 
         dispatch.message.setSelectedConversation(updatedSelectedConversation);
+      }
+
+      //update latedt message in conversations
+      const conversationIndex = _.findIndex(conversations, { _id: conversationId });
+      const updatedConversations = [ ...conversations ];
+      if (conversationIndex >= INT_ZERO) {
+        const updatedLastestMessage = isSelectedConversation ?
+          { ...conversations[ conversationIndex ], lastestMessage: { message } } :
+          { ...conversations[ conversationIndex ], lastestMessage: { message, seen: [ message.from ] } };
+        updatedConversations[ conversationIndex ] = updatedLastestMessage;
+
+        const { data, type } = message;
+        if (isEqual(type, MessageType.LEAVE)) {
+          const recipientIds = conversations[ conversationIndex ].recipients;
+          const newRecipients = _.filter(recipientIds, item => item !== data);
+          const updatedRecipients = { ...conversations[ conversationIndex ], recipients: newRecipients };
+          updatedConversations[ conversationIndex ] = updatedRecipients;
+        }
+
+        dispatch.message.setConversations(updatedConversations);
       }
     },
 

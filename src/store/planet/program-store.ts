@@ -33,6 +33,7 @@ export const programStore: any = createModel<IRootStore>()({
     isFetchingChecklist: false,
     isFetchingAnswer: false,
     isSubmitingAnswer: false,
+    isFetchingImageList: false,
 
   } as unknown as IProgramStore,
   reducers: {
@@ -47,6 +48,7 @@ export const programStore: any = createModel<IRootStore>()({
     setIsFetchingChecklist: (state, payload) => ({ ...state, isFetchingChecklist: payload }),
     setIsFetchingAnswer: (state, payload) => ({ ...state, isFetchingAnswer: payload }),
     setIsSubmitingAnswer: (state, payload) => ({ ...state, isSubmitingAnswer: payload }),
+    setIsFetchingImageList: (state, payload) => ({ ...state, isFetchingImageList: payload }),
   },
   effects: (dispatch: IRootDispatch) => ({
 
@@ -69,11 +71,14 @@ export const programStore: any = createModel<IRootStore>()({
 
     async doFetchImageList() {
       const endpoint = `image`;
-
+      dispatch.programStore.setIsFetchingImageList(true);
       try {
         const response = await axiosClient.get(endpoint);
         dispatch.programStore.setListImages(response.data);
+        dispatch.programStore.setIsFetchingImageList(false);
       } catch (error) {
+        dispatch.programStore.setIsFetchingImageList(false);
+
         throw new Error('Failed to fetch list images.');
       }
     },
