@@ -1,6 +1,7 @@
 import { Avatar, Button, List, Modal, Select, Typography } from "antd";
 import { isEmpty, map } from "lodash";
-import { memo, useCallback, useMemo, useState } from "react";
+import { userInfo } from "os";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { IRootStore } from "../../../store/store";
 import { IQuickUser, IUser } from "../../../store/user/user-interface";
@@ -21,10 +22,11 @@ export const MessageMembersModal = memo((
     isOpen: boolean,
     isAddMember: boolean
   }) => {
+  const userList = useSelector((state: IRootStore) => state.user.users) as IQuickUser[];
   const [ recipientIds, setRecipientIds ] = useState<string[]>([]);
 
   const handleSubmitForm = useCallback(() => {
-    isAddMember&&!isEmpty(recipientIds) ? onSubmit(recipientIds) : onCancel();
+    isAddMember && !isEmpty(recipientIds) ? onSubmit(recipientIds) : onCancel();
   }, [ isAddMember, onCancel, onSubmit, recipientIds ]);
 
   function handleChange(value: any) {
@@ -46,6 +48,10 @@ export const MessageMembersModal = memo((
     </Button>
   ]), [ onCancel ])
 
+  useEffect(() => {
+    console.log(userList);
+  }, [ userList ])
+
   return <Modal
     title={isAddMember ? 'Add New Member' : 'View Members'}
     visible={isOpen}
@@ -58,7 +64,10 @@ export const MessageMembersModal = memo((
       dataSource={users}
       renderItem={(item) => (
         <List.Item key={item.userId}>
-          <Typography.Text mark></Typography.Text> {(item.lastName && item.firstName) ? `${item.lastName} ${item.firstName}` : item.username}
+          {isEmpty(item?.avatar) ? <Avatar>{item?.username[ 0 ]}</Avatar> : <Avatar src={item?.avatar} />}
+          <Typography.Text mark></Typography.Text> {
+            (item.lastName && item.firstName) ? `${item.lastName} ${item.firstName}` : item.username
+          }
         </List.Item>
       )}
     />
@@ -71,14 +80,20 @@ export const MessageMembersModal = memo((
       optionLabelProp="label"
       className="mt-large-x2"
     >
-      {!isEmpty(users) && map(users, userInfo => (<Select.Option value={userInfo.id} label={userInfo.username}>
-        <div className="demo-option-label-item">
-          <span role="img" aria-label="China" className="mv-small">
-            <Avatar>{userInfo.username[ 0 ]}</Avatar>
-          </span>
-          {userInfo.username}
-        </div>
-      </Select.Option>))}
+      {!isEmpty(userList) && map(userList, ({ user_information: userInfo, id, username }) => {
+        const displayName = (userInfo.lastName && userInfo.firstName) ? `${userInfo.lastName} ${userInfo.firstName}` : username;
+        const avatar = isEmpty(userInfo.avatar) && username[ 0 ];
+
+        return (<Select.Option value={id} label={displayName}>
+          <div className="demo-option-label-item">
+            <span role="img" aria-label="China" className="mv-small">
+              <Avatar src={userInfo?.avatar}>{avatar}</Avatar>
+            </span>
+            {displayName}
+          </div>
+        </Select.Option>)
+      })
+      }
 
     </Select>}
   </Modal>
