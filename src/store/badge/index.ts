@@ -11,7 +11,7 @@ export const badgeStore: any = {
     setIsFetchingBadges: (state:IRootStore, payload:any)=>({...state, isFetchingBadges: payload}),
   },
   effects:(dispatch: IRootDispatch)=>({
-       async doFetchBadges(){
+       async doFetchBadges(keyword?: string, limit?: number,offset?: number ){
          const endpoint = 'badge/user';
          dispatch.badge.setIsFetchingBadges(true);
          try {

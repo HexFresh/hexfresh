@@ -1,5 +1,5 @@
 import { List, Skeleton, Typography } from "antd";
-import _, { includes } from "lodash";
+import _, { includes, isEmpty } from "lodash";
 import moment from "moment";
 import { memo } from "react";
 import { useSelector } from "react-redux";
@@ -28,7 +28,7 @@ export const MessagesList = memo(({
   className?: string | undefined;
 }) => {
 
-  const userId = useSelector((state:IRootStore)=> state.user.id);
+  const userId = useSelector((state: IRootStore) => state.user.id);
 
   return isLoading ?
     <Skeleton avatar title={false} loading={isLoading} active /> :
@@ -38,20 +38,20 @@ export const MessagesList = memo(({
       itemLayout="horizontal"
       loadMore={loadMore}
       dataSource={conversations}
-      style={{ height: '100%', overflowY: 'auto', overflowX: 'hidden' }}
+      style={{/*  height: '100%', */ overflowY: 'auto', overflowX: 'hidden' }}
       renderItem={item => {
-        const isUnreadMessage = includes(item.lastestMessage?.seen, userId);
+        const isUnreadMessage = !isEmpty(item.lastestMessage?.seen) && !includes(item.lastestMessage?.seen, userId);
         const isChatMessage = item.lastestMessage.type === MessageType.CHAT;
-        const content = isChatMessage?item?.lastestMessage?.data: getLastChatMessage(item.messages);
+        const content = isChatMessage ? item?.lastestMessage?.data : getLastChatMessage(item.messages);
         return (
-        <List.Item onClick={onClickItem.bind(null, item)} className={`messages--item pv-medium ${isUnreadMessage?'unread':''}`}>
-          <List.Item.Meta
-            title={<p >{item.title}</p>}
-            description={<Typography.Text ellipsis={true} >{content}</Typography.Text>}
-          />
-          <div className="time">{`${moment(new Date(item.lastestMessage.createdAt)).fromNow()}`}</div>
-          {/* </Skeleton> */}
-        </List.Item>)
+          <List.Item onClick={onClickItem.bind(null, item)} className={`messages--item pv-medium ${isUnreadMessage ? 'unread' : ''}`}>
+            <List.Item.Meta
+              title={<p >{item.title}</p>}
+              description={<Typography.Text ellipsis={true} >{content}</Typography.Text>}
+            />
+            <div className="time">{`${moment(new Date(item.lastestMessage.createdAt)).fromNow()}`}</div>
+            {/* </Skeleton> */}
+          </List.Item>)
       }}
     /> : <Skeleton avatar title={false} loading={isLoading} active />)
 });

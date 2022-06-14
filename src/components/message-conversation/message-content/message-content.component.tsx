@@ -41,12 +41,8 @@ export const MessageContent = React.memo(({
     switch (message?.type) {
       case MessageType.CHAT:
         return isResponseMessage ? <ResponseMessage message={message} /> : <RecieiveMessage message={message} avatar={avatar} />
-      case MessageType.ADD_RECIPIENT:
-        return <NotificationMessage message={message}/>;
-      case MessageType.LEAVE:
-        return <NotificationMessage message={message}/>;
       default:
-        break;
+        return <NotificationMessage message={message}/>;
     }
   }, [ avatar, isResponseMessage, message ])
 

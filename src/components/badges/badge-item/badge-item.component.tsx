@@ -1,32 +1,26 @@
-import { EditOutlined, EllipsisOutlined, SettingOutlined } from "@ant-design/icons";
-import { Avatar, Card, Typography } from "antd";
-import Meta from "antd/lib/card/Meta";
 import { memo } from "react";
+import { Tooltip } from "antd";
+
 import { IBadge } from "../../../store/badge/badge-interface";
 
 export const BadgeItem = memo(({badge}:{badge: IBadge})=>{
-  return <Card
-  style={{
-    width: 300,
-  }}
-  cover={
+  return  <div className="program">
+  <div className="cover-photo">
     <img
-      alt="badge"
-      src={badge?.image}
+      src={badge.image}
+      alt="img"
     />
-  }
-  // actions={[
-  //   <SettingOutlined key="setting" />,
-  //   <EditOutlined key="edit" />,
-  //   <EllipsisOutlined key="ellipsis" />,
-  // ]}
->
-  <Meta
-    // avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-    title={badge?.title}
-    description={<Typography.Text ellipsis={true} >{badge?.description}</Typography.Text>}
-  />
-</Card>;
+    <Tooltip className={"remove-btn"} title="remove" />
+  </div>
+  <div className="program-name">
+    <div className="program-title">
+      {badge.title}
+    </div>
+    <div className="program-description">
+      {badge.description}
+    </div>
+  </div>
+</div>
 });
 
 BadgeItem.displayName='BadgeItem';

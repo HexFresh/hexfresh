@@ -172,3 +172,11 @@
 .clickable {
   cursor: pointer;
 }
+
+.message-detail{
+  height: 100%;
+  .ant-card-body{
+    padding: 0px;
+    background: white;
+  }
+}

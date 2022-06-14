@@ -89,7 +89,7 @@ body {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    transition: box-shadow 0s,  height 250ms, width 250ms, left .5s, margin-top 1s, line-height 250ms, background-color 1s, background-size .5s ease-in 0.3s, opacity 0s;
+    transition: box-shadow 0s,  width 250ms, left .5s, margin-top 1s, line-height 250ms, background-color 1s, background-size .5s ease-in 0.3s, opacity 0s;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -210,7 +210,7 @@ body {
         height: $level2-height;
         width: $level2-width;
         line-height: $level2-height;
-        transition: box-shadow 1s,  left 1s, opacity 1s, height 250ms, width 250ms, margin-top 1s, line-height 1s;
+        transition: box-shadow 1s,  left 1s, opacity 1s,  width 250ms, margin-top 1s, line-height 1s;
     }
 }
 
@@ -229,7 +229,7 @@ body {
         height: $level2-height - $default-height;
         width: $level2-width - $default-width;
         line-height: 120px;
-        transition: box-shadow 1s,  left 1s, opacity 1s, height 250ms, width 250ms, margin-top 1s, line-height 1s;
+        transition: box-shadow 1s,  left 1s, opacity 1s,  width 250ms, margin-top 1s, line-height 1s;
     }
 }
 
@@ -246,7 +246,7 @@ body {
         height: $level2-height;
         line-height: $level2-height;
         width: $level2-width;
-        transition: box-shadow 1s,  left 1s, opacity 1s, height 250ms, width 250ms, margin-top 1s, line-height 1s;
+        transition: box-shadow 1s,  left 1s, opacity 1s,  width 250ms, margin-top 1s, line-height 1s;
     }
 }
 
@@ -263,7 +263,7 @@ body {
         height: $level2-height - $default-height;
         width: $level2-width - $default-width;
         line-height: $level2-height - 30;
-        transition: box-shadow 1s,  left 1s, opacity 1s, height 250ms, width 250ms, margin-top 1s, line-height 1s;
+        transition: box-shadow 1s,  left 1s, opacity 1s, width 250ms, margin-top 1s, line-height 1s;
     }
 }
 

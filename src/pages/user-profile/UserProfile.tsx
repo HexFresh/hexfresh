@@ -1,7 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState, useRef} from 'react';
 import {isEmpty} from 'lodash';
-import './user-profile.css';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import moment from 'moment';
+import {Button, message, Input, DatePicker, Select, Modal, Tabs} from 'antd';
+import {CircularProgress} from '@mui/material';
+import {AndroidOutlined, AppleOutlined, EditOutlined} from '@ant-design/icons';
+
+import {IUserProfile, IUserAccount, IDegree, IDistrict, IJobPosition, IProvince, IWard} from './interface';
+import HeaderInternal from '../../components/layouts/Header/HeaderInternal';
+import { BadgeList } from '../../components/badges/badge-list/badge-list.component';
+import { EmptyResult } from '../../components/results';
+import { INT_ONE, INT_TWO, USER_PROFILE_TABS } from '../../constant';
+
 import {
   createCurrentNewEmptyUserProfile,
   getCurrentUserAccount,
@@ -10,18 +22,10 @@ import {
   getAllDegree,
   getAllJobPosition,
 } from '../../api/userProfile';
-import {CircularProgress} from '@mui/material';
-import {Button, message, Input, DatePicker, Select, Modal, Tabs} from 'antd';
-import {AndroidOutlined, AppleOutlined, EditOutlined} from '@ant-design/icons';
-import axios from 'axios';
-import moment from 'moment';
-import {IUserProfile, IUserAccount, IDegree, IDistrict, IJobPosition, IProvince, IWard} from './interface';
-import HeaderInternal from '../../components/layouts/Header/HeaderInternal';
-import {verifyResetPasswordRequest} from "../../api/verificationApi";
-import {useDispatch, useSelector} from 'react-redux';
-import {IRootDispatch, IRootStore} from '../../store/store';
-import {BadgeList} from '../../components/badges/badge-list/badge-list.component';
-import {EmptyResult} from '../../components/results';
+import { verifyResetPasswordRequest } from "../../api/verificationApi";
+import { IRootDispatch, IRootStore } from '../../store/store';
+
+import './user-profile.css';
 
 const dateFormat = 'YYYY-MM-DD';
 const BASE_ADDRESS_API_URL = 'https://provinces.open-api.vn/api';
@@ -52,6 +56,8 @@ export default function UserProfile() {
 
   const dispatch = useDispatch<IRootDispatch>();
   const badge = useSelector((state: IRootStore) => (state.badge));
+  const selectedTab = useSelector((state: IRootStore) => (state.app.selectedUserTab));
+  const [ tab, setTab ] = useState<USER_PROFILE_TABS>(selectedTab);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -110,7 +116,6 @@ export default function UserProfile() {
       await fetchUserProfile();
     } else {
       setUserProfile(result);
-      console.log(result)
       setDisplayFirstName(result.firstName || '');
       setDisplayLastName(result.lastName || '');
       setSelectedProvince(result?.address?.province || null);
@@ -213,6 +218,11 @@ export default function UserProfile() {
     dispatch.badge.doFetchBadges();
   }, []);
 
+  useEffect(() => {
+    setTab(selectedTab);
+    console.log("🚀 ~ file: UserProfile.tsx ~ line 221 ~ useEffect ~ selectedTab", selectedTab)
+  }, [ selectedTab ])
+
   return (
     <div className="user-profile-main">
       <HeaderInternal textColorClassName='txt-color-black'/>
@@ -268,7 +278,7 @@ export default function UserProfile() {
               </div>
 
               <div className="card-body">
-                <Tabs defaultActiveKey="1">
+                <Tabs defaultActiveKey={tab}>
                   <Tabs.TabPane
                     tab={
                       <span>
@@ -276,7 +286,8 @@ export default function UserProfile() {
                         Persional Information
                       </span>
                     }
-                    key="1"
+                    tabKey={USER_PROFILE_TABS.INFORMATIONS}
+                    key={USER_PROFILE_TABS.INFORMATIONS}
                   >
                     <div className="card-body__container">
                       <div className="personal-info">
@@ -517,11 +528,14 @@ export default function UserProfile() {
                         Badges
                       </span>
                     }
-                    key="2"
+                    tabKey={USER_PROFILE_TABS.BADGES}
+                    key={USER_PROFILE_TABS.BADGES}
                   >
                     <div className="card-body__container">
-                      {isEmpty(badge?.badges) && !badge?.isFetchingBadges ?
-                        <EmptyResult message="Your badges will displayed here."/> : <BadgeList badges={badge?.badges}/>}
+                      {isEmpty(badge?.badges) &&
+                        !badge?.isFetchingBadges ?
+                        <EmptyResult message="Your badges will displayed here." /> :
+                        <BadgeList badges={badge?.badges} count={1} page={1} />}
                     </div>
                   </Tabs.TabPane>
                 </Tabs>

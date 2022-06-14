@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 export default class FooterFresher extends Component {
   render() {
     return (
-      <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+      <Footer style={{ textAlign: 'center' }}>Hexfresh ©2022</Footer>
     )
   }
 }

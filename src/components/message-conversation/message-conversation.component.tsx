@@ -13,8 +13,8 @@ import { EmptyResult } from "../results";
 import { IUser } from "../../store/user/user-interface";
 import { useSelector } from "react-redux";
 import { IRootStore } from "../../store/store";
-import { ChatType } from "../../utilities/enum-utils";
 import { MessageMembersModal } from "../message/message-member-modal/message-member-modal";
+import { getRecipients } from "../message/message-member-modal/message-member-modal.service";
 
 export const MessageDetail = memo(({
   isLoading,
@@ -124,10 +124,11 @@ export const MessageDetail = memo(({
 
   if (_.isEmpty(conversation)) { return <EmptyResult message="Your conversation will display here." /> }
 
+  const memberUserProfiles = getRecipients(conversation.recipients, profileRecipients);
   return isLoading ?
     <Skeleton avatar title={false} loading={isLoading} active /> :
     <>
-      <section className="chat">
+      <section className="chat pv-medium">
         <div className="header-chat">
           <Avatar size='large' >Y</Avatar>
           {!isEditTitle ?
@@ -177,7 +178,7 @@ export const MessageDetail = memo(({
         </div>
       </section>
       <MessageMembersModal
-        users={profileRecipients}
+        users={memberUserProfiles}
         onCancel={() => { setOpenMembersModal(false) }}
         isOpen={isOpenMembersModal}
         onSubmit={handleAddMember}

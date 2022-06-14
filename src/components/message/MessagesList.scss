@@ -2,15 +2,17 @@
   min-height: 350px;
 }
 
-.messages--item{
+.messages--item {
   cursor: pointer;
   .time,
-  .ant-list-item-meta-description
-  {
+  .ant-list-item-meta-description {
     font-size: 12px;
   }
 }
 
-.unread{
+.unread {
   font-weight: 700;
+  .ant-typography {
+    color: deepskyblue;
+  }
 }
