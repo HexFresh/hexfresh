@@ -1,7 +1,7 @@
 import { MessageOutlined } from "@ant-design/icons";
 import { style } from "@mui/system";
 import { notification } from "antd";
-import _, { find, isEmpty, isEqual, NumericDictionaryIteratee, values } from "lodash";
+import _, { find, isEmpty, isEqual, uniqueId} from "lodash";
 import axiosClient from "../../api/axiosClient";
 import axiosMessage from "../../api/axiosMessage";
 import { INT_ZERO } from "../../constant";
@@ -22,6 +22,7 @@ export const messageStore: any = {
     isFetchingRecipients: false,
     isAddingMember: false,
     isLeavingConversation: false,
+    forceScrollDown: '',
   },
   reducers: {
     setIsFetchingConversation: (state: IRootStore, payload: any) => ({ ...state, isFetchingConversation: payload }),
@@ -34,6 +35,7 @@ export const messageStore: any = {
     setIsFetchingRecipients: (state: IRootStore, payload: any) => ({ ...state, isFetchingRecipients: payload }),
     setIsAddingMember: (state: IRootStore, payload: any) => ({ ...state, isAddingMember: payload }),
     setIsLeavingConversation: (state: IRootStore, payload: any) => ({ ...state, isLeavingConversation: payload }),
+    setForceScrollDown: (state: IRootStore, payload: any) => ({...state, forceScrollDown: payload}),
   },
   effects: (dispatch: IRootDispatch) => ({
     async doCreateConversation({ recipients, title }: { recipients: string[], title: string }) {
@@ -192,8 +194,8 @@ export const messageStore: any = {
       const updatedConversations = [ ...conversations ];
       if (conversationIndex >= INT_ZERO) {
         const updatedLastestMessage = isSelectedConversation ?
-          { ...conversations[ conversationIndex ], lastestMessage: { message } } :
-          { ...conversations[ conversationIndex ], lastestMessage: { message, seen: [ message.from ] } };
+          { ...conversations[ conversationIndex ], lastestMessage: { ...message } } :
+          { ...conversations[ conversationIndex ], lastestMessage: { ...message, seen: [ message.from ] } };
         updatedConversations[ conversationIndex ] = updatedLastestMessage;
 
         const { data, type } = message;
@@ -206,6 +208,7 @@ export const messageStore: any = {
 
         dispatch.message.setConversations(updatedConversations);
       }
+      dispatch.message.setForceScrollDown(uniqueId('message_'));
     },
 
     async doAddMember({ recipientIds, conversationId }: { recipientIds: string[], conversationId: string }) {

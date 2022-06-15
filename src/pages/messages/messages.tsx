@@ -47,6 +47,7 @@ const Messages: FC<MessageProps> = ({
   isFetchingRecipients,
   isAddingMember,
   isLeavingConversation,
+  forceScrollDown,
 }) => {
   const [ state, setState ] = useState<typeof initialState>(initialState);
   const [ isActiveModal, setActiveModal ] = useState<boolean>(false);
@@ -154,6 +155,7 @@ const Messages: FC<MessageProps> = ({
                   doAddMember={doAddMember}
                   doLeaveConversation={doLeaveConversation}
                   doFetchRecipientsProfile={doFetchRecipientsProfile}
+                  forceScrollDown={forceScrollDown}
                 />
               </Card>
             </Content>
@@ -180,6 +182,7 @@ const mapStateToProps = (state: IRootStore) => ({
   isFetchingRecipients: state.message.isFetchingRecipients,
   isAddingMember: state.message.isAddingMember,
   isLeavingConversation: state.message.isLeavingConversation,
+  forceScrollDown: state.message.forceScrollDown,
 });
 
 const mapDispatchToProps = (dispatch: IRootDispatch) => ({

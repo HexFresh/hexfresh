@@ -67,8 +67,11 @@ export const MessagesList = memo(({
       renderItem={item => {
         const isUnreadMessage = !isEmpty(item.lastestMessage?.seen) && !includes(item.lastestMessage?.seen, userId);
         const isChatMessage = item.lastestMessage.type === MessageType.CHAT;
+        console.log("🚀 ~ file: MessagesList.tsx ~ line 70 ~ item.lastestMessage.type", item.lastestMessage.type)
         const content = isChatMessage ? item.lastestMessage.data : renderMessageContent(item.lastestMessage);
+        console.log("🚀 ~ file: MessagesList.tsx ~ line 71 ~ isChatMessage", isChatMessage)
         const time = isEmpty(item.lastestMessage?.createdAt) ? new Date() : new Date(item.lastestMessage?.createdAt);
+        console.log("🚀 ~ file: MessagesList.tsx ~ line 71 ~ content", content)
 
         return (
           <List.Item onClick={onClickItem.bind(null, item)} className={`messages--item pv-medium ${isUnreadMessage ? 'unread' : ''}`}>

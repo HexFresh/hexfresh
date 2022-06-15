@@ -25,7 +25,8 @@ export const MessageDetail = memo(({
   doRecieveMessage,
   doAddMember,
   doLeaveConversation,
-  doFetchRecipientsProfile
+  doFetchRecipientsProfile,
+  forceScrollDown
 }: {
   isLoading: boolean,
   isAddingMember: boolean,
@@ -35,7 +36,8 @@ export const MessageDetail = memo(({
   doRecieveMessage: any,
   doAddMember: any,
   doLeaveConversation: any,
-  doFetchRecipientsProfile: any
+  doFetchRecipientsProfile: any,
+  forceScrollDown: string,
 }) => {
   const [ messageString, setMessage ] = useState<string>('');
   const [ socket, setSocket ] = useState(io());
@@ -111,6 +113,14 @@ export const MessageDetail = memo(({
     })
   }, [ doRecieveMessage, socket ])
 
+  useEffect(()=>{
+    scrollToBottomPage();
+  },[])
+
+  const scrollToBottomPage = (mainElement = document.getElementById('messages-chat'))=>{
+    mainElement&& mainElement?.scroll({ top: 1});
+  }
+
   const confirmModal = () =>{
     Modal.confirm({
       title:'Do you want to leave this conversation',
@@ -162,7 +172,7 @@ export const MessageDetail = memo(({
             <Button type="text" icon={<MoreOutlined style={{ fontSize: 20 }} />} />
           </Dropdown>
         </div>
-        <div className="messages-chat">
+        <div className="messages-chat" id='messages-chat'>
           {_.reverse(_.map(conversation?.messages, 
             message => <MessageContent 
             profileRecipients={profileRecipients} 
