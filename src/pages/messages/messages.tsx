@@ -137,7 +137,10 @@ const Messages: FC<MessageProps> = ({
                 onClickItem={onClickItem}
                 initLoading={initLoading}
                 list={list}
-                loadMore={loadMore} />
+                loadMore={loadMore} 
+                doFetchRecipientsProfile={doFetchRecipientsProfile}
+                profileRecipients={profileRecipients}
+                />
             </Sider>
             <Content style={{ padding: '0 24px', minHeight: 280, overflowY: 'scroll' }}>
               <Card className='message-detail'>
