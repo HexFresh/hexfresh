@@ -15,7 +15,6 @@ import { useSelector } from "react-redux";
 import { IRootStore } from "../../store/store";
 import { MessageMembersModal } from "../message/message-member-modal/message-member-modal";
 import { getRecipients } from "../message/message-member-modal/message-member-modal.service";
-import { UserProfileModal } from "../user/user-profile-modal.component";
 
 export const MessageDetail = memo(({
   isLoading,
@@ -27,7 +26,8 @@ export const MessageDetail = memo(({
   doAddMember,
   doLeaveConversation,
   doFetchRecipientsProfile,
-  forceScrollDown
+  forceScrollDown,
+  onSelectUser,
 }: {
   isLoading: boolean,
   isAddingMember: boolean,
@@ -39,6 +39,7 @@ export const MessageDetail = memo(({
   doLeaveConversation: any,
   doFetchRecipientsProfile: any,
   forceScrollDown: string,
+  onSelectUser: any,
 }) => {
   const [ messageString, setMessage ] = useState<string>('');
   const [ socket, setSocket ] = useState(io());
@@ -195,6 +196,7 @@ export const MessageDetail = memo(({
         onSubmit={handleAddMember}
         isLoading={isAddingMember}
         isAddMember={isAddingModal}
+        onSelectUser={onSelectUser}
       />
     </>
 });

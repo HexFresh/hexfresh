@@ -6,7 +6,7 @@ import axios from 'axios';
 import moment from 'moment';
 import {Button, message, Input, DatePicker, Select, Modal, Tabs} from 'antd';
 import {CircularProgress} from '@mui/material';
-import {AndroidOutlined, AppleOutlined, EditOutlined} from '@ant-design/icons';
+import {EditOutlined, ProfileOutlined, StockOutlined} from '@ant-design/icons';
 
 import {IUserProfile, IUserAccount, IDegree, IDistrict, IJobPosition, IProvince, IWard} from './interface';
 import HeaderInternal from '../../components/layouts/Header/HeaderInternal';
@@ -284,7 +284,7 @@ export default function UserProfile() {
                   <Tabs.TabPane
                     tab={
                       <span>
-                        <AppleOutlined/>
+                        <ProfileOutlined />
                         Persional Information
                       </span>
                     }
@@ -526,7 +526,7 @@ export default function UserProfile() {
                   <Tabs.TabPane
                     tab={
                       <span>
-                        <AndroidOutlined/>
+                        <StockOutlined />
                         Badges
                       </span>
                     }
