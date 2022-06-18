@@ -25,8 +25,6 @@ export type Message = {
 const initialState = {
   initLoading: true,
   loading: false,
-  data: [],
-  list: [],
 };
 
 const Messages: FC<MessageProps> = ({
@@ -68,7 +66,7 @@ const Messages: FC<MessageProps> = ({
 
   };
 
-  const {initLoading, data, list, loading} = state;
+  const { initLoading, loading } = state;
   const loadMore =
     !initLoading && !loading ? (
       <div
@@ -109,6 +107,10 @@ const Messages: FC<MessageProps> = ({
     !_.isEmpty(selectedConversation?.recipients) && doFetchRecipientsProfile({recipients: selectedConversation?.recipients})
   }, [doFetchRecipientsProfile, selectedConversation])
 
+  useEffect(()=>{
+    console.log(profileRecipients);
+  },[profileRecipients])
+
   return (
     <>
       <Layout className="full-height">
@@ -141,8 +143,7 @@ const Messages: FC<MessageProps> = ({
                 conversations={conversations}
                 onClickItem={onClickItem}
                 initLoading={initLoading}
-                list={list}
-                loadMore={loadMore}
+                loadMore={loadMore} 
                 doFetchRecipientsProfile={doFetchRecipientsProfile}
                 profileRecipients={profileRecipients}
               />
