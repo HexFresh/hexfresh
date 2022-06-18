@@ -47,6 +47,7 @@ const Messages: FC<MessageProps> = ({
   isFetchingRecipients,
   isAddingMember,
   isLeavingConversation,
+  forceScrollDown,
 }) => {
   const [ state, setState ] = useState<typeof initialState>(initialState);
   const [ isActiveModal, setActiveModal ] = useState<boolean>(false);
@@ -137,7 +138,10 @@ const Messages: FC<MessageProps> = ({
                 onClickItem={onClickItem}
                 initLoading={initLoading}
                 list={list}
-                loadMore={loadMore} />
+                loadMore={loadMore} 
+                doFetchRecipientsProfile={doFetchRecipientsProfile}
+                profileRecipients={profileRecipients}
+                />
             </Sider>
             <Content style={{ padding: '0 24px', minHeight: 280, overflowY: 'scroll' }}>
               <Card className='message-detail'>
@@ -151,6 +155,7 @@ const Messages: FC<MessageProps> = ({
                   doAddMember={doAddMember}
                   doLeaveConversation={doLeaveConversation}
                   doFetchRecipientsProfile={doFetchRecipientsProfile}
+                  forceScrollDown={forceScrollDown}
                 />
               </Card>
             </Content>
@@ -177,6 +182,7 @@ const mapStateToProps = (state: IRootStore) => ({
   isFetchingRecipients: state.message.isFetchingRecipients,
   isAddingMember: state.message.isAddingMember,
   isLeavingConversation: state.message.isLeavingConversation,
+  forceScrollDown: state.message.forceScrollDown,
 });
 
 const mapDispatchToProps = (dispatch: IRootDispatch) => ({

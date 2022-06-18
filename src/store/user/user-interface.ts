@@ -17,6 +17,7 @@ export interface IAddress{
 	id: number,
 	country: string,
 	province: string,
+	district: string,
 	ward: string,
 	street: string,
 	createdAt: string,

@@ -1,6 +1,6 @@
-import { Avatar, Button, List, Modal, Select, Typography } from "antd";
+import { MoreOutlined } from "@mui/icons-material";
+import { Avatar, Button, Dropdown, List, Menu, Modal, Select } from "antd";
 import { isEmpty, map } from "lodash";
-import { userInfo } from "os";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { IRootStore } from "../../../store/store";
@@ -48,10 +48,6 @@ export const MessageMembersModal = memo((
     </Button>
   ]), [ onCancel ])
 
-  useEffect(() => {
-    console.log(userList);
-  }, [ userList ])
-
   return <Modal
     title={isAddMember ? 'Add New Member' : 'View Members'}
     visible={isOpen}
@@ -62,14 +58,28 @@ export const MessageMembersModal = memo((
     <List
       bordered
       dataSource={users}
-      renderItem={(item) => (
-        <List.Item key={item.userId}>
-          {isEmpty(item?.avatar) ? <Avatar>{item?.username[ 0 ]}</Avatar> : <Avatar src={item?.avatar} />}
-          <Typography.Text mark></Typography.Text> {
-            (item.lastName && item.firstName) ? `${item.lastName} ${item.firstName}` : item.username
-          }
+      renderItem={(item) => {
+        const avatar = isEmpty(item?.avatar) ? <Avatar>{item?.username[ 0 ]}</Avatar> : <Avatar src={item?.avatar} />;
+        const title = (item.lastName && item.firstName) ? `${item.lastName} ${item.firstName}` : item.username;
+        const description = item.job_position||'Not update yet';
+
+       return <List.Item key={item.id}>
+          <List.Item.Meta
+          avatar={avatar}
+          title={title}
+          description={description?.name}
+          />
+          <Dropdown key="more" overlay={<Menu>
+            <Menu.Item onClick={() => { }}>
+              View profile
+            </Menu.Item>
+          </Menu>
+          } placement="bottomRight" className="right icon">
+            <Button type="text" icon={<MoreOutlined style={{ fontSize: 20 }} />} />
+          </Dropdown>
+
         </List.Item>
-      )}
+      }}
     />
 
     {isAddMember && <Select

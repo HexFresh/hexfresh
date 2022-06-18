@@ -23,6 +23,6 @@ export const badgeStore: any = {
           dispatch.badge.setIsFetchingBadges(false);
            throw new Error(error);
          }
-       }
+       },
   })
 }

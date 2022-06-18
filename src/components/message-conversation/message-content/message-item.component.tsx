@@ -36,10 +36,12 @@ export const NotificationMessage = memo(({ message }: { message: IMessage }) => 
 
   }, [ message?.from, message?.type, profile, profileRecipients ])
 
+  const time = isEmpty(message?.createdAt) ? new Date() : new Date(message?.createdAt);
+  
   return <div className="message-others">
     <div className="other">
       <p className="text">{renderMessageContent}</p>
-      <p className="response-time time"> {`${moment(new Date(message?.createdAt)).fromNow()}`}</p>
+      <p className="response-time time"> {`${moment(time).fromNow()}`}</p>
     </div>
   </div>
 });

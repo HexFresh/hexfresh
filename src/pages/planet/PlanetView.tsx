@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import 'antd/dist/antd.css';
 //import './index.css';
-import { Layout, Menu, Breadcrumb, notification, Spin, Card, Skeleton } from 'antd';
+import { Layout, Menu, Breadcrumb, notification, Card, Skeleton, Typography } from 'antd';
 import {
   CheckOutlined,
   NotificationOutlined,
@@ -155,7 +155,10 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
     </Content>;
 
     if (isFetchingPhase) {
-      content = <Spin size='large' />
+      content = <div className="loading" >
+      <img src="/gifrocket-rocket.gif" alt="loading rocket" />
+      <Typography.Text className="text txt-color-black">Please wait a second...</Typography.Text>
+    </div>
     } else if (!_.isEmpty(selectedPhase) && _.isEmpty(selectedPhase.userChecklists) && !isFetchingTask) {
       content = <EmptyResult message={"Opps, we don't have any checklist here."} />
     }
