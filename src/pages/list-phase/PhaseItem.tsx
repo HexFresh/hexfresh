@@ -48,7 +48,7 @@ export default function PhaseItem(props: any) {
 
   useEffect(() => {
     const fetchImages = async () => {
-      const reusult = await getImages();
+      const reusult = await getImages("planet");
       setImages(reusult || []);
     };
     fetchImages();

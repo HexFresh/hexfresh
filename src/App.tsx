@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import { io } from 'socket.io-client';
+import {io} from 'socket.io-client';
 import {Navigate, Route, Routes, useLocation, useNavigate} from 'react-router-dom';
 
 import Carousel from './components/layouts/carousel/Carousel';
@@ -8,7 +8,7 @@ import MeteorShower from './components/layouts/meteo-shower/MeteorShower';
 import HeaderInternal from './components/layouts/Header/HeaderInternal';
 import ProgressCard from './components/layouts/goalcard/ProgressCard';
 import SignIn from './components/auth/SignIn';
-import { socketInstance } from './utils/socketioInit';
+import {socketInstance} from './utils/socketioInit';
 import {onMessageListener} from './utils/firebaseInit';
 
 import ListProgram from './pages/list-program/ListProgram';
@@ -31,6 +31,8 @@ import {IRootDispatch, IRootStore} from './store/store';
 import {IUserStore} from './store/user/user-store';
 
 import './App.css';
+import MentorProfile from "./pages/mentor-profile/MentorProfile";
+import MentorMessage from "./pages/mentor-message/MentorMessage";
 
 const Home = () => {
   return (
@@ -53,7 +55,7 @@ function App() {
   const dispatch = useDispatch<IRootDispatch>();
   const auth: IUserStore = useSelector<IRootStore>((state) => state.user);
   const roleId: number = Number(useSelector<IRootStore>((state) => state.user.roleId)) || Number(localStorage.getItem('roleId')) || 0;
-  const [ socket, setSocket ] = useState(io());
+  const [socket, setSocket] = useState(io());
   const token = useSelector<IRootStore>((state) => state.user?.token);
 
   if (!auth.token && location.pathname !== '/signin' && location.pathname !== '/planets' && location.pathname !== '/') {
@@ -67,16 +69,15 @@ function App() {
       await dispatch.user.fetchProfileUsers();
       // push notification
       onMessageListener()
-      .then((payload) => {
-        console.log('Notification: ');
-        console.log(payload);
-      })
-      .catch((err) => console.log('Notification fail: ', err));
+        .then((payload) => {
+          console.log('Notification: ');
+          console.log(payload);
+        })
+        .catch((err) => console.log('Notification fail: ', err));
     }
 
     initialFunc();
-    const newSocket = socketInstance;
-    setSocket(newSocket);
+    setSocket(socketInstance);
   }, []);
 
   useEffect(() => {
@@ -102,7 +103,6 @@ function App() {
     <Routes>
       {
         roleId === 3 ? (<><Route path="/" element={<Navigate to="/planets"/>}/>
-          <Route path="messages" element={<Messages/>}/>
           <Route path="notifications" element={<Notifications/>}/>
 
           <Route path="/mentor/programs" element={<ListProgram/>}/>
@@ -115,7 +115,8 @@ function App() {
           <Route path="/mentor/freshers/:fresherId" element={<FresherListPhase/>}/>
           <Route path="/mentor/freshers/:fresherId/phase/:phaseId" element={<ReviewTask/>}/>
 
-          <Route path="/user/profile" element={<UserProfile/>}/>
+          <Route path="/mentor/profile" element={<MentorProfile/>}/>
+          <Route path="/mentor/message" element={<MentorMessage/>}/>
 
           <Route path="*" element={<Navigate to="/mentor/programs"/>}/>
         </>) : (<>

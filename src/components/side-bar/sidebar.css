@@ -1,0 +1,76 @@
+.side-bar {
+    width: 70px;
+}
+
+.menu {
+    width: 70px;
+    height: 100vh;
+    background-color: #0f171f;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.menu .logo {
+    margin-top: 10px;
+    padding: 5px;
+    background-color: white;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.menu .menu-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 30px;
+    color: white;
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.menu .menu-item.active {
+    position: relative;
+    opacity: 1;
+    color: white;
+}
+
+.menu .menu-item.active:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 6px;
+    height: 100%;
+    background-color: #446cfc;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+}
+
+.menu .menu-item:hover {
+    opacity: 1;
+}
+
+.menu .bottom {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 10px;
+    grid-gap: 20px;
+}
+
+.menu .bottom .folder,
+.menu .bottom .settings {
+    color: white;
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.menu .bottom .folder:hover,
+.menu .bottom .settings:hover {
+    opacity: 1;
+}

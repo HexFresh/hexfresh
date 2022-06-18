@@ -1,13 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Link} from 'react-router-dom';
 import {useParams} from 'react-router-dom';
-import AppsIcon from '@mui/icons-material/Apps';
-import SchoolIcon from '@mui/icons-material/School';
-import SettingsIcon from '@mui/icons-material/Settings';
-import FolderIcon from '@mui/icons-material/Folder';
-import Avatar from '@mui/material/Avatar';
-import Tooltip from '@mui/material/Tooltip';
-import Fade from '@mui/material/Fade';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import {PlusOutlined} from '@ant-design/icons';
@@ -17,6 +9,7 @@ import DragDrop from './DragDrop';
 import {Modal, Input, Button, Select, message} from 'antd';
 import {getPhasesOfProgram, createPhase, getImages} from '../../api/mentor/mentorApi';
 import Leaderboard from './Leaderboard';
+import Sidebar from "../../components/side-bar/Sidebar";
 
 const {Option} = Select;
 
@@ -50,7 +43,7 @@ export default function ListPhase() {
   };
 
   const fetchImages = async () => {
-    const result = await getImages();
+    const result = await getImages("planet");
     setImages(result || []);
   };
 
@@ -128,67 +121,7 @@ export default function ListPhase() {
   return (
     <div className="list-phase">
       <div className="container">
-        <div className="menu">
-          <Link to="/mentor/programs">
-            <div className="logo">
-              <img src="/logo.svg" width="40px" alt="logo"/>
-            </div>
-          </Link>
-          <div className="menu-item active">
-            <Tooltip
-              TransitionComponent={Fade}
-              TransitionProps={{timeout: 600}}
-              title="Programs"
-              placement="right"
-              arrow
-            >
-              <Link className="link apps" to="/mentor/programs">
-                <AppsIcon sx={{width: 40, height: 40}}/>
-              </Link>
-            </Tooltip>
-          </div>
-          <div className="menu-item">
-            <Tooltip
-              TransitionComponent={Fade}
-              TransitionProps={{timeout: 600}}
-              title="Freshers"
-              placement="right"
-              arrow
-            >
-              <Link className="link apps" to="/mentor/freshers">
-                <SchoolIcon sx={{width: 40, height: 40}}/>
-              </Link>
-            </Tooltip>
-          </div>
-
-          <div className="bottom">
-            <div className="folder">
-              <Tooltip
-                TransitionComponent={Fade}
-                TransitionProps={{timeout: 600}}
-                title="Resources"
-                placement="right"
-                arrow
-              >
-                <FolderIcon sx={{width: 30, height: 30}}/>
-              </Tooltip>
-            </div>
-            <div className="settings">
-              <Tooltip
-                TransitionComponent={Fade}
-                TransitionProps={{timeout: 600}}
-                title="Settings"
-                placement="right"
-                arrow
-              >
-                <SettingsIcon sx={{width: 30, height: 30}}/>
-              </Tooltip>
-            </div>
-            <div className="avatar">
-              <Avatar/>
-            </div>
-          </div>
-        </div>
+        <Sidebar/>
         <div className="page-content">
           <div className="top-bar">
             <img src="/logo.svg" width="30px" alt="logo"/>

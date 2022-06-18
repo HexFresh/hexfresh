@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
-import { Apps, School, Settings, Folder, Search } from '@mui/icons-material';
-import { Avatar, Tooltip, Fade, InputBase, CircularProgress } from '@mui/material';
+import React, {useEffect, useState} from 'react';
+import {Link} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
+import {Search} from '@mui/icons-material';
+import {InputBase, CircularProgress} from '@mui/material';
 import './fresher-list-phase.css';
-import { getAllPhaseOfFresher } from '../../api/mentor/review/api';
-import { CircularProgressbar } from 'react-circular-progressbar';
+import {getAllPhaseOfFresher} from '../../api/mentor/review/api';
+import {CircularProgressbar} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import Sidebar from "../../components/side-bar/Sidebar";
 
 interface IFresherPhase {
   id: number;
@@ -52,70 +53,10 @@ export default function FresherListPhase() {
   return (
     <div className="fresher-list-phase">
       <div className="container">
-        <div className="menu">
-          <Link to="/mentor/programs">
-            <div className="logo">
-              <img src="/logo.svg" width="40px" alt="logo" />
-            </div>
-          </Link>
-          <div className="menu-item">
-            <Tooltip
-              TransitionComponent={Fade}
-              TransitionProps={{ timeout: 600 }}
-              title="Programs"
-              placement="right"
-              arrow
-            >
-              <Link className="link apps" to="/mentor/programs">
-                <Apps sx={{ width: 40, height: 40 }} />
-              </Link>
-            </Tooltip>
-          </div>
-          <div className="menu-item active">
-            <Tooltip
-              TransitionComponent={Fade}
-              TransitionProps={{ timeout: 600 }}
-              title="Freshers"
-              placement="right"
-              arrow
-            >
-              <Link className="link apps" to="/mentor/freshers">
-                <School sx={{ width: 40, height: 40 }} />
-              </Link>
-            </Tooltip>
-          </div>
-
-          <div className="bottom">
-            <div className="folder">
-              <Tooltip
-                TransitionComponent={Fade}
-                TransitionProps={{ timeout: 600 }}
-                title="Resources"
-                placement="right"
-                arrow
-              >
-                <Folder sx={{ width: 30, height: 30 }} />
-              </Tooltip>
-            </div>
-            <div className="settings">
-              <Tooltip
-                TransitionComponent={Fade}
-                TransitionProps={{ timeout: 600 }}
-                title="Settings"
-                placement="right"
-                arrow
-              >
-                <Settings sx={{ width: 30, height: 30 }} />
-              </Tooltip>
-            </div>
-            <div className="avatar">
-              <Avatar />
-            </div>
-          </div>
-        </div>
+        <Sidebar/>
         <div className="page-content">
           <div className="topbar">
-            <img src="/logo.svg" width="30px" alt="logo" />
+            <img src="/logo.svg" width="30px" alt="logo"/>
             <p>Hexfresh</p>
           </div>
           <div className="name-page">
@@ -127,8 +68,8 @@ export default function FresherListPhase() {
           <div className="filter-search">
             <div className="container">
               <div className="search">
-                <Search style={{ width: '20px', height: '20px' }} />
-                <InputBase style={{ fontSize: '14px', width: '100%' }} placeholder="Search" />
+                <Search style={{width: '20px', height: '20px'}}/>
+                <InputBase style={{fontSize: '14px', width: '100%'}} placeholder="Search"/>
               </div>
               <div className="filter"></div>
             </div>
@@ -136,10 +77,10 @@ export default function FresherListPhase() {
           <div className="phases">
             <div className="container">
               {loading ? (
-                <CircularProgress className="circular-progress" />
+                <CircularProgress className="circular-progress"/>
               ) : phases.length === 0 ? (
                 <div className="img-404">
-                  <img alt="img-404" style={{ height: '200px' }} src="/no-records.png" />
+                  <img alt="img-404" style={{height: '200px'}} src="/no-records.png"/>
                 </div>
               ) : (
                 <div className="fresher-phases-list">
@@ -160,7 +101,7 @@ export default function FresherListPhase() {
                         />
                         <div className="fresher-phase-name">{phase.phase.title}</div>
                       </div>
-                      <div className="right" style={{ width: 50, height: 50 }}>
+                      <div className="right" style={{width: 50, height: 50}}>
                         <CircularProgressbar
                           value={phase.completedPercentage}
                           maxValue={1}

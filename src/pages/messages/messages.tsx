@@ -1,18 +1,18 @@
-import { Breadcrumb, Button, Card, Layout } from "antd";
+import {Breadcrumb, Button, Card, Layout} from "antd";
 import Search from "antd/lib/input/Search";
-import { Content } from "antd/lib/layout/layout";
+import {Content} from "antd/lib/layout/layout";
 import Sider from "antd/lib/layout/Sider";
 import _ from "lodash";
-import { FC, useCallback, useEffect, useState } from "react";
-import { connect } from "react-redux";
+import React, {FC, useCallback, useEffect, useState} from "react";
+import {connect} from "react-redux";
 import HeaderInternal from "../../components/layouts/Header/HeaderInternal";
-import { MessageDetail } from "../../components/message-conversation/message-conversation.component";
-import { MessageCreateModal } from "../../components/message/message-create-modal/message-create-modal.component";
-import { MessageListHeader } from "../../components/message/message-list-header/message-list-header.component";
+import {MessageDetail} from "../../components/message-conversation/message-conversation.component";
+import {MessageCreateModal} from "../../components/message/message-create-modal/message-create-modal.component";
+import {MessageListHeader} from "../../components/message/message-list-header/message-list-header.component";
 
-import { MessagesList } from "../../components/message/MessagesList";
-import { IConversation } from "../../store/message/message-interface";
-import { IRootDispatch, IRootStore } from "../../store/store";
+import {MessagesList} from "../../components/message/MessagesList";
+import {IConversation} from "../../store/message/message-interface";
+import {IRootDispatch, IRootStore} from "../../store/store";
 
 export type Message = {
   id: string;
@@ -30,27 +30,27 @@ const initialState = {
 };
 
 const Messages: FC<MessageProps> = ({
-  doCreateConversation,
-  doFetchAllConversation,
-  doFetchConversation,
-  doRenameConversation,
-  doFetchRecipientsProfile,
-  doRecieveMessage,
-  doAddMember,
-  doLeaveConversation,
+                                      doCreateConversation,
+                                      doFetchAllConversation,
+                                      doFetchConversation,
+                                      doRenameConversation,
+                                      doFetchRecipientsProfile,
+                                      doRecieveMessage,
+                                      doAddMember,
+                                      doLeaveConversation,
 
-  selectedConversation,
-  conversations,
-  profileRecipients,
-  isFetchingConversations,
-  isFetchingConversation,
-  isFetchingRecipients,
-  isAddingMember,
-  isLeavingConversation,
-  forceScrollDown,
-}) => {
-  const [ state, setState ] = useState<typeof initialState>(initialState);
-  const [ isActiveModal, setActiveModal ] = useState<boolean>(false);
+                                      selectedConversation,
+                                      conversations,
+                                      profileRecipients,
+                                      isFetchingConversations,
+                                      isFetchingConversation,
+                                      isFetchingRecipients,
+                                      isAddingMember,
+                                      isLeavingConversation,
+                                      forceScrollDown,
+                                    }) => {
+  const [state, setState] = useState<typeof initialState>(initialState);
+  const [isActiveModal, setActiveModal] = useState<boolean>(false);
 
   useEffect(() => {
     doFetchAllConversation();
@@ -68,7 +68,7 @@ const Messages: FC<MessageProps> = ({
 
   };
 
-  const { initLoading, data, list, loading } = state;
+  const {initLoading, data, list, loading} = state;
   const loadMore =
     !initLoading && !loading ? (
       <div
@@ -84,53 +84,57 @@ const Messages: FC<MessageProps> = ({
     ) : null;
 
   const onClickItem = useCallback(async (item: IConversation) => {
-    await doFetchConversation({ conversationId: item?._id, skip: 0, limit: 0 });
-  }, [ doFetchConversation ]);
+    await doFetchConversation({conversationId: item?._id, skip: 0, limit: 0});
+  }, [doFetchConversation]);
 
   const handleAddChat = useCallback(() =>
-    setActiveModal(true)
+      setActiveModal(true)
     , []);
 
   const handleCancleAddChat = useCallback(() =>
-    setActiveModal(false)
+      setActiveModal(false)
     , []);
 
   const handleSubmitModal = useCallback((recipientIds, title) => {
-    const createConversation = async () => {
-      await doCreateConversation({ recipients: recipientIds, title });
-      await doFetchAllConversation();
+      const createConversation = async () => {
+        await doCreateConversation({recipients: recipientIds, title});
+        await doFetchAllConversation();
+      }
+      createConversation();
+      setActiveModal(false);
     }
-    createConversation();
-    setActiveModal(false);
-  }
-    , [ doCreateConversation, doFetchAllConversation ]);
+    , [doCreateConversation, doFetchAllConversation]);
 
   useEffect(() => {
-    !_.isEmpty(selectedConversation?.recipients) && doFetchRecipientsProfile({ recipients: selectedConversation?.recipients })
-  }, [ doFetchRecipientsProfile, selectedConversation ])
+    !_.isEmpty(selectedConversation?.recipients) && doFetchRecipientsProfile({recipients: selectedConversation?.recipients})
+  }, [doFetchRecipientsProfile, selectedConversation])
 
   return (
     <>
       <Layout className="full-height">
-        <HeaderInternal textColorClassName='txt-color-black' />
-        <Content className='centered' style={{ padding: '0 50px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
+        {
+          localStorage.getItem('roleId') === '4' ? <HeaderInternal textColorClassName='txt-color-black'/> : (<></>)
+        }
+        <Content className='centered' style={{padding: '0 50px'}}>
+          <Breadcrumb style={{margin: '16px 0'}}>
             <Breadcrumb.Item href='/'>Home</Breadcrumb.Item>
             <Breadcrumb.Item>Messages</Breadcrumb.Item>
           </Breadcrumb>
           <Layout
             className="site-layout-background ant-layout-has-sider"
-            style={{ padding: '24px 0' }}
+            style={{padding: '24px 0'}}
           >
             <Sider className="site-layout-background b-white p-medium" width={400}>
-              <MessageListHeader className="mb-medium" onAddChat={handleAddChat} />
+              <MessageListHeader className="mb-medium" onAddChat={handleAddChat}/>
               <Search
                 className="mb-medium"
                 placeholder="Search conversaiclatons"
                 allowClear
                 enterButton
                 size="large"
-                onSearch={(value) => { console.log(value) }}
+                onSearch={(value) => {
+                  console.log(value)
+                }}
               />
               <MessagesList
                 isLoading={isFetchingConversations}
@@ -138,12 +142,12 @@ const Messages: FC<MessageProps> = ({
                 onClickItem={onClickItem}
                 initLoading={initLoading}
                 list={list}
-                loadMore={loadMore} 
+                loadMore={loadMore}
                 doFetchRecipientsProfile={doFetchRecipientsProfile}
                 profileRecipients={profileRecipients}
-                />
+              />
             </Sider>
-            <Content style={{ padding: '0 24px', minHeight: 280, overflowY: 'scroll' }}>
+            <Content style={{padding: '0 24px', minHeight: 280, overflowY: 'scroll'}}>
               <Card className='message-detail'>
                 <MessageDetail
                   doRecieveMessage={doRecieveMessage}
@@ -166,7 +170,9 @@ const Messages: FC<MessageProps> = ({
         isOpenModal={isActiveModal}
         loading={false}
         onCancel={handleCancleAddChat}
-        onSearchUser={(value: any) => { console.log(value) }}
+        onSearchUser={(value: any) => {
+          console.log(value)
+        }}
         onSubmit={handleSubmitModal}
       />
     </>

@@ -1,18 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import { Apps, School, Settings, Folder, Search } from '@mui/icons-material';
-import { InputBase, Avatar, CircularProgress } from '@mui/material';
+import React, {useEffect, useState} from 'react';
+import {Link} from 'react-router-dom';
+import {Search} from '@mui/icons-material';
+import {InputBase, CircularProgress} from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { Pagination, Tooltip, Menu, Dropdown } from 'antd';
+import {Pagination} from 'antd';
 import './list-program.css';
-import { getPrograms } from '../../api/mentor/mentorApi';
-import { IRootDispatch } from '../../store/store';
+import {getPrograms} from '../../api/mentor/mentorApi';
+import Sidebar from "../../components/side-bar/Sidebar";
 
 interface IProgram {
   id: string;
   title: string;
+  image: {
+    imageLink: string
+  }
 }
 
 const nPerPage = 4;
@@ -24,34 +26,20 @@ export default function ListProgram() {
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = React.useState(1);
 
-  const dispatch = useDispatch<IRootDispatch>();
-  const navigate = useNavigate();
-
-  const logoutHandler = React.useCallback(() => {
-    dispatch.user.logoutHandlerAction({ dispatch, navigate });
-  }, []);
-
-  const menu = (
-    <Menu>
-      <Menu.Item key="0" onClick={() => logoutHandler()}>
-        Logout
-      </Menu.Item>
-    </Menu>
-  );
-
   const handleChangePage = (page: number) => {
     setPage(page);
   };
 
   const fetchPrograms = async (keyword: string, limit: number, offset: number) => {
     setLoading(true);
-    const result = await getPrograms({ keyword, limit, offset });
+    const result = await getPrograms({keyword, limit, offset});
     setPrograms(result.rows || []);
     setCount(result.count);
     setLoading(false);
   };
 
   useEffect(() => {
+    localStorage.setItem('sideBarTitle', 'programs');
     document.title = 'HexF - List Program';
     fetchPrograms(keyword, nPerPage, (page - 1) * nPerPage);
   }, [page, keyword]);
@@ -59,48 +47,10 @@ export default function ListProgram() {
   return (
     <div className="list-program">
       <div className="container">
-        <div className="menu">
-          <div className="logo">
-            <Link to="/mentor/programs">
-              <img src="/logo.svg" width="40px" alt="logo" />
-            </Link>
-          </div>
-          <div className="menu-item active">
-            <Tooltip color="#3751FF" title="Programs" placement="right">
-              <Link className="link apps" to="/mentor/programs">
-                <Apps sx={{ width: 40, height: 40 }} />
-              </Link>
-            </Tooltip>
-          </div>
-          <div className="menu-item">
-            <Tooltip color="#3751FF" title="Freshers" placement="right">
-              <Link className="link apps" to="/mentor/freshers">
-                <School sx={{ width: 40, height: 40 }} />
-              </Link>
-            </Tooltip>
-          </div>
-
-          <div className="bottom">
-            <div className="folder">
-              <Tooltip color="#3751FF" title="Resources" placement="right">
-                <Folder sx={{ width: 30, height: 30 }} />
-              </Tooltip>
-            </div>
-            <div className="settings">
-              <Tooltip color="#3751FF" title="Settings" placement="right">
-                <Settings sx={{ width: 30, height: 30 }} />
-              </Tooltip>
-            </div>
-            <div className="avatar">
-              <Dropdown arrow placement="topRight" overlay={menu}>
-                <Avatar />
-              </Dropdown>
-            </div>
-          </div>
-        </div>
+        <Sidebar/>
         <div className="page-content">
           <div className="topbar">
-            <img src="/logo.svg" width="30px" alt="logo" />
+            <img src="/logo.svg" width="30px" alt="logo"/>
             <p>Hexfresh</p>
           </div>
           <div className="name-page">
@@ -109,7 +59,7 @@ export default function ListProgram() {
           <div className="filter-search">
             <div className="container">
               <div className="search">
-                <Search style={{ width: '20px', height: '20px' }} />
+                <Search style={{width: '20px', height: '20px'}}/>
                 <InputBase
                   value={keyword}
                   onChange={(e) => {
@@ -117,7 +67,7 @@ export default function ListProgram() {
                     setKeyword(e.target.value);
                   }}
                   placeholder="Search"
-                  style={{ fontSize: '14px', width: '100%' }}
+                  style={{fontSize: '14px', width: '100%'}}
                 />
               </div>
               <div className="filter"></div>
@@ -125,7 +75,7 @@ export default function ListProgram() {
           </div>
           <div className="programs">
             {loading ? (
-              <CircularProgress />
+              <CircularProgress/>
             ) : count > 0 ? (
               <div className="programs__container">
                 <Grid container spacing={2}>
@@ -135,12 +85,13 @@ export default function ListProgram() {
                         <div className="program">
                           <div className="cover-photo">
                             <img
-                              src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/80a9d98d-327f-4bb2-b173-4298d710e51c/derkflv-9f975f3d-791f-4e16-8d9d-fb0a9e5e0554.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzgwYTlkOThkLTMyN2YtNGJiMi1iMTczLTQyOThkNzEwZTUxY1wvZGVya2Zsdi05Zjk3NWYzZC03OTFmLTRlMTYtOGQ5ZC1mYjBhOWU1ZTA1NTQucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.eEDVAlJGBqXo6OeZEORXWk1veGSHFL-ZTUMz43Jtr3Q"
-                              alt="img"
+                              src={program?.image?.imageLink}
+                              alt="cover-photo"
                             />
                           </div>
                           <div className="program-name">
-                            <Link className="link" to={`/mentor/programs/${program.id}/phases`}>
+                            <Link className="link"
+                                  to={`/mentor/programs/${program.id}/phases`}>
                               {program.title}
                             </Link>
                           </div>
@@ -152,7 +103,7 @@ export default function ListProgram() {
               </div>
             ) : (
               <div className="img-404">
-                <img style={{ height: '200px' }} src="/no-records.png" alt="img" />
+                <img style={{height: '200px'}} src="/no-records.png" alt="img"/>
               </div>
             )}
           </div>

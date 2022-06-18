@@ -1,10 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useRef, useState} from 'react';
-import {useDispatch} from 'react-redux';
-import {Link, useNavigate, useParams} from 'react-router-dom';
-import {Apps, School, Settings, Folder} from '@mui/icons-material';
-import {Avatar, CircularProgress} from '@mui/material';
-import {Tooltip, Menu, Dropdown, Button, Modal, Select, message, Input} from 'antd';
+import {useNavigate, useParams} from 'react-router-dom';
+import {CircularProgress} from '@mui/material';
+import {Tooltip, Button, Modal, Select, message, Input} from 'antd';
 import './list-task.css';
 import {
   getAllTask,
@@ -12,9 +10,9 @@ import {
   getBadges,
   addAvailableBadgeToChecklist, addNewBadgeToChecklist, removeBadgeFromChecklist
 } from "./api";
-import {IRootDispatch} from '../../store/store';
 import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
 import axios from "axios";
+import Sidebar from "../../components/side-bar/Sidebar";
 
 const {Option} = Select;
 
@@ -44,22 +42,9 @@ export default function ListTask() {
   const [addBadgeMode, setAddBadgeMode] = useState('available');
   const [selectedBadge, setSelectedBadge] = useState(null);
 
-  const dispatch = useDispatch<IRootDispatch>();
   const navigate = useNavigate();
   const {phaseId, programId, checklistId} = useParams<{ phaseId: string, programId: string, checklistId: string }>();
   const refInput = useRef<HTMLInputElement>(null);
-
-  const logoutHandler = React.useCallback(() => {
-    dispatch.user.logoutHandlerAction({dispatch, navigate});
-  }, []);
-
-  const menu = (
-    <Menu>
-      <Menu.Item key="0" onClick={() => logoutHandler()}>
-        Logout
-      </Menu.Item>
-    </Menu>
-  );
 
   const fetchTasks = async () => {
     setChecklistLoading(true);
@@ -165,45 +150,7 @@ export default function ListTask() {
   return (
     <div className="list-task">
       <div className="container">
-        <div className="menu">
-          <div className="logo">
-            <Link to="/mentor/programs">
-              <img src="/logo.svg" width="40px" alt="logo"/>
-            </Link>
-          </div>
-          <div className="menu-item active">
-            <Tooltip color="#3751FF" title="Programs" placement="right">
-              <Link className="link apps" to="/mentor/programs">
-                <Apps sx={{width: 40, height: 40}}/>
-              </Link>
-            </Tooltip>
-          </div>
-          <div className="menu-item">
-            <Tooltip color="#3751FF" title="Freshers" placement="right">
-              <Link className="link apps" to="/mentor/freshers">
-                <School sx={{width: 40, height: 40}}/>
-              </Link>
-            </Tooltip>
-          </div>
-
-          <div className="bottom">
-            <div className="folder">
-              <Tooltip color="#3751FF" title="Resources" placement="right">
-                <Folder sx={{width: 30, height: 30}}/>
-              </Tooltip>
-            </div>
-            <div className="settings">
-              <Tooltip color="#3751FF" title="Settings" placement="right">
-                <Settings sx={{width: 30, height: 30}}/>
-              </Tooltip>
-            </div>
-            <div className="avatar">
-              <Dropdown arrow placement="topRight" overlay={menu}>
-                <Avatar/>
-              </Dropdown>
-            </div>
-          </div>
-        </div>
+        <Sidebar/>
         <div className="page-content">
           <div className="topbar">
             <img src="/logo.svg" width="30px" alt="logo"/>

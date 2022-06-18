@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Apps, School, Settings, Folder, Search } from '@mui/icons-material';
-import { InputBase, Avatar, CircularProgress } from '@mui/material';
-import { Pagination, Table, Button, Tooltip, Modal, Select, message, Popconfirm } from 'antd';
-import { AuditOutlined, FileExcelOutlined } from '@ant-design/icons';
+import React, {useEffect, useState} from 'react';
+import {Link} from 'react-router-dom';
+import {Search} from '@mui/icons-material';
+import {InputBase, CircularProgress} from '@mui/material';
+import {Pagination, Table, Button, Tooltip, Modal, Select, message, Popconfirm} from 'antd';
+import {AuditOutlined, FileExcelOutlined} from '@ant-design/icons';
 import {
   getPrograms,
   assignProgramToFresher,
   getAllFresher,
   deleteProgramFromFresher,
 } from '../../api/mentor/mentorApi';
-import { CircularProgressbar } from 'react-circular-progressbar';
+import {CircularProgressbar} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import './list-fresher.css';
+import Sidebar from "../../components/side-bar/Sidebar";
 
 interface IFresher {
   id: string;
@@ -35,7 +36,7 @@ interface IProgram {
 
 const nPerPage = 5;
 
-const { Option } = Select;
+const {Option} = Select;
 
 export default function ListProgram() {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -95,7 +96,7 @@ export default function ListProgram() {
               justifyContent: 'center',
             }}
           >
-            <div style={{ width: 50, height: 50 }}>
+            <div style={{width: 50, height: 50}}>
               <CircularProgressbar
                 value={fresher?.currentProgram?.completedPercentage}
                 maxValue={1}
@@ -126,7 +127,7 @@ export default function ListProgram() {
               onClick={() => showModal(fresher.id)}
               disabled={fresher?.currentProgram !== null}
               shape="circle"
-              icon={<AuditOutlined />}
+              icon={<AuditOutlined/>}
             ></Button>
           </Tooltip>
           <Tooltip title="Remove Program">
@@ -138,7 +139,7 @@ export default function ListProgram() {
               onConfirm={() => handleRemoveProgram(fresher.id, fresher.currentProgram?.program.id)}
               cancelText="No"
             >
-              <Button disabled={fresher?.currentProgram === null} shape="circle" icon={<FileExcelOutlined />}></Button>
+              <Button disabled={fresher?.currentProgram === null} shape="circle" icon={<FileExcelOutlined/>}></Button>
             </Popconfirm>
           </Tooltip>
         </div>
@@ -147,10 +148,10 @@ export default function ListProgram() {
   ];
 
   const handleRemoveProgram = (fresherId: string, programId: number) => {
-    console.log({ fresherId, programId });
+    console.log({fresherId, programId});
     const removeProgram = async () => {
       try {
-        message.loading({ content: 'Removing...', key: 'removeProgram' }).then(async () => {
+        message.loading({content: 'Removing...', key: 'removeProgram'}).then(async () => {
           await deleteProgramFromFresher(fresherId, programId);
           message.success('Program removed successfully');
           fetchFreshers(keyword, nPerPage, (page - 1) * nPerPage);
@@ -169,7 +170,7 @@ export default function ListProgram() {
 
   const fetchFreshers = async (keyword: string, limit: number, offset: number) => {
     setLoading(true);
-    const result = await getAllFresher({ keyword, limit, offset });
+    const result = await getAllFresher({keyword, limit, offset});
     console.log(result);
     setFreshers(result.rows || []);
     setCount(result.count || 0);
@@ -177,7 +178,7 @@ export default function ListProgram() {
   };
 
   const fetchPrograms = async () => {
-    const programs = await getPrograms({ keyword: '', limit: null, offset: 0 });
+    const programs = await getPrograms({keyword: '', limit: null, offset: 0});
     setPrograms(programs.rows || []);
   };
 
@@ -216,44 +217,10 @@ export default function ListProgram() {
   return (
     <div className="list-fresher">
       <div className="container">
-        <div className="menu">
-          <div className="logo">
-            <Link to="/mentor/programs">
-              <img src="/logo.svg" width="40px" alt="logo" />
-            </Link>
-          </div>
-          <div className="menu-item">
-            <Tooltip color="#3751FF" title="Programs" placement="right">
-              <Link className="link apps" to="/mentor/programs">
-                <Apps sx={{ width: 40, height: 40 }} />
-              </Link>
-            </Tooltip>
-          </div>
-          <div className="menu-item active">
-            <Tooltip color="#3751FF" title="Freshers" placement="right">
-              <School sx={{ width: 40, height: 40 }} />
-            </Tooltip>
-          </div>
-
-          <div className="bottom">
-            <div className="folder">
-              <Tooltip color="#3751FF" title="Resources" placement="right">
-                <Folder sx={{ width: 30, height: 30 }} />
-              </Tooltip>
-            </div>
-            <div className="settings">
-              <Tooltip color="#3751FF" title="Settings" placement="right">
-                <Settings sx={{ width: 30, height: 30 }} />
-              </Tooltip>
-            </div>
-            <div className="avatar">
-              <Avatar />
-            </div>
-          </div>
-        </div>
+        <Sidebar/>
         <div className="page-content">
           <div className="topbar">
-            <img src="/logo.svg" width="30px" alt="logo" />
+            <img src="/logo.svg" width="30px" alt="logo"/>
             <p>Hexfresh</p>
           </div>
           <div className="name-page">
@@ -262,7 +229,7 @@ export default function ListProgram() {
           <div className="filter-search">
             <div className="container">
               <div className="search">
-                <Search style={{ width: '20px', height: '20px' }} />
+                <Search style={{width: '20px', height: '20px'}}/>
                 <InputBase
                   value={keyword}
                   onChange={(e) => {
@@ -270,7 +237,7 @@ export default function ListProgram() {
                     setKeyword(e.target.value);
                   }}
                   placeholder="Search"
-                  style={{ fontSize: '14px', width: '100%' }}
+                  style={{fontSize: '14px', width: '100%'}}
                 />
               </div>
               <div className="filter"></div>
@@ -278,10 +245,10 @@ export default function ListProgram() {
           </div>
           <div className="freshers">
             {loading ? (
-              <CircularProgress />
+              <CircularProgress/>
             ) : (
               <div className="freshers__container">
-                <Table className="table" columns={columns} dataSource={freshers} pagination={false} />
+                <Table className="table" columns={columns} dataSource={freshers} pagination={false}/>
                 <div className="lf-pagination">
                   <Pagination
                     current={page}
@@ -318,7 +285,7 @@ export default function ListProgram() {
               value={selectProgram}
               onChange={(value: string) => setSelectProgram(value)}
               placeholder="Select program"
-              style={{ width: '100%', marginTop: '10px' }}
+              style={{width: '100%', marginTop: '10px'}}
             >
               {programs.map((program: any) => (
                 <Option key={program.id} value={program.id}>
