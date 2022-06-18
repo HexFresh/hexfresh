@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import { IRootStore } from "../../store/store";
 import { MessageMembersModal } from "../message/message-member-modal/message-member-modal";
 import { getRecipients } from "../message/message-member-modal/message-member-modal.service";
+import { UserProfileModal } from "../user/user-profile-modal.component";
 
 export const MessageDetail = memo(({
   isLoading,
