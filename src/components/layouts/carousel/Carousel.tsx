@@ -10,6 +10,7 @@ import { RematchDispatch, RematchDispatcher } from "@rematch/core";
 import { message, notification, Progress, Spin, Typography } from "antd";
 import _ from "lodash";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import { RocketLoading } from "../../loading/rocket-loading.component";
 
 type ICarouselProps = StateProps & DispatchProps;
 
@@ -120,10 +121,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
     const { isLoading } = this.state;
 
     if (_.isEmpty(program) || _.isEmpty(imageList) || isLoading) {
-      return <div className="loading" >
-        <img src="/gifrocket-rocket.gif" alt="loading rocket" />
-        <Typography.Text className="text">Please wait a second...</Typography.Text>
-      </div>
+      return <RocketLoading/>
     }
     return (
       <div id="carousel" className="noselect">

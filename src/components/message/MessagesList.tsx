@@ -56,10 +56,6 @@ export const MessagesList = memo(({
       })
   }, [ conversations, doFetchRecipientsProfile ])
 
-  useEffect(() => {
-    console.log(profileRecipients);
-  }, [ profileRecipients ])
-
   const renderMessageContent = useCallback((message: IMessage) => {
     if (message.type === MessageType.CHAT) return;
     const user = find(profileRecipients, [ 'userId', message?.data ]);
