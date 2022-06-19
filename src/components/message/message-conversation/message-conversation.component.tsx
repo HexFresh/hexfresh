@@ -1,20 +1,22 @@
-import { SendOutlined, MoreOutlined, Warning } from "@mui/icons-material";
-import { Avatar, Button, Dropdown, Form, Input, Menu, Modal, Skeleton, Typography } from "antd";
-import { memo, useCallback, useEffect, useState } from "react"
 import _ from 'lodash';
+import { memo, useCallback, useEffect, useState } from "react"
+import { useSelector } from "react-redux";
 import { io } from "socket.io-client";
 import { message as messageAnt } from 'antd'
+import { SendOutlined, MoreOutlined, Warning } from "@mui/icons-material";
+import { Avatar, Button, Dropdown, Form, Input, Menu, Modal, Skeleton, Typography } from "antd";
 
-import { socketInstance } from '../../utils/socketioInit';
+
+
 import './message-conversation.scss';
-import { IConversation } from "../../store/message/message-interface";
-import { MessageContent } from "./message-content/message-content.component";
-import { EmptyResult } from "../results";
-import { IUser } from "../../store/user/user-interface";
-import { useSelector } from "react-redux";
-import { IRootStore } from "../../store/store";
-import { MessageMembersModal } from "../message/message-member-modal/message-member-modal";
-import { getRecipients } from "../message/message-member-modal/message-member-modal.service";
+import { IConversation } from "../../../store/message/message-interface";
+import { IUser } from "../../../store/user/user-interface";
+import { IRootStore } from "../../../store/store";
+import { socketInstance } from '../../../utils/socketioInit';
+import { EmptyResult } from '../../results';
+import { getRecipients } from '../message-member-modal/message-member-modal.service';
+import { MessageContent } from './message-content/message-content.component';
+import { MessageMembersModal } from '../message-member-modal/message-member-modal';
 
 export const MessageDetail = memo(({
   isLoading,
