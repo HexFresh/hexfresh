@@ -10,10 +10,10 @@ import TextArea from 'antd/lib/input/TextArea';
 
 import { EmptyResult } from '../results';
 import { ISelectedTask, ISequenceTask, ITask } from '../../interface/program-interface'
-import { TaskCategory } from '../../utilities/enum-utils';
+import { TaskCategory } from '../../utils/enum-utils';
 import './taskitem.scss';
 import { DropResult } from 'react-beautiful-dnd';
-import { reorder } from '../../utilities/helpers';
+import { reorder } from '../../utils/helpers';
 import { MatchSequence } from './match-sequence/MatchSequence';
 import { SingleChoice } from './single-choice-quiz/SingleChoice';
 import { MultipleChoices } from './multiple-task/MultipleChoices';
