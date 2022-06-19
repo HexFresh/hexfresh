@@ -392,7 +392,7 @@ export default function UserProfile() {
                         <div className="field">
                           <div className="field__title">Job position</div>
                           <Select
-                            disabled={!edit}
+                            disabled={true}
                             showSearch
                             optionFilterProp="children"
                             filterOption={(input: any, option: any) =>
