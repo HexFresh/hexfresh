@@ -1,3 +1,4 @@
+import { AssignmentInd, Logout } from '@mui/icons-material';
 import { Avatar, Dropdown, Menu } from 'antd';
 import React from 'react';
 import { useDispatch } from 'react-redux';
@@ -27,9 +28,19 @@ const HeaderInternal = ({ textColorClassName }: { textColorClassName?: string })
   };
 
   const menu = (
-    <Menu onClick={onClickMenu}>
-      <Menu.Item key="1">My Profile</Menu.Item>
-      <Menu.Item key="2">Sign out</Menu.Item>
+    <Menu onClick={onClickMenu} className='menu-popup'>
+      <Menu.Item key="1">
+        <AssignmentInd /> 
+      <span>
+        My Profile
+      </span>
+      </Menu.Item>
+      <Menu.Item key="2">
+        <Logout/>
+        <span>
+          Log Out
+        </span>
+      </Menu.Item>
     </Menu>
   );
   return (
