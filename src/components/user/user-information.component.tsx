@@ -13,7 +13,7 @@ export const UserInformationTab = memo((
     {
       userAccount: IQuickUser,
       userProfile: IUser,
-      dateFormat: string,
+      dateFormat?: string,
       address: IAddress,
     }
 ) => {

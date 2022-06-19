@@ -11,6 +11,7 @@ export const MessageMembersModal = memo((
     users,
     onSubmit,
     onCancel,
+    onSelectUser,
     isOpen,
     isLoading,
     isAddMember = false
@@ -18,6 +19,7 @@ export const MessageMembersModal = memo((
     users: IUser[],
     onSubmit: any,
     onCancel: any,
+    onSelectUser: any,
     isLoading: boolean,
     isOpen: boolean,
     isAddMember: boolean
@@ -28,6 +30,10 @@ export const MessageMembersModal = memo((
   const handleSubmitForm = useCallback(() => {
     isAddMember && !isEmpty(recipientIds) ? onSubmit(recipientIds) : onCancel();
   }, [ isAddMember, onCancel, onSubmit, recipientIds ]);
+
+  const handleSelectUser = useCallback(
+    user => onSelectUser(user), [onSelectUser]
+  )
 
   function handleChange(value: any) {
     !isEmpty(value) && setRecipientIds(value);
@@ -70,7 +76,7 @@ export const MessageMembersModal = memo((
           description={description?.name}
           />
           <Dropdown key="more" overlay={<Menu>
-            <Menu.Item onClick={() => { }}>
+            <Menu.Item onClick={() => {handleSelectUser(item) }}>
               View profile
             </Menu.Item>
           </Menu>

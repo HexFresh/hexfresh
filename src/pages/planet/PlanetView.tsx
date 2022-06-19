@@ -14,7 +14,7 @@ import TaskItem from '../../components/task/TaskItem';
 import { ITask } from '../../interface/program-interface';
 import HeaderInternal from '../../components/layouts/Header/HeaderInternal';
 import { EmptyResult } from '../../components/results';
-import { TaskCategory } from '../../utilities/enum-utils';
+import { TaskCategory } from '../../utils/enum-utils';
 
 import './planetview.scss';
 

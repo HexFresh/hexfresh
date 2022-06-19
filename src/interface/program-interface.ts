@@ -1,5 +1,4 @@
-import { string } from "yup";
-import { AttachmentStatus, TaskCategory, TaskStatus } from "../utilities/enum-utils";
+import { AttachmentStatus } from "../utils/enum-utils";
 
 export interface IPhase {
   phase?: IPhaseDetail;

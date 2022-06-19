@@ -6,13 +6,14 @@ import _ from "lodash";
 import React, {FC, useCallback, useEffect, useState} from "react";
 import {connect} from "react-redux";
 import HeaderInternal from "../../components/layouts/Header/HeaderInternal";
-import {MessageDetail} from "../../components/message-conversation/message-conversation.component";
+import { MessageDetail } from "../../components/message/message-conversation/message-conversation.component";
 import {MessageCreateModal} from "../../components/message/message-create-modal/message-create-modal.component";
 import {MessageListHeader} from "../../components/message/message-list-header/message-list-header.component";
-
-import {MessagesList} from "../../components/message/MessagesList";
-import {IConversation} from "../../store/message/message-interface";
-import {IRootDispatch, IRootStore} from "../../store/store";
+import { MessagesList } from "../../components/message/MessagesList";
+import { UserProfileModal } from "../../components/user/user-profile-modal.component";
+import { IConversation } from "../../store/message/message-interface";
+import { IRootDispatch, IRootStore } from "../../store/store";
+import { IUser } from "../../store/user/user-interface";
 
 export type Message = {
   id: string;
@@ -25,32 +26,33 @@ export type Message = {
 const initialState = {
   initLoading: true,
   loading: false,
-  data: [],
-  list: [],
 };
 
 const Messages: FC<MessageProps> = ({
-                                      doCreateConversation,
-                                      doFetchAllConversation,
-                                      doFetchConversation,
-                                      doRenameConversation,
-                                      doFetchRecipientsProfile,
-                                      doRecieveMessage,
-                                      doAddMember,
-                                      doLeaveConversation,
+  doCreateConversation,
+  doFetchAllConversation,
+  doFetchConversation,
+  doRenameConversation,
+  doFetchRecipientsProfile,
+  doRecieveMessage,
+  doAddMember,
+  doLeaveConversation,
+  doFetchUserBadge,
 
-                                      selectedConversation,
-                                      conversations,
-                                      profileRecipients,
-                                      isFetchingConversations,
-                                      isFetchingConversation,
-                                      isFetchingRecipients,
-                                      isAddingMember,
-                                      isLeavingConversation,
-                                      forceScrollDown,
-                                    }) => {
-  const [state, setState] = useState<typeof initialState>(initialState);
-  const [isActiveModal, setActiveModal] = useState<boolean>(false);
+  selectedConversation,
+  conversations,
+  profileRecipients,
+  isFetchingConversations,
+  isFetchingConversation,
+  isFetchingRecipients,
+  isAddingMember,
+  isLeavingConversation,
+  forceScrollDown,
+  isFetchingBadges,
+}) => {
+  const [ state, setState ] = useState<typeof initialState>(initialState);
+  const [ isActiveModal, setActiveModal ] = useState<boolean>(false);
+  const [ selectedUser, setSelectedUser ] = useState<IUser>();
 
   useEffect(() => {
     doFetchAllConversation();
@@ -68,7 +70,7 @@ const Messages: FC<MessageProps> = ({
 
   };
 
-  const {initLoading, data, list, loading} = state;
+  const { initLoading, loading } = state;
   const loadMore =
     !initLoading && !loading ? (
       <div
@@ -105,9 +107,16 @@ const Messages: FC<MessageProps> = ({
     }
     , [doCreateConversation, doFetchAllConversation]);
 
+  const handleSelectUser = useCallback(
+    (user: IUser) => {
+      !_.isEmpty(user) && setSelectedUser(user);
+    }, []
+  )
+
   useEffect(() => {
-    !_.isEmpty(selectedConversation?.recipients) && doFetchRecipientsProfile({recipients: selectedConversation?.recipients})
-  }, [doFetchRecipientsProfile, selectedConversation])
+    !_.isEmpty(selectedConversation?.recipients) && doFetchRecipientsProfile({ recipients: selectedConversation?.recipients })
+  }, [ doFetchRecipientsProfile, selectedConversation ]
+  )
 
   return (
     <>
@@ -141,7 +150,6 @@ const Messages: FC<MessageProps> = ({
                 conversations={conversations}
                 onClickItem={onClickItem}
                 initLoading={initLoading}
-                list={list}
                 loadMore={loadMore}
                 doFetchRecipientsProfile={doFetchRecipientsProfile}
                 profileRecipients={profileRecipients}
@@ -160,12 +168,20 @@ const Messages: FC<MessageProps> = ({
                   doLeaveConversation={doLeaveConversation}
                   doFetchRecipientsProfile={doFetchRecipientsProfile}
                   forceScrollDown={forceScrollDown}
+                  onSelectUser = {handleSelectUser}
                 />
               </Card>
             </Content>
           </Layout>
         </Content>
       </Layout>
+      <UserProfileModal
+        isOpen={!_.isEmpty(selectedUser)}
+        onClose={() => { setSelectedUser(undefined) }}
+        userId={selectedUser?.userId || ""}
+        doFetchUserBadge={doFetchUserBadge}
+        isFetchingBadges={isFetchingBadges}
+      />
       <MessageCreateModal
         isOpenModal={isActiveModal}
         loading={false}
@@ -189,6 +205,7 @@ const mapStateToProps = (state: IRootStore) => ({
   isAddingMember: state.message.isAddingMember,
   isLeavingConversation: state.message.isLeavingConversation,
   forceScrollDown: state.message.forceScrollDown,
+  isFetchingBadges: state.badge.isFetchingBadges,
 });
 
 const mapDispatchToProps = (dispatch: IRootDispatch) => ({
@@ -200,6 +217,9 @@ const mapDispatchToProps = (dispatch: IRootDispatch) => ({
   doRecieveMessage: dispatch.message.doRecieveMessage,
   doAddMember: dispatch.message.doAddMember,
   doLeaveConversation: dispatch.message.doLeaveConversation,
+  doFetchUserBadge: dispatch.badge.doFetchUserBadge,
+
+  setSelectedUserBadges: dispatch.badge.setSelectedUserBadges,
 });
 
 type MessageStateProps = ReturnType<typeof mapStateToProps>;

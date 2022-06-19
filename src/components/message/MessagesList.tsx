@@ -1,7 +1,7 @@
-import { memo } from "react";
+import { memo, useCallback, useEffect } from "react";
 import moment from "moment";
 import { List, Skeleton, Typography } from "antd";
-import _, { find, includes, isEmpty } from "lodash";
+import _, { find, forEach, includes, isEmpty } from "lodash";
 import { useSelector } from "react-redux";
 
 import { IConversation, IMessage } from "../../store/message/message-interface";
@@ -12,11 +12,16 @@ import { IUser } from "../../store/user/user-interface";
 import './MessagesList.scss';
 import { getFullName } from "../../store/user/user.service";
 
+const ACTION_DATAUSER = [ MessageType.CREATE, MessageType.LEAVE ]
+
+const ACTION_BOTHUSER = [ MessageType.ADD_RECIPIENT ];
+
+const ACTION_FROMUSER = [ MessageType.CHAT, MessageType.RENAME ];
+
 export const MessagesList = memo(({
   initLoading,
   isLoading,
   loadMore,
-  list,
   onClickItem,
   className,
   conversations,
@@ -27,7 +32,6 @@ export const MessagesList = memo(({
   initLoading: boolean;
   isLoading: boolean;
   loadMore: any;
-  list: any[];
   onClickItem: any;
   className?: string | undefined;
   doFetchRecipientsProfile: any;
@@ -36,24 +40,41 @@ export const MessagesList = memo(({
 
   const userId = useSelector((state: IRootStore) => state.user.id);
 
-  const renderMessageContent = (message: IMessage) => {
+  useEffect(() => {
+    forEach(
+      conversations,
+      conversation => {
+        const { lastestMessage } = conversation;
+        if (lastestMessage.type === MessageType.CHAT) return;
+
+        const user = find(profileRecipients, [ 'userId', lastestMessage?.data ]);
+
+        const recipientIds = includes(ACTION_FROMUSER, lastestMessage.type) ?
+          [ lastestMessage.from ] : includes(ACTION_DATAUSER, lastestMessage.type) ?
+            [ lastestMessage.data ] : [ lastestMessage.from, lastestMessage.data ];
+        isEmpty(user) && lastestMessage?.data && doFetchRecipientsProfile({ recipients: recipientIds })
+      })
+  }, [ conversations, doFetchRecipientsProfile ])
+
+  const renderMessageContent = useCallback((message: IMessage) => {
+    if (message.type === MessageType.CHAT) return;
     const user = find(profileRecipients, [ 'userId', message?.data ]);
-    isEmpty(user) && message?.data && doFetchRecipientsProfile({ recipients: [ message?.data ] })
+
     switch (message?.type) {
       case MessageType.ADD_RECIPIENT:
         const actionBy = find(profileRecipients, [ 'userId', message?.from ]);
-        isEmpty(actionBy) && message?.from && doFetchRecipientsProfile({ recipients: [ message?.from ] })
         return `${getFullName(user)} was added by ${getFullName(actionBy)}.`;
       case MessageType.LEAVE:
         return `${getFullName(user)} was just leave to this conversation.`;
       case MessageType.CREATE:
         return `${getFullName(user)} created this conversation.`;
       case MessageType.RENAME:
-        return `${getFullName(user)} has rename this conversation.`;
+        const renameBy = find(profileRecipients, [ 'userId', message?.from ]);
+        return `${getFullName(renameBy)} has renamed this conversation.`;
       default:
         break;
     }
-  };
+  }, [ doFetchRecipientsProfile, profileRecipients ]);
 
   return isLoading ?
     <Skeleton avatar title={false} loading={isLoading} active /> :
