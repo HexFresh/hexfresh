@@ -6,10 +6,9 @@ import _ from "lodash";
 import React, {FC, useCallback, useEffect, useState} from "react";
 import {connect} from "react-redux";
 import HeaderInternal from "../../components/layouts/Header/HeaderInternal";
-import {MessageDetail} from "../../components/message-conversation/message-conversation.component";
+import { MessageDetail } from "../../components/message/message-conversation/message-conversation.component";
 import {MessageCreateModal} from "../../components/message/message-create-modal/message-create-modal.component";
 import {MessageListHeader} from "../../components/message/message-list-header/message-list-header.component";
-
 import { MessagesList } from "../../components/message/MessagesList";
 import { UserProfileModal } from "../../components/user/user-profile-modal.component";
 import { IConversation } from "../../store/message/message-interface";

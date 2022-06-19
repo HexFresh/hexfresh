@@ -3,12 +3,13 @@ import { useSelector } from "react-redux";
 import { find, isEmpty } from "lodash";
 import moment from "moment";
 import { Avatar } from "antd";
+import { MessageType } from "../../../../store/message/message.constant";
+import { getFullName } from "../../../../store/user/user.service";
+import { IMessage } from "../../../../store/message/message-interface";
+import { IRootStore } from "../../../../store/store";
+import { IUser } from "../../../../store/user/user-interface";
 
-import { IMessage } from "../../../store/message/message-interface";
-import { MessageType } from "../../../store/message/message.constant";
-import { IRootStore } from "../../../store/store";
-import { IUser } from "../../../store/user/user-interface";
-import { getFullName } from "../../../store/user/user.service";
+
 
 export const NotificationMessage = memo(({ message }: { message: IMessage }) => {
   const [ profile, setProfile ] = useState<IUser>();

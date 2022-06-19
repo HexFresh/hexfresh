@@ -3,10 +3,11 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { NotificationMessage, RecieiveMessage, ResponseMessage } from "./message-item.component";
-import { IMessage } from "../../../store/message/message-interface";
-import { MessageType } from "../../../store/message/message.constant";
-import { IRootStore } from "../../../store/store";
-import { IUser } from "../../../store/user/user-interface";
+
+import { IMessage } from "../../../../store/message/message-interface";
+import { MessageType } from "../../../../store/message/message.constant";
+import { IUser } from "../../../../store/user/user-interface";
+import { IRootStore } from "../../../../store/store";
 
 export const MessageContent = React.memo(({
   message,
