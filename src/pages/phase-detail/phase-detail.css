@@ -62,7 +62,7 @@
 }
 
 .phase-detail .content .detail-left {
-  width: 350px;
+  width: 400px;
   height: calc(100vh - 130px);
   overflow: hidden;
   display: flex;

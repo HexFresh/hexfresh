@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { HomeOutlined, ApartmentOutlined } from '@ant-design/icons';
+import React, {useEffect, useState} from 'react';
+import {Link} from 'react-router-dom';
+import {HomeOutlined, ApartmentOutlined} from '@ant-design/icons';
 import './phase-detail.css';
-import { sortByField } from '../../utils/common';
-import { useParams } from 'react-router-dom';
+import {sortByField} from '../../utils/common';
+import {useParams} from 'react-router-dom';
 import TaskContent from '../../components/mentor/task-content/TaskContent';
-import { Menu, Breadcrumb, Modal, Input, Select, Button, message } from 'antd';
-import { PlusCircleOutlined } from '@ant-design/icons';
-import { createChecklist, getAllChecklist, createTask, getPhaseById } from '../../api/mentor/mentorApi';
-import { CircularProgress } from '@mui/material';
+import {Menu, Breadcrumb, Modal, Input, Select, Button, message} from 'antd';
+import {PlusCircleOutlined} from '@ant-design/icons';
+import {createChecklist, getAllChecklist, createTask, getPhaseById} from '../../api/mentor/mentorApi';
+import {CircularProgress} from '@mui/material';
 
-const { Option } = Select;
+const {Option} = Select;
 
 interface ITask {
   id: number;
@@ -34,7 +34,7 @@ interface IChecklist {
   tasks: ITask[];
 }
 
-const { SubMenu } = Menu;
+const {SubMenu} = Menu;
 
 function PhaseDetail() {
   const [loading, setLoading] = useState(false);
@@ -122,10 +122,10 @@ function PhaseDetail() {
       };
 
       const handleCreateChecklist = async () => {
-        message.loading({ content: 'Creating...' }).then(async () => {
+        message.loading({content: 'Creating...'}).then(async () => {
           await createChecklist(Number(phaseId), newChecklist);
           fetchChecklists();
-          message.success({ content: 'Created', key: 'success' });
+          message.success({content: 'Created', key: 'success'});
         });
       };
       handleCreateChecklist();
@@ -142,10 +142,10 @@ function PhaseDetail() {
           findMaxIndexOfTask(checklists[checklists.findIndex((checklist) => checklist.id === checklistId)].tasks) + 1,
       };
       const handleCreateTask = async () => {
-        message.loading({ content: 'Creating...' }).then(async () => {
+        message.loading({content: 'Creating...'}).then(async () => {
           await createTask(Number(checklistId), newTask);
           fetchChecklists();
-          message.success({ content: 'Created', key: 'success' });
+          message.success({content: 'Created', key: 'success'});
           setIsTaskModalVisible(false);
           setTaskTitle('');
           setTaskType('1');
@@ -174,12 +174,12 @@ function PhaseDetail() {
   return (
     <div className="phase-detail-main">
       {loading ? (
-        <CircularProgress />
+        <CircularProgress/>
       ) : (
         <div className="phase-detail">
           <div className="topbar">
             <Link className="topbar__left" to="/mentor/programs">
-              <img src="/logo.svg" width="36px" alt="logo" />
+              <img src="/logo.svg" width="36px" alt="logo"/>
             </Link>
             <div className="topbar__mid">{phaseTitle}</div>
             <div className="topbar__right"></div>
@@ -212,7 +212,7 @@ function PhaseDetail() {
           <div className="content">
             <div className="detail-left">
               <div className="left__container">
-                <Menu mode="inline" style={{ borderRight: 0, backgroundColor: 'white' }}>
+                <Menu mode="inline" style={{borderRight: 0, backgroundColor: 'white'}}>
                   {checklists.map((checklist) => {
                     return (
                       <SubMenu
@@ -225,7 +225,6 @@ function PhaseDetail() {
                             style={{
                               fontSize: '18px',
                               fontWeight: 'bold',
-                              textTransform: 'uppercase',
                             }}
                           >
                             {checklist?.title}
@@ -246,7 +245,7 @@ function PhaseDetail() {
                             type="primary"
                             onClick={() => showTaskModal(checklist.id)}
                             className="add-task-btn"
-                            icon={<PlusCircleOutlined />}
+                            icon={<PlusCircleOutlined/>}
                             style={{
                               width: '100%',
                             }}
@@ -263,7 +262,7 @@ function PhaseDetail() {
                     type="primary"
                     onClick={showChecklistModal}
                     className="add-checklist-btn"
-                    icon={<PlusCircleOutlined />}
+                    icon={<PlusCircleOutlined/>}
                     style={{
                       width: '100%',
                       marginTop: '10px',
@@ -277,7 +276,7 @@ function PhaseDetail() {
             </div>
             <div className="detail-right">
               {task ? (
-                <TaskContent setTaskNull={setTaskNull} fetchChecklists={fetchChecklists} task={task} />
+                <TaskContent setTaskNull={setTaskNull} fetchChecklists={fetchChecklists} task={task}/>
               ) : (
                 <div className="no-task">
                   <p>No Task Selected</p>
@@ -292,7 +291,7 @@ function PhaseDetail() {
             onOk={handleTaskOk}
             onCancel={handleTaskCancel}
             footer={[
-              <Button key="cancel" style={{ marginRight: '10px' }} onClick={handleTaskCancel}>
+              <Button key="cancel" style={{marginRight: '10px'}} onClick={handleTaskCancel}>
                 Cancel
               </Button>,
               <Button key="create" type="primary" onClick={handleTaskOk}>
@@ -303,11 +302,11 @@ function PhaseDetail() {
             <div className="form">
               <div className="field">
                 <label>Title</label>
-                <Input style={{ width: '100%', marginTop: '10px' }} value={taskTitle} onChange={changeTaskTitle} />
+                <Input style={{width: '100%', marginTop: '10px'}} value={taskTitle} onChange={changeTaskTitle}/>
               </div>
               <div className="field">
                 <label>Choose type of task</label>
-                <Select value={taskType} style={{ width: '100%', marginTop: '10px' }} onChange={changeTaskType}>
+                <Select value={taskType} style={{width: '100%', marginTop: '10px'}} onChange={changeTaskType}>
                   <Option value="1">Single-Choice</Option>
                   <Option value="2">Multiple-Choice</Option>
                   <Option value="3">Constructed-Response</Option>
@@ -327,7 +326,7 @@ function PhaseDetail() {
             onOk={handleChecklistOk}
             onCancel={handleChecklistCancel}
             footer={[
-              <Button key="cancel" style={{ marginRight: '10px' }} onClick={handleChecklistCancel}>
+              <Button key="cancel" style={{marginRight: '10px'}} onClick={handleChecklistCancel}>
                 Cancel
               </Button>,
               <Button key="create" type="primary" onClick={handleChecklistOk}>
@@ -338,7 +337,7 @@ function PhaseDetail() {
             <div className="form">
               <div className="field">
                 <label>Title</label>
-                <Input value={checklistTitle} onChange={(e) => setChecklistTitle(e.target.value)} />
+                <Input value={checklistTitle} onChange={(e) => setChecklistTitle(e.target.value)}/>
               </div>
             </div>
           </Modal>
