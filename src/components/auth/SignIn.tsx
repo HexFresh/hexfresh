@@ -94,7 +94,7 @@ const SignIn = () => {
             required
             fullWidth
             id="email"
-            label="Email Address"
+            label="Username"
             name="email"
             autoComplete="email"
             error={emailHasError}
@@ -103,7 +103,7 @@ const SignIn = () => {
             value={email}
             helperText={
               emailHasError
-                ? 'Username must not be empty and include \'@\' if it is email and is a number if it is your studentID'
+                ? 'Username must not be empty'
                 : ''
             }
           />
@@ -160,7 +160,7 @@ const SignIn = () => {
               Sign In
             </Button>
 
-            <Divider>
+{/*             <Divider>
               <Typography
                 gutterBottom
                 variant="subtitle1"
@@ -179,8 +179,7 @@ const SignIn = () => {
                 '& > :not(style)': { m: 2 },
               }}
             >
-              {/* <GoogleSignin /> */}
-            </Grid>
+            </Grid> */}
           </Grid>
         </Box>
       </Grid>
