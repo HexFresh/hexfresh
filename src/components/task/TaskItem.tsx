@@ -518,7 +518,8 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
     const {
       binaryChoices,
       multipleChoices,
-      isEdit, isTaken,
+      isEdit, 
+      isTaken,
       inputTextArea,
       matchingSequence,
       pairIds,
@@ -564,7 +565,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
                 </Card>
               </div>
             })}
-            {!isTaken || isEdit && <Dragger {...props} onChange={this._onChangeFile} onDrop={this._onDropFile}>
+            {(!isTaken || isEdit) && <Dragger {...props} onChange={this._onChangeFile} onDrop={this._onDropFile}>
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />
               </p>
