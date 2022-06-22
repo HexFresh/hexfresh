@@ -1,18 +1,22 @@
-.matching__card{
+.matching__card {
   &:hover,
-  &-clicked{
+  &-clicked {
     border: 1px solid #75e18c;
     cursor: pointer;
   }
 }
 
-.close-badge{
-  &:hover{
+.close-badge {
+  &:hover {
     cursor: pointer;
     color: #ffa39e;
   }
 }
 
-.taskitem--assignment__card-body{
+.taskitem--assignment__card-body {
   display: flex;
+}
+
+.taskitem--document__html {
+  overflow-y: scroll;
 }

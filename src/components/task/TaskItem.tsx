@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import _, { get, isEmpty } from 'lodash';
+import _, { get, isEmpty, isEqual } from 'lodash';
 import 'antd/dist/antd.css';
 import { message, Space, Button, Skeleton, Upload, Card, Typography } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
@@ -251,6 +251,14 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
       }
     }
 
+    const { task } = this.props;
+    if (isEqual(task?.task?.typeId, TaskCategory.DOCUMENT)) {
+      const element = document.getElementById('taskitem--document__html');
+      if (!isEmpty(task?.task?.document?.document) && element) {
+        element.innerHTML = task?.task?.document?.document.toString() || '';
+      }
+    }
+
   }
 
   private _onChangeSingleChoice(e: any) {
@@ -496,6 +504,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
           break;
         case TaskCategory.DOCUMENT:
           await doSubmitDocument({ taskId });
+          break;
         default:
           break;
       }
@@ -518,7 +527,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
     const {
       binaryChoices,
       multipleChoices,
-      isEdit, 
+      isEdit,
       isTaken,
       inputTextArea,
       matchingSequence,
@@ -535,9 +544,8 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
       switch (task?.task?.typeId) {
         case TaskCategory.DOCUMENT:
           return <>
-            <Title> {task?.task?.document?.title}</Title>
-            <div className='taskitem--document__html' id='taskitem--document__html'>
-              Alo 123123</div>
+            <Title level={4}> {task?.task?.document?.title || task?.task?.title}</Title>
+            <div className='taskitem--document__html' id='taskitem--document__html' />
           </>;
         case TaskCategory.ASSIGNMENT:
           const props = {
@@ -671,7 +679,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
         {
           (isLoading || isFetchingAnswer) ? <Skeleton active={true} /> :
             <>
-              <Title>{task?.task?.quiz?.question}</Title>
+              <Title level={4}>{task?.task?.quiz?.question}</Title>
               <br></br>
               <Space direction="vertical" style={{ width: '100%', gap: '0px' }}>
                 {!isEmptyQuiz ?
