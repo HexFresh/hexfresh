@@ -1,5 +1,5 @@
 import { NavigateFunction } from "react-router-dom";
-import axiosClient from "../../api/axiosClient";
+import axiosClient, { setAuthAPIToken } from "../../api/axiosClient";
 import rootStore, { IRootDispatch, IRootStore } from "../store";
 import { retrieveStoredToken } from '../../utils/calc';
 import { socketInstance } from "../../utils/socketioInit";
@@ -69,7 +69,7 @@ export const user: any = {
 
         //set token for axios message
         setAuthToken(data.token);
-
+        setAuthAPIToken(data.token);
         // Copy to success
 
         await dispatch.user.fetchProfileUsers();
@@ -124,7 +124,7 @@ export const user: any = {
       navigate,
       location
     }: { dispatch: IRootDispatch, navigate: NavigateFunction, location: any }) {
-      const endpoint = `program/1`;
+      const endpoint = `/`;
       //const token = localStorage.getItem('token');
       const token = sessionStorage.getItem('token');
 
@@ -133,23 +133,24 @@ export const user: any = {
       }
 
       try {
+        const accessToken = localStorage.getItem('token');
+        const userId = localStorage.getItem('userId');
+        if (accessToken) {
+          //set token for axios message
+          setAuthToken(accessToken);
+          setAuthAPIToken(accessToken);
+
+          const socket = socketInstance;
+          socket.io.opts.query = "token=" + accessToken as any;
+          socket.emit('signin', 'Auto sign in');
+        } else {
+          console.log('no access token');
+        }
+
         const response = await axiosClient.get(endpoint);
         if (response.status === 200) {
-
-          const accessToken = localStorage.getItem('token');
-          const userId = localStorage.getItem('userId');
-          if (accessToken) {
-            //set token for axios message
-            setAuthToken(accessToken);
-
-            const socket = socketInstance;
-            socket.io.opts.query = "token=" + accessToken as any;
-            socket.emit('signin', 'Auto sign in');
-          } else {
-            console.log('no access token');
-          }
           dispatch.user.loginSucces({
-            token: accessToken || 'ẻdtafygsuhijdeiyfuiwuyefv',
+            token: accessToken,
             userId
           });
 
@@ -163,6 +164,7 @@ export const user: any = {
         }
 
       } catch (error) {
+        dispatch.user.signOut({ navigate });
         console.log(error, 'error');
       }
 

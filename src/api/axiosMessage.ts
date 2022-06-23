@@ -2,7 +2,7 @@ import axios from "axios";
 
 const axiosMessage = axios.create({
   withCredentials: true,
-  baseURL: 'https://hexfresh-socket.herokuapp.com',
+  baseURL: process.env.REACT_APP_CHAT_SERVER_URL,
 });
 
 

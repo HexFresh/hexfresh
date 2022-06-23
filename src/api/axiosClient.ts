@@ -1,11 +1,8 @@
 import axios from "axios";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { IRootDispatch } from "../store/store";
 
 const axiosClient = axios.create({
   withCredentials: true,
-  baseURL: 'https://hexfresh-gamification-backend.herokuapp.com/api/',
+  baseURL: process.env.REACT_APP_API_SERVER_URL,
   //baseURL: 'http://localhost:3000/api/',
 });
 
@@ -59,5 +56,13 @@ axiosClient.interceptors.response.use(function (response) {
       }
   return Promise.reject(error.message);
 });
+
+export const setAuthAPIToken = (token: string) => {
+  if (token) {
+    axiosClient.defaults.headers.common.Authorization = `Bearer ${token}`;
+  } else {
+    delete axiosClient.defaults.headers.common.Authorization;
+  }
+};
 
 export default axiosClient;
