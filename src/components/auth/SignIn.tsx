@@ -1,4 +1,4 @@
-import React, { Dispatch } from 'react';
+import React, { Dispatch, useCallback } from 'react';
 import { /* Redirect, */ useNavigate, Link } from 'react-router-dom';
 import {
   Grid,
@@ -16,13 +16,14 @@ import classes from './SignIn.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { IRootDispatch, IRootStore } from '../../store/store';
 import { ILocationStore } from '../../store/location/location-store';
+import { isEqual } from 'lodash';
 
 const SignIn = () => {
   const dispatch = useDispatch<IRootDispatch>()
   const navigate = useNavigate();
   const preLocation: ILocationStore = useSelector<IRootStore>((state) => state.location);
 
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [ isLoading, setIsLoading ] = React.useState<boolean>(false);
   const {
     value: email,
     valueIsValid: emailIsValid,
@@ -42,7 +43,7 @@ const SignIn = () => {
 
   const formIsValid = emailIsValid && passwordIsValid;
 
-  const submitHandler = (event: { preventDefault: () => void; }) => {
+  const handleSubmit = useCallback((event: { preventDefault: () => void; }) => {
     event.preventDefault();
     if (!formIsValid) {
       return;
@@ -53,7 +54,11 @@ const SignIn = () => {
     }, 1000)
     dispatch.user.signIn({ email, password, navigate, preLocation: preLocation.location });
     //dispatch(signIn({ username: email, password }, history, preLocation));
-  };
+  },[dispatch.user, email, formIsValid, navigate, password, preLocation.location]);
+
+  const handleKeyDown = useCallback((e) => {
+    isEqual(e.key, 'Enter') && handleSubmit(e);
+  }, [handleSubmit])
 
   const forgotPasswordHandler = () => {
     navigate('/forgot-password');
@@ -106,6 +111,7 @@ const SignIn = () => {
                 ? 'Username must not be empty'
                 : ''
             }
+            onKeyDown={handleKeyDown }
           />
           <TextField
             margin="normal"
@@ -123,6 +129,7 @@ const SignIn = () => {
             helperText={
               passwordHasError ? 'Pass must has more than 8 characters.' : ''
             }
+            onKeyDown={handleKeyDown}
           />
           <Grid
             sx={{
@@ -138,7 +145,7 @@ const SignIn = () => {
             <Grid container>
               <Grid item xs>
                 <div
-                  className={classes['forgot-password']}
+                  className={classes[ 'forgot-password' ]}
                   aria-hidden="true"
                   onClick={forgotPasswordHandler}
                 >
@@ -155,12 +162,12 @@ const SignIn = () => {
               type="primary"
               loading={isLoading}
               size='large'
-              onClick={submitHandler}
+              onClick={handleSubmit}
             >
               Sign In
             </Button>
 
-{/*             <Divider>
+            {/*             <Divider>
               <Typography
                 gutterBottom
                 variant="subtitle1"

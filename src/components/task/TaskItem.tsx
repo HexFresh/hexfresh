@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import _, { get, isEmpty, isEqual } from 'lodash';
 import 'antd/dist/antd.css';
-import { message, Space, Button, Skeleton, Upload, Card, Typography } from 'antd';
+import { Space, Button, Skeleton, Card, Typography } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import Title from 'antd/lib/typography/Title';
 import Text from 'antd/lib/typography/Text';
@@ -20,9 +20,8 @@ import { MultipleChoices } from './multiple-task/MultipleChoices';
 import { BinaryQuiz } from './binary-quiz/BinaryQuiz';
 import { INT_ONE, INT_TWO, INT_ZERO } from '../../constant';
 import { MatchCorrespond } from './match-corresponding/MatchCorrespond';
-import { isTrueAnswer } from './match-corresponding/match-correspoding.util';
 import { CloseOutlined } from '@mui/icons-material';
-import { InlineValue } from '../../core/common/component/inline-value';
+import { InlineValue } from '../../core/component/inline-value';
 
 export interface IMatchingSequencePair {
   id: number;
