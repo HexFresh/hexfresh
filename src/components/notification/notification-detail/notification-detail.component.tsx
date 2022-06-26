@@ -21,8 +21,8 @@ export const NotifcationModalDetail = memo(({
 }) => {
 
   const fromUser = isEqual(selectedNotif.type, NotificationType.SYSTEM)? 
-                      <CustomAvatar isSystem />:
-                      <CustomAvatar user={actionUser}/>
+                      <CustomAvatar isSystem hasBackground/>:
+                      <CustomAvatar user={actionUser} hasBackground/>
   return<Modal
   className="modal"
   title={selectedNotif?.title}

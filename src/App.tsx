@@ -66,6 +66,7 @@ function App() {
 
     const initialFunc = async () => {
       await dispatch.user.checkAutoLoginV2({dispatch, navigate, location});
+      await dispatch.user.doFetchCurrentProfileInfo();
       await dispatch.user.fetchProfileUsers();
       // push notification
       onMessageListener()
@@ -78,7 +79,7 @@ function App() {
 
     initialFunc();
     setSocket(socketInstance);
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (socket.disconnected) {

@@ -15,6 +15,7 @@ const initialState = {
   roleId: null,
   users: [],
   isFetchingUsers: false,
+  myProfile: {},
 }
 
 export const user: any = {
@@ -46,7 +47,7 @@ export const user: any = {
 
     setUsers: (state: IRootStore, payload: any) => ({ ...state, users: payload }),
     setIsFetchingUsers: (state: IRootStore, payload: any) => ({ ...state, isFetchingUsers: payload }),
-
+    setProfile: (state: IRootStore, payload: any) => ({ ...state, myProfile: payload })
   },
   effects: (dispatch: IRootDispatch) => ({
     async signIn(
@@ -195,6 +196,23 @@ export const user: any = {
         });
       }
     },
+
+    async doFetchCurrentProfileInfo() {
+      const endpoint = `user/info`;
+      dispatch.user.setIsFetchingUsers(true);
+      try {
+        const response = await axiosClient.get(endpoint);
+        const { data: { id } } = response;
+        const endpoint_userProfile = `user/${id}/user-profile`;
+
+        const responseProfile = await axiosClient.get(endpoint_userProfile);
+        dispatch.user.setProfile(responseProfile.data);
+      } catch (error) {
+        console.log(error);
+      }
+      dispatch.user.setIsFetchingUsers(false);
+
+    }
 
   }),
 }

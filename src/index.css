@@ -87,6 +87,9 @@ code {
 .ml-small {
   margin-left: 4px;
 }
+.ml-medium{
+  margin-left: 6px;
+}
 
 .mt-large {
   margin-top: 14px !important;
