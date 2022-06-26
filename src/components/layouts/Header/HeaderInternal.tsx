@@ -1,18 +1,25 @@
 import { AssignmentInd, Logout } from '@mui/icons-material';
 import { Avatar, Dropdown, Menu } from 'antd';
-import React from 'react';
-import { useDispatch } from 'react-redux';
+import { isEmpty } from 'lodash';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { IRootDispatch } from '../../../store/store';
+import { CustomAvatar } from '../../../core/component/avatar/avatar.component';
+import { IRootDispatch, IRootStore } from '../../../store/store';
 import './HeaderInternal.scss';
 
 const HeaderInternal = ({ textColorClassName }: { textColorClassName?: string }) => {
   const dispatch = useDispatch<IRootDispatch>();
   const navigate = useNavigate();
+  const myProfile = useSelector((state: IRootStore) => state.user.myProfile);
 
   const logoutHandler = React.useCallback(() => {
     dispatch.user.logoutHandlerAction({ dispatch, navigate });
-  }, []);
+  }, [ dispatch, navigate ]);
+
+  useEffect(()=>{
+    isEmpty(myProfile)&&dispatch.user.doFetchCurrentProfileInfo();
+  },[dispatch.user, myProfile])
 
   const onClickMenu = ({ key }: { key: string }) => {
     switch (key) {
@@ -30,13 +37,13 @@ const HeaderInternal = ({ textColorClassName }: { textColorClassName?: string })
   const menu = (
     <Menu onClick={onClickMenu} className='menu-popup'>
       <Menu.Item key="1">
-        <AssignmentInd /> 
-      <span>
-        My Profile
-      </span>
+        <AssignmentInd className='mr-medium' />
+        <span>
+          My Profile
+        </span>
       </Menu.Item>
       <Menu.Item key="2">
-        <Logout/>
+        <Logout className='mr-medium' />
         <span>
           Log Out
         </span>
@@ -57,7 +64,7 @@ const HeaderInternal = ({ textColorClassName }: { textColorClassName?: string })
           </Link>
         </div>
         <div className="item-space"></div>
-        <div className="header-item">
+       {/*  <div className="header-item">
           <Link className={textColorClassName} to="/">
             <span className="logo-item">
               <div className="logo-img">
@@ -67,13 +74,13 @@ const HeaderInternal = ({ textColorClassName }: { textColorClassName?: string })
             </span>
           </Link>
         </div>
-        <div className="item-space"></div>
+        <div className="item-space"></div> */}
 
         <div className="header-item">
           <Link className={textColorClassName} to="/notifications">
             <span className="logo-item">
               <div className="logo-img">
-                <img src="/contact.png" alt="Onboarding icon" />
+                <img src="https://res.cloudinary.com/droruloek/image/upload/v1656257769/hexfresh/bell_rnlwil.png" alt="Onboarding icon" />
               </div>
               <span>Notifications</span>
             </span>
@@ -120,7 +127,13 @@ const HeaderInternal = ({ textColorClassName }: { textColorClassName?: string })
 
         <div className="header-item">
           <Dropdown overlay={menu}>
-            <Avatar src="/man.png" />
+            <div>
+              {
+                isEmpty(myProfile) ?
+                  <Avatar src="/man.png" /> :
+                  <CustomAvatar user={myProfile} className={textColorClassName} />
+              }
+            </div>
           </Dropdown>
         </div>
       </div>

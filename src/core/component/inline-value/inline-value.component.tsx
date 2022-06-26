@@ -7,7 +7,7 @@ export const InlineValue = React.memo(({ title, value }: { title: string, value:
     <Col span={6}>
       <Title level={5}>{title}</Title>
     </Col>
-    <Col span={18}>
+    <Col span={18} style={{textAlign:'justify'}}>
       {value}
     </Col>
   </Row>

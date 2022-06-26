@@ -25,7 +25,7 @@ export const notificationStore: any = {
     doPushNotif(notificationPayload: INotification) {
       if (isEmpty(notification)) return;
       notification.open({
-        message: `New message from ${notificationPayload.title}`,
+        message: `${notificationPayload.title}`,
         description: notificationPayload.body,
       });
     },
