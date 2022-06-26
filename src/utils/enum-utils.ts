@@ -20,6 +20,9 @@ export enum AttachmentStatus {
   SCANNED
 }
 
-export const ChatType = {
-  CHAT: 'chat',
+export enum NotificationType {
+  CHAT = "chat",
+  ANNOUNCEMENT = "announcement",
+  SYSTEM = "system",
+  BADGE = "badge",
 }

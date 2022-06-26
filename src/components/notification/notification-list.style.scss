@@ -1,0 +1,9 @@
+.notif-list{
+  .notif-item{
+    padding: 16px;
+    &:hover{
+      background-color: #78b2fa;
+      cursor: pointer;
+    }
+  }
+}
