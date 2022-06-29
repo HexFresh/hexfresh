@@ -11,6 +11,7 @@ import {EditOutlined, ProfileOutlined, StockOutlined} from '@ant-design/icons';
 import {IUserProfile, IUserAccount, IDegree, IDistrict, IJobPosition, IProvince, IWard} from './interface';
 import HeaderInternal from '../../components/layouts/Header/HeaderInternal';
 import {BadgeList} from '../../components/badges/badge-list/badge-list.component';
+import  FresherStatistic from '../../components/fresher/statistic/fresher-statistic.component';
 import {EmptyResult} from '../../components/results';
 import {USER_PROFILE_TABS} from '../../constant';
 
@@ -538,6 +539,7 @@ export default function UserProfile() {
                       !badge?.isFetchingBadges ?
                         <EmptyResult message="Your badges will displayed here."/> :
                         <BadgeList badges={badge?.badges} count={1} page={1}/>}
+                        <FresherStatistic/>
                     </div>
                   </Tabs.TabPane>
                 </Tabs>

@@ -12,7 +12,7 @@ export const stats: any = {
   },
   effects: (dispatch: IRootDispatch) => ({
     async doFetchFresherStats() {
-      const endpoint = '/api/stat/dashboard-fresher';
+      const endpoint = 'stat/dashboard-fresher';
       dispatch.stats.setIsFetchingStats(true);
       try {
         const response = await axiosClient.get(endpoint);
