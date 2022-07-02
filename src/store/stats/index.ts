@@ -1,10 +1,14 @@
 import axiosClient from "../../api/axiosClient";
 import { IRootDispatch, IRootStore } from "../store";
 
+export const statInitialState = {
+  stats: {},
+  isFetchingStats: false,
+}
+
 export const stats: any = {
   state: {
-    stats: {},
-    isFetchingStats: false,
+    ...statInitialState,
   },
   reducers: {
     setStats: (state: IRootStore, payload: any) => ({ ...state, stats: payload }),

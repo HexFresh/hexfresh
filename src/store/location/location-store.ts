@@ -1,8 +1,12 @@
 import { IRootStore } from "../store"
 
+export const locationInitialState = {
+  location: null,
+}
+
 export const locationStore: any = {
   state: {
-    location: null,
+    ...locationInitialState
   },
   reducers: {
     startAt: (state: IRootStore, payload: string) => ({ ...state, location: payload }),

@@ -7,7 +7,7 @@ import { notification } from "antd";
 import { setAuthToken } from "../../api/axiosMessage";
 import { DoorSlidingOutlined } from "@mui/icons-material";
 
-const initialState = {
+export const userInitialState = {
   token: null,
   id: null,
   email: null,
@@ -20,7 +20,7 @@ const initialState = {
 
 export const user: any = {
   state: {
-    ...initialState
+    ...userInitialState
   },
   reducers: {
     loginSucces: (state: IRootStore, payload: any) => {
@@ -42,7 +42,7 @@ export const user: any = {
       }
     },
     logout: (state: IRootStore) => {
-      return { ...initialState }
+      return { ...userInitialState }
     },
 
     setUsers: (state: IRootStore, payload: any) => ({ ...state, users: payload }),
@@ -102,6 +102,7 @@ export const user: any = {
     },
     signOut({ navigate }: { navigate: NavigateFunction }) {
       dispatch.user.logout();
+      dispatch({ type: 'RESET_APP' });
       localStorage.removeItem('token');
       localStorage.removeItem('userId');
       sessionStorage.removeItem("token");

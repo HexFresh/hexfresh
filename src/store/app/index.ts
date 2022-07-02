@@ -1,9 +1,14 @@
 import { USER_PROFILE_TABS } from "../../constant";
 import { IRootDispatch, IRootStore } from "../store";
 
+export const appInitialState={
+  selectedUserTab: USER_PROFILE_TABS.INFORMATIONS,
+
+}
+
 export const appStore: any = {
   state:{
-    selectedUserTab: USER_PROFILE_TABS.INFORMATIONS,
+    ...appInitialState,
   },
   reducers:{
     setSelectedUserTab: (state: IRootStore, payload: number)=>({...state, selectedUserTab: payload}),
