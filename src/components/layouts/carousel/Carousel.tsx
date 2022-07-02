@@ -11,6 +11,7 @@ import { message, notification, Progress, Spin, Typography } from "antd";
 import _ from "lodash";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { RocketLoading } from "../../loading/rocket-loading.component";
+import { INT_TWO } from "../../../constant";
 
 type ICarouselProps = StateProps & DispatchProps;
 
@@ -121,7 +122,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
     const { isLoading } = this.state;
 
     if (_.isEmpty(program) || _.isEmpty(imageList) || isLoading) {
-      return <RocketLoading/>
+      return <RocketLoading />
     }
     return (
       <div id="carousel" className="noselect">
@@ -183,7 +184,8 @@ class ItemClass extends React.Component<IItemProps, IItemStates> {
 
   render() {
     const className = "item level" + this.props.level;
-    const backgroundSize = this.props.level === 0 ? '400px' : 'auto';
+    const backgroundSize = this.props.level === 0 ? '400px' : this.props.level === -INT_TWO ? '50% ' : 'auto';
+    console.log("🚀 ~ file: Carousel.tsx ~ line 188 ~ ItemClass ~ render ~ this.props.level", this.props.level)
     const { program, navigate, image } = this.props;
 
     return (
