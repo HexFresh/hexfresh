@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,8 +10,9 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import { random } from 'lodash';
-import { IStats } from '../../../store/stats/stats.interface';
+import { map, random } from 'lodash';
+import { IPointByDate, IStats, ITaskDoneByDate } from '../../../store/stats/stats.interface';
+import moment from 'moment';
 
 ChartJS.register(
   CategoryScale,
@@ -31,31 +32,35 @@ export const options = {
     },
     title: {
       display: true,
-      text: 'Chart.js Line Chart',
+      text: 'Your current status',
     },
   },
 };
 
-const labels = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July' ];
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Dataset 1',
-      data: labels.map(() => random(100)),
-      borderColor: 'rgb(255, 99, 132)',
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
-    },
-    {
-      label: 'Dataset 2',
-      data: labels.map(() => random(100)),
-      borderColor: 'rgb(53, 162, 235)',
-      backgroundColor: 'rgba(53, 162, 235, 0.5)',
-    },
-  ],
+export const getData = (tasks: ITaskDoneByDate[], points: IPointByDate[]) => {
+  const labels =map(tasks, task=> moment(task.date).format("MMM Do YY"));
+  return {
+    labels,
+    datasets: [
+      {
+        label: 'Task done',
+        data: map(tasks, task => task.totalTasks),
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      },
+      {
+        label: 'Points',
+        data: map(points, point => point.totalpoints),
+        borderColor: 'rgb(53, 162, 235)',
+        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+      },
+    ],
+  }
 };
 
-export const FresherLineChart = ({ stats }: { stats: IStats }) => {
+export const FresherLineChart = ({ stats:{tasksDoneByDate, pointsByDate } }: { stats: IStats }) => {
+const data = useMemo(()=> getData(tasksDoneByDate, pointsByDate),[pointsByDate, tasksDoneByDate]);
+
   return <Line className='mt-medium' options={options} data={data} />;
 }
