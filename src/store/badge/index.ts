@@ -1,12 +1,15 @@
 import { isEmpty } from "lodash";
 import axiosClient from "../../api/axiosClient";
 import { IRootDispatch, IRootStore } from "../store";
+export const badgeInitialState ={
+  badges: null,
+  isFetchingBadges: false,
+  selectedUserBadges: [],
+}
 
 export const badgeStore: any = {
   state:{
-    badges: null,
-    isFetchingBadges: false,
-    selectedUserBadges: [],
+    ...badgeInitialState,
   },
   reducers:{
     setBadges: (state: IRootStore, payload: any)=>({...state, badges: payload}),

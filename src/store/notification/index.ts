@@ -5,14 +5,18 @@ import { DEFAULT_PAGE_SIZE, INT_ONE, INT_ZERO } from "../../constant";
 import rootStore, { IRootDispatch, IRootStore } from "../store"
 import { ICounter, INotification } from "./notification.interface";
 
+export const notificationInitialState = {
+  notifications: [],
+  selectedNotif: null,
+  counter: {} as ICounter,
+
+  isFetchingNotifications: false,
+  isFetchingNotifDetail: false,
+}
+
 export const notificationStore: any = {
   state: {
-    notifications: [],
-    selectedNotif: null,
-    counter: {} as ICounter,
-
-    isFetchingNotifications: false,
-    isFetchingNotifDetail: false,
+    ...notificationInitialState,
   },
   reducers: {
     setNotifications: (state: IRootStore, payload: any) => ({ ...state, notifications: payload }),

@@ -3,9 +3,9 @@
 $default-height: 80%;
 $default-width: 25%;
 $level2-height: $default-height - 8%;
-$level2-width: $default-width - 8%;
+$level2-width: $default-width - 13%;
 $level1-height: 26%;
-$level1-width: 8%;
+$level1-width: 20%;
 $level0-height: 43%;
 $level0-width: 20.5%;
 $level-2-left: 15%;
@@ -89,7 +89,7 @@ body {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    transition: box-shadow 0s,  width 250ms, left .5s, margin-top 1s, line-height 250ms, background-color 1s, background-size .5s ease-in 0.3s, opacity 0s;
+    transition: box-shadow 0s,  width 250ms, left .5s, margin-top 1s, line-height 250ms, background-color 1s, opacity 0s;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
