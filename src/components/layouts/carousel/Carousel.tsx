@@ -1,8 +1,8 @@
 import React from "react";
 import { TransitionGroup } from "react-transition-group";
 import { connect } from "react-redux";
-import {NavigateFunction, useNavigate } from "react-router-dom";
-import {  notification} from "antd";
+import { NavigateFunction, useNavigate } from "react-router-dom";
+import { notification } from "antd";
 import _, { isEqual } from "lodash";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
@@ -40,45 +40,45 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
   generateItems() {
     const { imageList } = this.props;
     const { isLoading, active, items } = this.state;
-    if (!isLoading && !_.isEmpty(items)){
+    if (!isLoading && !_.isEmpty(items)) {
 
       const itemsPhase = [];
-    let level;
-    if (items.length < 5) {
+      let level;
+      if (items.length < 5) {
 
-      for (let i = 0; i < active + items.length; i++) {
-        let index = i;
-        if (i < 0) {
-          index = items.length + i;
-        } else if (i >= items.length) {
-          index = i % items.length;
+        for (let i = 0; i < active + items.length; i++) {
+          let index = i;
+          if (i < 0) {
+            index = items.length + i;
+          } else if (i >= items.length) {
+            index = i % items.length;
+          }
+          level = active - i;
+          const image = _.find(imageList, { id: items[ index ]?.phase?.imageId })
+          itemsPhase.push(
+            <Item key={index} level={level} program={items[ index ].phase} image={image} />
+          );
         }
-        level = active - i;
-        const image = _.find(imageList, { id: items[ index ]?.phase?.imageId })
-        itemsPhase.push(
-          <Item key={index} level={level} program={items[ index ].phase} image={image} />
-        );
-      }
-    } else {
+      } else {
 
-      for (let i = active - 2; i < active + 3; i++) {
-        let index = i;
-        if (i < 0) {
-          index = items.length + i;
-        } else if (i >= items.length) {
-          index = i % items.length;
+        for (let i = active - 2; i < active + 3; i++) {
+          let index = i;
+          if (i < 0) {
+            index = items.length + i;
+          } else if (i >= items.length) {
+            index = i % items.length;
+          }
+          level = this.state.active - i;
+          const image = _.find(imageList, { id: items[ index ]?.phase?.imageId })
+          itemsPhase.push(
+            <Item key={index} level={level} program={items[ index ].phase} image={image} />
+          );
         }
-        level = this.state.active - i;
-        const image = _.find(imageList, { id: items[ index ]?.phase?.imageId })
-        itemsPhase.push(
-          <Item key={index} level={level} program={items[ index ].phase} image={image} />
-        );
       }
+      return itemsPhase;
     }
-    return itemsPhase;
-    } 
-    
-    return <></>;  
+
+    return <></>;
   }
 
   moveLeft() {
@@ -140,7 +140,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
         <TransitionGroup transitionName={this.state.direction}>
           {this.generateItems()}
         </TransitionGroup>
-        {(active < items.length - INT_ONE ) && <div className="arrow arrow-right" onClick={this.rightClick}>
+        {(active < items.length - INT_ONE) && <div className="arrow arrow-right" onClick={this.rightClick}>
           <RightOutlined style={{ color: 'white' }} />
         </div>}
 
