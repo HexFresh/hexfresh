@@ -1,17 +1,17 @@
 import React from "react";
 import { TransitionGroup } from "react-transition-group";
-import "./Carousel.scss";
+import { connect } from "react-redux";
+import { NavigateFunction, useNavigate } from "react-router-dom";
+import { notification } from "antd";
+import _, { isEqual } from "lodash";
+import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+
 import { IRootDispatch, IRootStore } from "../../../store/store";
 import { IImage, IPhase } from "../../../interface/program-interface";
-import { connect } from "react-redux";
-import { Link, NavigateFunction, useNavigate } from "react-router-dom";
-import { programStore } from "../../../store/planet/program-store";
-import { RematchDispatch, RematchDispatcher } from "@rematch/core";
-import { message, notification, Progress, Spin, Typography } from "antd";
-import _ from "lodash";
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { RocketLoading } from "../../loading/rocket-loading.component";
-import { INT_TWO } from "../../../constant";
+import { INT_ONE, INT_TWO, INT_ZERO } from "../../../constant";
+
+import "./Carousel.scss";
 
 type ICarouselProps = StateProps & DispatchProps;
 
@@ -39,57 +39,65 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
 
   generateItems() {
     const { imageList } = this.props;
-    const { isLoading, active } = this.state;
-    if (isLoading || _.isEmpty(this.state.items)) return <></>;
-    const items = [];
-    let level;
-    if (this.state.items.length < 5) {
+    const { isLoading, active, items } = this.state;
+    if (!isLoading && !_.isEmpty(items)) {
 
-      for (let i = 0; i < active + this.state.items.length; i++) {
-        let index = i;
-        if (i < 0) {
-          index = this.state.items.length + i;
-        } else if (i >= this.state.items.length) {
-          index = i % this.state.items.length;
-        }
-        level = active - i;
-        const image = _.find(imageList, { id: this.state.items[ index ]?.phase?.imageId })
-        items.push(
-          <Item key={index} level={level} program={this.state.items[ index ].phase} image={image} />
-        );
-      }
-    } else {
+      const itemsPhase = [];
+      let level;
+      if (items.length < 5) {
 
-      for (let i = active - 2; i < active + 3; i++) {
-        let index = i;
-        if (i < 0) {
-          index = this.state.items.length + i;
-        } else if (i >= this.state.items.length) {
-          index = i % this.state.items.length;
+        for (let i = 0; i < active + items.length; i++) {
+          let index = i;
+          if (i < 0) {
+            index = items.length + i;
+          } else if (i >= items.length) {
+            index = i % items.length;
+          }
+          level = active - i;
+          const image = _.find(imageList, { id: items[ index ]?.phase?.imageId })
+          itemsPhase.push(
+            <Item key={index} level={level} program={items[ index ].phase} image={image} />
+          );
         }
-        level = this.state.active - i;
-        const image = _.find(imageList, { id: this.state.items[ index ]?.phase?.imageId })
-        items.push(
-          <Item key={index} level={level} program={this.state.items[ index ].phase} image={image} />
-        );
+      } else {
+
+        for (let i = active - 2; i < active + 3; i++) {
+          let index = i;
+          if (i < 0) {
+            index = items.length + i;
+          } else if (i >= items.length) {
+            index = i % items.length;
+          }
+          level = this.state.active - i;
+          const image = _.find(imageList, { id: items[ index ]?.phase?.imageId })
+          itemsPhase.push(
+            <Item key={index} level={level} program={items[ index ].phase} image={image} />
+          );
+        }
       }
+      return itemsPhase;
     }
-    return items;
+
+    return <></>;
   }
 
   moveLeft() {
-    let newActive = this.state.active;
+    const { active } = this.state;
+    let newActive = active;
     newActive--;
+
     this.setState({
-      active: newActive < 0 ? this.state.items.length - 1 : newActive,
+      active: newActive < INT_ZERO ? active : newActive,
       direction: "left",
     });
   }
 
   moveRight() {
-    let newActive = this.state.active;
+    const { active, items } = this.state;
+    let newActive = active;
+    newActive++;
     this.setState({
-      active: (newActive + 1) % this.state.items.length,
+      active: newActive < items.length ? newActive : items.length - INT_ONE,
       direction: "right",
     });
   }
@@ -119,22 +127,22 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
 
   render() {
     const { program, imageList } = this.props;
-    const { isLoading } = this.state;
+    const { isLoading, items, active } = this.state;
 
     if (_.isEmpty(program) || _.isEmpty(imageList) || isLoading) {
       return <RocketLoading />
     }
     return (
       <div id="carousel" className="noselect">
-        <div className="arrow arrow-left" onClick={this.leftClick}>
+        {!isEqual(active, INT_ZERO) && <div className="arrow arrow-left" onClick={this.leftClick}>
           <LeftOutlined style={{ color: 'white' }} />
-        </div>
+        </div>}
         <TransitionGroup transitionName={this.state.direction}>
           {this.generateItems()}
         </TransitionGroup>
-        <div className="arrow arrow-right" onClick={this.rightClick}>
+        {(active < items.length - INT_ONE) && <div className="arrow arrow-right" onClick={this.rightClick}>
           <RightOutlined style={{ color: 'white' }} />
-        </div>
+        </div>}
 
       </div>
     );
@@ -185,7 +193,6 @@ class ItemClass extends React.Component<IItemProps, IItemStates> {
   render() {
     const className = "item level" + this.props.level;
     const backgroundSize = this.props.level === 0 ? '400px' : this.props.level === -INT_TWO ? '50% ' : 'auto';
-    console.log("🚀 ~ file: Carousel.tsx ~ line 188 ~ ItemClass ~ render ~ this.props.level", this.props.level)
     const { program, navigate, image } = this.props;
 
     return (
@@ -200,6 +207,7 @@ class ItemClass extends React.Component<IItemProps, IItemStates> {
           }}
         >
           <span className="itemname">{program?.title}</span>
+          <span className="item_index" >{program?.index}</span>
           <button onClick={() => { navigate(`/planets/${program?.id}`) }} className="btn btn-5">Press to do</button>
         </div>
 

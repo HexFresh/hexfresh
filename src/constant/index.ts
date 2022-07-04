@@ -3,6 +3,7 @@ export const INT_ONE = 1;
 export const INT_TWO = 2;
 export const DEFAULT_PAGE_SIZE = 24;
 export enum USER_PROFILE_TABS{
+  OVERVIEW = 'overview', //default tab
   INFORMATIONS = 'informations',
   BADGES = "badges",
 }

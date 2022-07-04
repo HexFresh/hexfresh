@@ -2,7 +2,7 @@ import { USER_PROFILE_TABS } from "../../constant";
 import { IRootDispatch, IRootStore } from "../store";
 
 export const appInitialState={
-  selectedUserTab: USER_PROFILE_TABS.INFORMATIONS,
+  selectedUserTab: USER_PROFILE_TABS.OVERVIEW,
 
 }
 
