@@ -31,8 +31,8 @@ const Notifications: FC<NotificationProps> = memo(({
       //open modal
       setActiveModal(true);
       setSelectedNotif(notif);
-
-    }, [])
+      !isEmpty(notif) && doFetchNotificationDetail(notif._id)
+    }, [doFetchNotificationDetail])
 
   useEffect(() => {
     if (!isEqual(selectedNotif.type, NotificationType.SYSTEM)) {
@@ -46,9 +46,9 @@ const Notifications: FC<NotificationProps> = memo(({
     }
   }, [ doFetchProfile, selectedNotif.from, selectedNotif.type ])
 
-  useEffect(()=>{
+  useEffect(() => {
     doFetchCounterNotification();
-  },[])
+  }, [])
 
   return <>
     <Layout className="full-height">
