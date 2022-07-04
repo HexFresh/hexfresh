@@ -44,14 +44,14 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
 
       const itemsPhase = [];
       let level;
-      if (items.length < 5) {
+      if (items?.length < 5) {
 
-        for (let i = 0; i < active + items.length; i++) {
+        for (let i = 0; i < active + items?.length; i++) {
           let index = i;
           if (i < 0) {
-            index = items.length + i;
-          } else if (i >= items.length) {
-            index = i % items.length;
+            index = items?.length + i;
+          } else if (i >= items?.length) {
+            index = i % items?.length;
           }
           level = active - i;
           const image = _.find(imageList, { id: items[ index ]?.phase?.imageId })
@@ -64,9 +64,9 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
         for (let i = active - 2; i < active + 3; i++) {
           let index = i;
           if (i < 0) {
-            index = items.length + i;
-          } else if (i >= items.length) {
-            index = i % items.length;
+            index = items?.length + i;
+          } else if (i >= items?.length) {
+            index = i % items?.length;
           }
           level = this.state.active - i;
           const image = _.find(imageList, { id: items[ index ]?.phase?.imageId })
@@ -97,7 +97,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
     let newActive = active;
     newActive++;
     this.setState({
-      active: newActive < items.length ? newActive : items.length - INT_ONE,
+      active: newActive < items?.length ? newActive : items?.length - INT_ONE,
       direction: "right",
     });
   }
@@ -127,7 +127,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
 
   render() {
     const { program, imageList } = this.props;
-    const { isLoading, items, active } = this.state;
+    const { isLoading, items, active, direction } = this.state;
 
     if (_.isEmpty(program) || _.isEmpty(imageList) || isLoading) {
       return <RocketLoading />
@@ -137,10 +137,11 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
         {!isEqual(active, INT_ZERO) && <div className="arrow arrow-left" onClick={this.leftClick}>
           <LeftOutlined style={{ color: 'white' }} />
         </div>}
-        <TransitionGroup transitionName={this.state.direction}>
+        {/* <TransitionGroup transitionName={direction}>
           {this.generateItems()}
-        </TransitionGroup>
-        {(active < items.length - INT_ONE) && <div className="arrow arrow-right" onClick={this.rightClick}>
+        </TransitionGroup> */}
+        {this.generateItems()}
+        {(active < items?.length - INT_ONE) && <div className="arrow arrow-right" onClick={this.rightClick}>
           <RightOutlined style={{ color: 'white' }} />
         </div>}
 

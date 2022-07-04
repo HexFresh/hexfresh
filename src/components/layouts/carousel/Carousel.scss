@@ -204,6 +204,9 @@ body {
     opacity: 0.8;
     font-size: medium;
   }
+  span.item_index {
+    opacity: 0;
+  }
   button,
   a {
     display: none;

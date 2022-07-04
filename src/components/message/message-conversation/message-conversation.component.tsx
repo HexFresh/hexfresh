@@ -142,7 +142,7 @@ export const MessageDetail = memo(({
   return isLoading ?
     <Skeleton avatar title={false} loading={isLoading} active /> :
     <>
-      <section className="chat pv-medium">
+      <section className="chat ">
         <div className="header-chat">
           <Avatar size='large' >Y</Avatar>
           {!isEditTitle ?
@@ -176,7 +176,7 @@ export const MessageDetail = memo(({
             <Button type="text" icon={<MoreOutlined style={{ fontSize: 20 }} />} />
           </Dropdown>
         </div>
-        <div className="messages-chat" id='messages-chat'>
+        <div className="messages-chat pv-medium" id='messages-chat'>
           {_.reverse(_.map(conversation?.messages, 
             message => <MessageContent 
             profileRecipients={profileRecipients} 
