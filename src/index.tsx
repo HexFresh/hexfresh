@@ -5,6 +5,7 @@ import App from './App';
 import { Provider } from 'react-redux';
 import rootStore from './store/store';
 import { BrowserRouter } from 'react-router-dom';
+import setupInterceptors  from './api/setupInterceptor';
 
 ReactDOM.render(
   <Provider store={rootStore}>
@@ -15,3 +16,5 @@ ReactDOM.render(
 
   document.getElementById('root')
 );
+
+setupInterceptors(rootStore)
