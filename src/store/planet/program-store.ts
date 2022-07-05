@@ -69,7 +69,7 @@ export const programStore: any = createModel<IRootStore>()({
         dispatch.programStore.doFetchUserPhase({ programId });
       } catch (error) {
         dispatch.programStore.setIsFetchingProgram(false);
-        throw new Error('Failed to fetch program.');
+        /* throw new Error('Failed to fetch program.'); */
       }
       dispatch.programStore.setIsFetchingProgram(false);
 
@@ -85,7 +85,7 @@ export const programStore: any = createModel<IRootStore>()({
       } catch (error) {
         dispatch.programStore.setIsFetchingImageList(false);
 
-        throw new Error('Failed to fetch list images.');
+       /*  throw new Error('Failed to fetch list images.'); */
       }
     },
 
