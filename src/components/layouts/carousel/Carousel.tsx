@@ -44,37 +44,21 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
 
       const itemsPhase = [];
       let level;
-      if (items?.length < 5) {
 
-        for (let i = 0; i < active + items?.length; i++) {
-          let index = i;
-          if (i < 0) {
-            index = items?.length + i;
-          } else if (i >= items?.length) {
-            index = i % items?.length;
-          }
-          level = active - i;
-          const image = _.find(imageList, { id: items[ index ]?.phase?.imageId })
-          itemsPhase.push(
-            <Item key={index} level={level} program={items[ index ].phase} image={image} />
-          );
+      for (let i = 0; i < items?.length; i++) {
+        let index = i;
+        if (i < 0) {
+          index = items?.length + i;
+        } else if (i >= items?.length) {
+          index = i % items?.length;
         }
-      } else {
-
-        for (let i = active - 2; i < active + 3; i++) {
-          let index = i;
-          if (i < 0) {
-            index = items?.length + i;
-          } else if (i >= items?.length) {
-            index = i % items?.length;
-          }
-          level = this.state.active - i;
-          const image = _.find(imageList, { id: items[ index ]?.phase?.imageId })
-          itemsPhase.push(
-            <Item key={index} level={level} program={items[ index ].phase} image={image} />
-          );
-        }
+        level = active - i;
+        const image = _.find(imageList, { id: items[ index ]?.phase?.imageId })
+        itemsPhase.push(
+          <Item key={index} level={level} program={items[ index ].phase} image={image} />
+        );
       }
+
       return itemsPhase;
     }
 
@@ -137,7 +121,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
         {!isEqual(active, INT_ZERO) && <div className="arrow arrow-left" onClick={this.leftClick}>
           <LeftOutlined style={{ color: 'white' }} />
         </div>}
-        {/* <TransitionGroup transitionName={direction}>
+        {/*         <TransitionGroup transitionName={direction}>
           {this.generateItems()}
         </TransitionGroup> */}
         {this.generateItems()}
