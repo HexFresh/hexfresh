@@ -33,6 +33,7 @@ import {IUserStore} from './store/user/user-store';
 import './App.css';
 import MentorProfile from "./pages/mentor-profile/MentorProfile";
 import MentorMessage from "./pages/mentor-message/MentorMessage";
+import MentorDashboard from "./pages/mentor-dashboard/MentorDashboard";
 
 const Home = () => {
   return (
@@ -63,7 +64,6 @@ function App() {
   }
 
   useEffect(() => {
-
     const initialFunc = async () => {
       await dispatch.user.checkAutoLoginV2({dispatch, navigate, location});
       await dispatch.user.fetchProfileUsers();
@@ -118,7 +118,9 @@ function App() {
           <Route path="/mentor/profile" element={<MentorProfile/>}/>
           <Route path="/mentor/message" element={<MentorMessage/>}/>
 
-          <Route path="*" element={<Navigate to="/mentor/programs"/>}/>
+          <Route path="/mentor/dashboard" element={<MentorDashboard/>}/>
+
+          <Route path="*" element={<Navigate to="/mentor/dashboard"/>}/>
         </>) : (<>
           <Route path="/" element={<Navigate to="/planets"/>}/>
           <Route path="planets" element={<Home/>}/>

@@ -3,10 +3,14 @@ import React, {useEffect, useState} from 'react';
 import './sidebar.css';
 import {Link, useNavigate} from "react-router-dom";
 import {Dropdown, Menu, Tooltip} from "antd";
-import {Apps, Folder, School, Settings, Message, AccountCircle} from "@mui/icons-material";
+import {Apps, School, Message} from "@mui/icons-material";
 import {Avatar} from "@mui/material";
 import {useDispatch} from "react-redux";
 import {IRootDispatch} from "../../store/store";
+import LogoutIcon from '@mui/icons-material/Logout';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import LoyaltyIcon from '@mui/icons-material/Loyalty';
 
 export default function Sidebar() {
   const [active, setActive] = useState('');
@@ -29,8 +33,23 @@ export default function Sidebar() {
 
   const menu = (
     <Menu>
-      <Menu.Item key="0" onClick={() => logoutHandler()}>
-        Logout
+      <Menu.Item key="0" onClick={() => {
+        navigate("/mentor/profile");
+        setActive("profile");
+        localStorage.setItem('sideBarTitle', 'profile');
+      }}>
+        <div style={{
+          display: 'flex', alignItems: 'center', gridGap: '10px'
+        }}><AssignmentIndIcon/>
+          <div style={{fontWeight: "bold"}}>Profile</div>
+        </div>
+      </Menu.Item>
+      <Menu.Item key="1" onClick={() => logoutHandler()}>
+        <div style={{
+          display: 'flex', alignItems: 'center', gridGap: '10px'
+        }}><LogoutIcon/>
+          <div style={{fontWeight: "bold"}}>Log Out</div>
+        </div>
       </Menu.Item>
     </Menu>
   );
@@ -43,16 +62,29 @@ export default function Sidebar() {
             <img src="/logo.svg" width="40px" alt="logo"/>
           </Link>
         </div>
+
+        <div className={active === "dashboard" ? "menu-item active" : "menu-item"}>
+          <Tooltip color="#3751FF" title="Dashboard" placement="right">
+            <Link className="link apps" to="/mentor/dashboard" onClick={() => {
+              setActive("dashboard")
+              localStorage.setItem('sideBarTitle', 'dashboard');
+            }}>
+              <DashboardIcon sx={{width: 36, height: 36}}/>
+            </Link>
+          </Tooltip>
+        </div>
+
         <div className={active === "programs" ? "menu-item active" : "menu-item"}>
           <Tooltip color="#3751FF" title="Programs" placement="right">
             <Link className="link apps" to="/mentor/programs" onClick={() => {
               setActive("programs")
               localStorage.setItem('sideBarTitle', 'programs');
             }}>
-              <Apps sx={{width: 40, height: 40}}/>
+              <LoyaltyIcon sx={{width: 36, height: 36}}/>
             </Link>
           </Tooltip>
         </div>
+
         <div className={active === "freshers" ? "menu-item active" : "menu-item"}>
           <Tooltip color="#3751FF" title="Freshers" placement="right">
             <Link className="link apps" to="/mentor/freshers" onClick={() => {
@@ -74,29 +106,8 @@ export default function Sidebar() {
           </Tooltip>
         </div>
 
-        <div className={active === "profile" ? "menu-item active" : "menu-item"}>
-          <Tooltip color="#3751FF" title="Profile" placement="right">
-            <Link className="link apps" to="/mentor/profile" onClick={() => {
-              setActive("profile")
-              localStorage.setItem('sideBarTitle', 'profile');
-            }}>
-              <AccountCircle sx={{width: 36, height: 36}}/>
-            </Link>
-          </Tooltip>
-        </div>
-
 
         <div className="bottom">
-          <div className="folder">
-            <Tooltip color="#3751FF" title="Resources" placement="right">
-              <Folder sx={{width: 30, height: 30}}/>
-            </Tooltip>
-          </div>
-          <div className="settings">
-            <Tooltip color="#3751FF" title="Settings" placement="right">
-              <Settings sx={{width: 30, height: 30}}/>
-            </Tooltip>
-          </div>
           <div className="avatar">
             <Dropdown arrow placement="topRight" overlay={menu}>
               <Avatar/>
