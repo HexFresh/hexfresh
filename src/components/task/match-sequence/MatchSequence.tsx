@@ -1,7 +1,7 @@
 import { Card, Col, Row, Typography } from "antd"
 import React from "react"
 import { OnDragEndResponder } from "react-beautiful-dnd"
-import DraggableList from "../../../core/common/component/draggable-list/DraggableList"
+import DraggableList from "../../../core/component/draggable-list/DraggableList"
 import { IMactchSequence } from "../../../interface/program-interface"
 import './matchsequence.scss';
 

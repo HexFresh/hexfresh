@@ -1,13 +1,14 @@
 import { NavigateFunction } from "react-router-dom";
-import axiosClient, { setAuthAPIToken } from "../../api/axiosClient";
+import axiosClient from "../../api/axiosClient";
 import rootStore, { IRootDispatch, IRootStore } from "../store";
 import { retrieveStoredToken } from '../../utils/calc';
 import { socketInstance } from "../../utils/socketioInit";
 import { notification } from "antd";
 import { setAuthToken } from "../../api/axiosMessage";
-import { DoorSlidingOutlined } from "@mui/icons-material";
+import axios from "axios";
+import axiosAuth from "../../api/axiosAuth";
 
-const initialState = {
+export const userInitialState = {
   token: null,
   id: null,
   email: null,
@@ -15,11 +16,12 @@ const initialState = {
   roleId: null,
   users: [],
   isFetchingUsers: false,
+  myProfile: {},
 }
 
 export const user: any = {
   state: {
-    ...initialState
+    ...userInitialState
   },
   reducers: {
     loginSucces: (state: IRootStore, payload: any) => {
@@ -41,12 +43,12 @@ export const user: any = {
       }
     },
     logout: (state: IRootStore) => {
-      return { ...initialState }
+      return { ...userInitialState }
     },
 
     setUsers: (state: IRootStore, payload: any) => ({ ...state, users: payload }),
     setIsFetchingUsers: (state: IRootStore, payload: any) => ({ ...state, isFetchingUsers: payload }),
-
+    setProfile: (state: IRootStore, payload: any) => ({ ...state, myProfile: payload })
   },
   effects: (dispatch: IRootDispatch) => ({
     async signIn(
@@ -58,7 +60,7 @@ export const user: any = {
     ) {
       const endpoint = `/auth/login`;
       try {
-        const response = await axiosClient.post(endpoint, `username=${email}&password=${password}`);
+        const response = await axiosAuth.post(endpoint, `username=${email}&password=${password}`);
         const { data } = response;
         dispatch.user.loginSucces({
           body: {
@@ -69,15 +71,16 @@ export const user: any = {
 
         //set token for axios message
         setAuthToken(data.token);
-        setAuthAPIToken(data.token);
         // Copy to success
 
-        await dispatch.user.fetchProfileUsers();
-
+        // await dispatch.user.fetchProfileUsers();
+        console.log('sign in token',data.token);
+        
         localStorage.setItem('token', data.token);
         localStorage.setItem('userId', data.userId);
         sessionStorage.setItem("token", data.token as string)
         localStorage.setItem("roleId", data.user.roleId as string)
+        localStorage.setItem('refreshToken', data.refreshToken)
 
         if (preLocation) {
           dispatch.location.arrivedStartLocation();
@@ -101,6 +104,9 @@ export const user: any = {
     },
     signOut({ navigate }: { navigate: NavigateFunction }) {
       dispatch.user.logout();
+      dispatch({ type: 'RESET_APP' });
+      console.log('sign out remove token');
+      
       localStorage.removeItem('token');
       localStorage.removeItem('userId');
       sessionStorage.removeItem("token");
@@ -138,7 +144,6 @@ export const user: any = {
         if (accessToken) {
           //set token for axios message
           setAuthToken(accessToken);
-          setAuthAPIToken(accessToken);
 
           const socket = socketInstance;
           socket.io.opts.query = "token=" + accessToken as any;
@@ -195,6 +200,23 @@ export const user: any = {
         });
       }
     },
+
+    async doFetchCurrentProfileInfo() {
+      const endpoint = `user/info`;
+      dispatch.user.setIsFetchingUsers(true);
+      try {
+        const response = await axiosClient.get(endpoint);
+        const { data: { id } } = response;
+        const endpoint_userProfile = `user/${id}/user-profile`;
+
+        const responseProfile = await axiosClient.get(endpoint_userProfile);
+        dispatch.user.setProfile(responseProfile.data);
+      } catch (error) {
+        console.log(error);
+      }
+      dispatch.user.setIsFetchingUsers(false);
+
+    }
 
   }),
 }

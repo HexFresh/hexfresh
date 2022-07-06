@@ -1,0 +1,17 @@
+.custom-avatar{
+  display: flex;
+    align-content: center;
+    align-items: center;
+    width: fit-content;
+    border-radius: 20px;
+    padding: 6px;
+    &.has-bg{
+      background-color: beige;
+    }
+    .avatar{
+      //margin-right: 2px;
+    }
+    .name{
+      padding-left: 16px;;
+    }
+}

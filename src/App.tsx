@@ -22,7 +22,7 @@ import FresherLeaderboard from './pages/fresher-leaderboard/FresherLeaderboard';
 import UserProfile from './pages/user-profile/UserProfile';
 import Messages from './pages/messages/messages';
 import ForgotPassword from "./pages/forgot-password/ForgotPassword";
-import {Notifications} from './pages/notifications/notifications';
+import Notifications from './pages/notifications/notifications';
 import Badges from './pages/badges/badges';
 import ListChecklist from "./pages/list-checklist/ListChecklist";
 import ListTask from "./pages/list-task/ListTask";
@@ -66,6 +66,7 @@ function App() {
   useEffect(() => {
     const initialFunc = async () => {
       await dispatch.user.checkAutoLoginV2({dispatch, navigate, location});
+      await dispatch.user.doFetchCurrentProfileInfo();
       await dispatch.user.fetchProfileUsers();
       // push notification
       onMessageListener()
@@ -78,7 +79,7 @@ function App() {
 
     initialFunc();
     setSocket(socketInstance);
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (socket.disconnected) {

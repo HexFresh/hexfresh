@@ -38,6 +38,7 @@ const Messages: FC<MessageProps> = ({
   doAddMember,
   doLeaveConversation,
   doFetchUserBadge,
+  resetSelectedMessage,
 
   selectedConversation,
   conversations,
@@ -59,7 +60,12 @@ const Messages: FC<MessageProps> = ({
     setState({
       ...state,
       initLoading: false,
-    })
+    });
+
+    return()=>{
+      resetSelectedMessage();
+    }
+
   }, [])
 
   const onLoadMore = () => {
@@ -220,6 +226,7 @@ const mapDispatchToProps = (dispatch: IRootDispatch) => ({
   doFetchUserBadge: dispatch.badge.doFetchUserBadge,
 
   setSelectedUserBadges: dispatch.badge.setSelectedUserBadges,
+  resetSelectedMessage: dispatch.message.resetSelectedMessage,
 });
 
 type MessageStateProps = ReturnType<typeof mapStateToProps>;

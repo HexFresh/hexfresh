@@ -5,7 +5,7 @@ import axiosClient from '../../api/axiosClient';
 import { ICheckList, IImage, IPhase, ITask } from '../../interface/program-interface';
 import rootStore, { IRootDispatch, IRootStore } from '../store';
 
-type IProgramStore = {
+/* type IProgramStore = {
   selectedPhase: IPhase;
   programs: IPhase;
   checklists: ICheckList[];
@@ -17,12 +17,10 @@ type IProgramStore = {
   isFetchingChecklist: boolean;
   isFetchAnswer: boolean;
   isSubmitingAnswer: boolean;
-}
+} */
 
-
-export const programStore: any = createModel<IRootStore>()({
-  state: {
-    program: {},
+export const programInititalState ={
+  program: {},
     selectedPhase: {},
     checklists: [],
     selectedTask: {},
@@ -34,8 +32,13 @@ export const programStore: any = createModel<IRootStore>()({
     isFetchingAnswer: false,
     isSubmitingAnswer: false,
     isFetchingImageList: false,
+}
 
-  } as unknown as IProgramStore,
+
+export const programStore: any = createModel<IRootStore>()({
+  state: {
+    ...programInititalState
+  },
   reducers: {
     setSelectedPhase: (state, payload) => ({ ...state, selectedPhase: payload }),
     setProgram: (state, payload) => ({ ...state, program: payload }),
@@ -49,6 +52,9 @@ export const programStore: any = createModel<IRootStore>()({
     setIsFetchingAnswer: (state, payload) => ({ ...state, isFetchingAnswer: payload }),
     setIsSubmitingAnswer: (state, payload) => ({ ...state, isSubmitingAnswer: payload }),
     setIsFetchingImageList: (state, payload) => ({ ...state, isFetchingImageList: payload }),
+
+    reset: () =>({...programInititalState}),
+    resetSelectedTask: (state)=>({...state, selectedTask:{}}),
   },
   effects: (dispatch: IRootDispatch) => ({
 
@@ -63,7 +69,7 @@ export const programStore: any = createModel<IRootStore>()({
         dispatch.programStore.doFetchUserPhase({ programId });
       } catch (error) {
         dispatch.programStore.setIsFetchingProgram(false);
-        throw new Error('Failed to fetch program.');
+        /* throw new Error('Failed to fetch program.'); */
       }
       dispatch.programStore.setIsFetchingProgram(false);
 
@@ -79,7 +85,7 @@ export const programStore: any = createModel<IRootStore>()({
       } catch (error) {
         dispatch.programStore.setIsFetchingImageList(false);
 
-        throw new Error('Failed to fetch list images.');
+       /*  throw new Error('Failed to fetch list images.'); */
       }
     },
 

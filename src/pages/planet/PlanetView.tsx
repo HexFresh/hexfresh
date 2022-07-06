@@ -53,6 +53,11 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
 
   }
 
+  componentWillUnmount(){
+    const { resetSelectedTask } = this.props;
+    resetSelectedTask();
+  }
+
   private async _onChangeSelectedTask({checklistId, taskId}:{checklistId: number, taskId: number}) {
    await this.props.doFetchUserTask({checklistId, taskId});
   }
@@ -216,6 +221,8 @@ const mapDispatchToProps = (dispatch: IRootDispatch) => ({
   doUpdateMatchingSequenceQuestion: dispatch.programStore.doUpdateMatchingSequenceQuestion,
   doUpdateMatchingCorrespondingQuestion: dispatch.programStore.doUpdateMatchingCorrespondingQuestion,
   doUpdateAssignment: dispatch.programStore.doUpdateAssignment,
+
+  resetSelectedTask: dispatch.programStore.resetSelectedTask,
 });
 
 type PlanViewStateProps = ReturnType<typeof mapStateToProps>;

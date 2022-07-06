@@ -9,8 +9,10 @@
   display: flex;
   align-items: center;
   position: fixed;
-  max-width: 626px;
+  max-width: 673px;
   width: 100%;
+  margin-top: -1px;
+  padding: 1rem;
   .ant-form-item {
     margin: 0;
   }
@@ -104,7 +106,7 @@
 }
 
 .footer-chat {
-  width: 32%;
+  width: 673px;
   height: 80px;
   display: flex;
   align-items: center;
@@ -112,6 +114,7 @@
   bottom: 25px;
   background-color: white;
   border-top: 2px solid #eee;
+  padding: 1rem;
 }
 
 .chat .footer-chat .icon {

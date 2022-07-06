@@ -7,6 +7,7 @@ import { programStore } from "./planet/program-store"
 import { notificationStore } from "./notification";
 import { badgeStore } from "./badge";
 import { appStore } from "./app";
+import { stats } from "./stats";
 
 export interface RootModel extends Models<RootModel> {
   user: typeof user,
@@ -16,6 +17,7 @@ export interface RootModel extends Models<RootModel> {
   notification: typeof notificationStore,
   badge: typeof badgeStore,
   app: typeof appStore,
+  stats: typeof stats,
 }
 
 export const models: RootModel = {
@@ -25,4 +27,5 @@ export const models: RootModel = {
   notification: notificationStore,
   badge: badgeStore,
   app: appStore,
+  stats,
 }
