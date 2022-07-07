@@ -13,6 +13,7 @@ import {
 import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
 import axios from "axios";
 import Sidebar from "../../components/side-bar/Sidebar";
+import {getPhaseById} from "../../api/mentor/mentorApi";
 
 const {Option} = Select;
 
@@ -28,12 +29,17 @@ interface IBadge {
   image: string;
 }
 
+interface IPhase {
+  title: string;
+}
+
 export default function ListChecklist() {
   const [checklistLoading, setChecklistLoading] = useState(false);
   const [badgesLoading, setBadgesLoading] = useState(false);
   const [checklists, setChecklists] = useState<IChecklist[] | []>([]);
   const [badges, setBadges] = useState<IBadge[] | []>([]);
   const [allBadges, setAllBadges] = useState<IBadge[] | []>([]);
+  const [phase, setPhase] = useState<IPhase | null>(null);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [title, setTitle] = useState('');
@@ -46,10 +52,14 @@ export default function ListChecklist() {
   const {phaseId, programId} = useParams<{ phaseId: string, programId: string }>();
   const refInput = useRef<HTMLInputElement>(null);
 
+  const fetchPhase = async () => {
+    const result = await getPhaseById(Number(programId), Number(phaseId));
+    setPhase(result);
+  }
+
   const fetchChecklists = async () => {
     setChecklistLoading(true);
     const result = await getAllChecklist(phaseId);
-    console.log('result: ', result);
     setChecklists(result);
     setChecklistLoading(false);
   };
@@ -71,6 +81,7 @@ export default function ListChecklist() {
     fetchChecklists();
     fetchBadges();
     fetchAllBadges();
+    fetchPhase()
   }, []);
 
   const showModal = () => {
@@ -131,7 +142,6 @@ export default function ListChecklist() {
       const result = await addNewBadgeToPhase(phaseId, {
         title, description, image: res.data.secure_url
       })
-      console.log(result);
       if (result) {
         message.success('Add badge successfully', 0.5);
         await fetchBadges();
@@ -158,7 +168,7 @@ export default function ListChecklist() {
             <p>Hexfresh</p>
           </div>
           <div className="name-page">
-            <div className="container">Phase Detail</div>
+            <div className="container">{phase?.title}</div>
           </div>
           <div className="filter-search">
             <div className="container">
@@ -275,7 +285,8 @@ export default function ListChecklist() {
         </div>) : (<div className="form-add-badge">
           <div style={{display: 'flex', marginTop: '20px'}}>
             <div style={{width: '150px'}}>Title</div>
-            <Input value={title} onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setTitle(e.target.value)}/>
+            <Input value={title}
+                   onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setTitle(e.target.value)}/>
           </div>
           <div style={{display: 'flex', marginTop: '20px'}}>
             <div style={{width: '150px'}}>Description</div>

@@ -13,6 +13,7 @@ import {
 import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
 import axios from "axios";
 import Sidebar from "../../components/side-bar/Sidebar";
+import {getChecklistById} from "../../api/mentor/mentorApi";
 
 const {Option} = Select;
 
@@ -28,12 +29,17 @@ interface IBadge {
   image: string;
 }
 
+interface IChecklist {
+  title: string;
+}
+
 export default function ListTask() {
   const [checklistLoading, setChecklistLoading] = useState(false);
   const [badgesLoading, setBadgesLoading] = useState(false);
   const [tasks, setTasks] = useState<ITask[] | []>([]);
   const [badges, setBadges] = useState<IBadge[] | []>([]);
   const [allBadges, setAllBadges] = useState<IBadge[] | []>([]);
+  const [checklist, setChecklist] = useState<IChecklist | null>(null);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [title, setTitle] = useState('');
@@ -65,11 +71,17 @@ export default function ListTask() {
     setAllBadges(result.rows || []);
   }
 
+  const fetchChecklist = async () => {
+    const result = await getChecklistById(Number(phaseId), Number(checklistId));
+    setChecklist(result);
+  }
+
   useEffect(() => {
     document.title = 'HexF - List Checklist';
     fetchTasks();
     fetchBadges();
     fetchAllBadges();
+    fetchChecklist();
   }, []);
 
   const showModal = () => {
@@ -157,7 +169,7 @@ export default function ListTask() {
             <p>Hexfresh</p>
           </div>
           <div className="name-page">
-            <div className="container">Checklist Detail</div>
+            <div className="container">{checklist?.title}</div>
           </div>
           <div className="filter-search">
             <div className="container">

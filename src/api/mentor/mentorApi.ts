@@ -93,6 +93,17 @@ export const getAllChecklist = async (phaseId: number) => {
   }
 };
 
+export const getChecklistById = async (phaseId: number, id: number) => {
+  const endpoint = `phase/${phaseId}/checklist/${id}`;
+  try {
+    const response = await axiosClient.get(endpoint);
+    const {data} = response;
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export const createChecklist = async (phaseId: number, checklist: any) => {
   const endpoint = `phase/${phaseId}/checklist`;
   try {
