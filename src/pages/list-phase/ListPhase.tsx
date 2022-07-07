@@ -7,7 +7,7 @@ import {CircularProgress} from '@mui/material';
 import './list-phase.css';
 import DragDrop from './DragDrop';
 import {Modal, Input, Button, Select, message} from 'antd';
-import {getPhasesOfProgram, createPhase, getImages} from '../../api/mentor/mentorApi';
+import {getPhasesOfProgram, createPhase, getImages, getProgramById} from '../../api/mentor/mentorApi';
 import Leaderboard from './Leaderboard';
 import Sidebar from "../../components/side-bar/Sidebar";
 
@@ -26,9 +26,14 @@ interface IImage {
   imageLink: string;
 }
 
+interface IProgram {
+  title: string;
+}
+
 export default function ListPhase() {
   const [loading, setLoading] = useState(false);
   const [phases, setPhases] = useState<IPhase[] | []>([]);
+  const [program, setProgram] = useState<IProgram | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [name, setName] = useState<string>('');
   const [planet, setPlanet] = useState<string>('1');
@@ -39,8 +44,14 @@ export default function ListPhase() {
 
   const fetchPhases = async () => {
     const result = await getPhasesOfProgram(Number(programId), keyword);
+    console.log(result)
     setPhases(result);
   };
+
+  const fetchProgram = async () => {
+    const result = await getProgramById(Number(programId));
+    setProgram(result);
+  }
 
   const fetchImages = async () => {
     const result = await getImages("planet");
@@ -53,6 +64,7 @@ export default function ListPhase() {
       setLoading(true);
       await fetchImages();
       await fetchPhases();
+      await fetchProgram();
       setLoading(false);
     };
     fetchData();
@@ -129,7 +141,7 @@ export default function ListPhase() {
           </div>
           <div className="name-page">
             <div className="container">
-              <div className="name">Program's Detail</div>
+              <div className="name">{program?.title}</div>
               <div className="add-phase">
                 <Button icon={<PlusOutlined/>} className="add-phase-btn" type="primary" onClick={showModal}>
                   Create a new phase
