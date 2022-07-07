@@ -78,7 +78,6 @@ export const user: any = {
         
         localStorage.setItem('token', data.token);
         localStorage.setItem('userId', data.userId);
-        sessionStorage.setItem("token", data.token as string)
         localStorage.setItem("roleId", data.user.roleId as string)
         localStorage.setItem('refreshToken', data.refreshToken)
 
@@ -97,21 +96,29 @@ export const user: any = {
         throw new Error('Failed to login.');
       }
     },
-    logoutHandlerAction({ dispatch, navigate }: { dispatch: IRootDispatch, navigate: NavigateFunction }) {
+    async logoutHandlerAction({ dispatch, navigate }: { dispatch: IRootDispatch, navigate: NavigateFunction }) {
       localStorage.clear();
       socketInstance.close();
-      this.signOut({ navigate });
+      await this.signOut({ navigate });
     },
-    signOut({ navigate }: { navigate: NavigateFunction }) {
+    async signOut({ navigate }: { navigate: NavigateFunction }) {
       dispatch.user.logout();
       dispatch({ type: 'RESET_APP' });
       console.log('sign out remove token');
       
-      localStorage.removeItem('token');
-      localStorage.removeItem('userId');
-      sessionStorage.removeItem("token");
-      localStorage.removeItem("roleId");
-      localStorage.removeItem("_grecaptcha")
+      const endpoint = '/auth/logout';
+      try {
+        await axiosAuth.get(endpoint, { withCredentials: true});
+
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        localStorage.removeItem("roleId");
+        localStorage.removeItem("_grecaptcha");
+  
+        
+      } catch (error) {
+        throw error;
+      }
       navigate('/signin', { replace: true });
     },
     checkAutoLogin({
@@ -131,8 +138,7 @@ export const user: any = {
       location
     }: { dispatch: IRootDispatch, navigate: NavigateFunction, location: any }) {
       const endpoint = `/`;
-      //const token = localStorage.getItem('token');
-      const token = sessionStorage.getItem('token');
+      const token = localStorage.getItem('token');
 
       if (token) {
         dispatch.user.retrieveToken(token);
@@ -169,7 +175,7 @@ export const user: any = {
         }
 
       } catch (error) {
-        dispatch.user.signOut({ navigate });
+        // await dispatch.user.signOut({ navigate });
         console.log(error, 'error');
       }
 

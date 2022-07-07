@@ -13,8 +13,8 @@ const HeaderInternal = ({ textColorClassName }: { textColorClassName?: string })
   const navigate = useNavigate();
   const myProfile = useSelector((state: IRootStore) => state.user.myProfile);
 
-  const logoutHandler = React.useCallback(() => {
-    dispatch.user.logoutHandlerAction({ dispatch, navigate });
+  const logoutHandler = React.useCallback(async () => {
+    await dispatch.user.logoutHandlerAction({ dispatch, navigate });
   }, [ dispatch, navigate ]);
 
   useEffect(()=>{
