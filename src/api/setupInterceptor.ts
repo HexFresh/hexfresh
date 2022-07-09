@@ -39,68 +39,87 @@ const setup = (store: IStore) => {
       // Access Token was expired
       if (error.response.status === 401 && !originalConfig._retry) {
         originalConfig._ret = true;
+        dispatch.user.setLoadingState(true);
         try {
-          const rs = await  axiosAuth.get("/auth/refresh-token");
-          const { token } = rs.data;
-          
-            dispatch.user.retrieveToken(token);
-            tokenService.updateLocalAccessToken(token);
-            return axiosClient(originalConfig);
-        
+          const rs = await axiosAuth.get("/auth/refresh-token");
+          const { token, user } = rs.data;
+
+          dispatch.user.loginSucces({
+            body: {
+              ...user
+            },
+            token,
+          });
+          tokenService.updateLocalAccessToken(token);
+          dispatch.user.setLoadingState(false);
+
+          return axiosClient(originalConfig);
+
         } catch (_error) {
+          dispatch.user.setLoadingState(false);
+
           return Promise.reject(_error);
         }
       }
     }
     return Promise.reject(error.message);
   });
-  
+
 
   // Axios Message
   // Add a request interceptor
-axiosMessage.interceptors.request.use(function (config) {
-  const token = getLocalAccessToken();
-  if (token) {
-    // config.headers["Authorization"] = 'Bearer ' + token;  // for Spring Boot back-end
-    set(config, [ 'headers', 'Authorization' ], 'Bearer ' + token)
-    // set(config, [ 'headers', 'x-access-token' ], token) // for Node.js Express back-end
-  }
-  return config;
-}, function (error) {
-  // Do something with request error
-  return Promise.reject(error);
-});
+  axiosMessage.interceptors.request.use(function (config) {
+    const token = getLocalAccessToken();
+    if (token) {
+      // config.headers["Authorization"] = 'Bearer ' + token;  // for Spring Boot back-end
+      set(config, [ 'headers', 'Authorization' ], 'Bearer ' + token)
+      // set(config, [ 'headers', 'x-access-token' ], token) // for Node.js Express back-end
+    }
+    return config;
+  }, function (error) {
+    // Do something with request error
+    return Promise.reject(error);
+  });
 
-// Add a response interceptor
-axiosMessage.interceptors.response.use(function (response) {
-  // Any status code that lie within the range of 2xx cause this function to trigger
-  // Do something with response data
-  
-  return response;
-}, async function (error) {
-  // Any status codes that falls outside the range of 2xx cause this function to trigger
-  // Do something with response error
-  const originalConfig = error.config;
+  // Add a response interceptor
+  axiosMessage.interceptors.response.use(function (response) {
+    // Any status code that lie within the range of 2xx cause this function to trigger
+    // Do something with response data
 
-  if (originalConfig.url !== "/auth/signin" && error.response) {
-    // Access Token was expired
-    if (error.response.status === 401 && !originalConfig._retry) {
-      originalConfig._ret = true;
-      try {
-        const rs = await axiosAuth.get("/auth/refresh-token");
-        const { token } = rs.data;
-        
-          dispatch.user.retrieveToken(token);
+    return response;
+  }, async function (error) {
+    // Any status codes that falls outside the range of 2xx cause this function to trigger
+    // Do something with response error
+    const originalConfig = error.config;
+
+    if (originalConfig.url !== "/auth/signin" && error.response) {
+      // Access Token was expired
+      if (error.response.status === 401 && !originalConfig._retry) {
+        originalConfig._ret = true;
+        dispatch.user.setLoadingState(true);
+        try {
+          const rs = await axiosAuth.get("/auth/refresh-token");
+          const { token, user } = rs.data;
+
+          dispatch.user.loginSucces({
+            body: {
+              ...user
+            },
+            token,
+          });
           tokenService.updateLocalAccessToken(token);
+          dispatch.user.setLoadingState(false);
+
           return axiosMessage(originalConfig);
-      
-      } catch (_error) {
-        return Promise.reject(_error);
+
+        } catch (_error) {
+          dispatch.user.setLoadingState(false);
+          return Promise.reject(_error);
+        }
       }
     }
-  }
-  return Promise.reject(error.message);
-});
+    return Promise.reject(error.message);
+  });
 
 }
 
