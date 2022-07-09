@@ -17,6 +17,7 @@ export const userInitialState = {
   users: [],
   isFetchingUsers: false,
   myProfile: {},
+  loadingState: false,
 }
 
 export const user: any = {
@@ -27,7 +28,6 @@ export const user: any = {
     loginSucces: (state: IRootStore, payload: any) => {
       const socket = socketInstance;
       socket.io.opts.query = "token=" + payload.token as any;
-      console.log("🚀 ~ file: user-store.ts ~ line 29 ~ payload.token", payload.token)
       socket.connect();
       socket.emit('signin', 'Hi from signin')
       return {
@@ -48,7 +48,8 @@ export const user: any = {
 
     setUsers: (state: IRootStore, payload: any) => ({ ...state, users: payload }),
     setIsFetchingUsers: (state: IRootStore, payload: any) => ({ ...state, isFetchingUsers: payload }),
-    setProfile: (state: IRootStore, payload: any) => ({ ...state, myProfile: payload })
+    setProfile: (state: IRootStore, payload: any) => ({ ...state, myProfile: payload }),
+    setLoadingState: (state: IRootStore, payload: boolean) => ({...state, loadingState: payload})
   },
   effects: (dispatch: IRootDispatch) => ({
     async signIn(
