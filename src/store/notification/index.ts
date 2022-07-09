@@ -28,7 +28,7 @@ export const notificationStore: any = {
   effects: (dispatch: IRootDispatch) => ({
     doPushNotif(notificationPayload: INotification) {
       if (isEmpty(notification)) return;
-      notification.open({
+      notification.info({
         message: `${notificationPayload.title}`,
         description: notificationPayload.body,
       });

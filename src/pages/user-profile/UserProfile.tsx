@@ -549,7 +549,6 @@ export default function UserProfile() {
                         !badge?.isFetchingBadges ?
                         <EmptyResult message="Your badges will displayed here." /> :
                         <BadgeList badges={badge?.badges} count={1} page={1} />}
-                      <FresherStatistic />
                     </div>
                   </Tabs.TabPane>
                 </Tabs>
