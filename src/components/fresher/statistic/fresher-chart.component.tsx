@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -8,9 +8,11 @@ import {
   Title,
   Tooltip,
   Legend,
+  ChartData,
+  ChartOptions,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import { map, random } from 'lodash';
+import { map, max } from 'lodash';
 import { IPointByDate, IStats, ITaskDoneByDate } from '../../../store/stats/stats.interface';
 import moment from 'moment';
 
@@ -24,43 +26,75 @@ ChartJS.register(
   Legend
 );
 
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top' as const,
-    },
-    title: {
-      display: true,
-      text: 'Your current status',
-    },
-  },
-};
-
-
-export const getData = (tasks: ITaskDoneByDate[], points: IPointByDate[]) => {
-  const labels =map(tasks, task=> moment(task.date).format("MMM Do YY"));
-  return {
-    labels,
-    datasets: [
-      {
-        label: 'Task done',
-        data: map(tasks, task => task.totalTasks),
-        borderColor: 'rgb(255, 99, 132)',
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+export const FresherLineChart = ({ stats: { tasksDoneByDate, pointsByDate } }: { stats: IStats }) => {
+  const getOptions = useCallback((): ChartOptions<'line'> => {
+    const tasks = tasksDoneByDate;
+    
+    const totalTasks = map(tasks, task => task.totalTasks);
+    const maxTotalTask = max(totalTasks) || 0;
+    const displayMaxTotalTask = maxTotalTask % 10 === 0 ? max(totalTasks) : maxTotalTask + (10 - maxTotalTask % 10);
+  
+    return {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top' as const,
+        },
+        title: {
+          display: true,
+          text: 'Your current status',
+        },
       },
-      {
-        label: 'Points',
-        data: map(points, point => point.totalpoints),
-        borderColor: 'rgb(53, 162, 235)',
-        backgroundColor: 'rgba(53, 162, 235, 0.5)',
-      },
-    ],
-  }
-};
+      scales: {
+        y:{
+          display: true,
+          position: 'left',
+          title: {
+            display: true,
+            text: 'Ex 1'
+          }
+        },
+        z: {
+          display: true,
+          min: 0,
+          max: displayMaxTotalTask,
+          position: 'right',
+          title: {
+            display: true,
+            text: 'Ex 2'
+          }
+        }
+      }
+    }
+  }, [tasksDoneByDate]);
+  
+  
+  const getData = useCallback((): ChartData<'line'> => {
+    const tasks = tasksDoneByDate;
+    const points = pointsByDate;
+    const labels = map(tasks, task => moment(task.date).format("MMM Do YY"));
+    return {
+      labels,
+      datasets: [
+        {
+          label: 'Task done',
+          data: map(tasks, task => task.totalTasks),
+          borderColor: 'rgb(255, 99, 132)',
+          backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        },
+        {
+          label: 'Points',
+          data: map(points, point => point.totalpoints),
+          borderColor: 'rgb(53, 162, 235)',
+          backgroundColor: 'rgba(53, 162, 235, 0.5)',
+        },
+      ],
+    }
+  },[pointsByDate, tasksDoneByDate]);
+  const data: ChartData<'line'> = useMemo(() => getData(), [getData]);
+  const options = useMemo<ChartOptions<'line'>>(() => getOptions(), [getOptions]);
 
-export const FresherLineChart = ({ stats:{tasksDoneByDate, pointsByDate } }: { stats: IStats }) => {
-const data = useMemo(()=> getData(tasksDoneByDate, pointsByDate),[pointsByDate, tasksDoneByDate]);
-
-  return <Line className='mt-medium' options={options} data={data} />;
+  return <>
+    <Line className='mt-medium' options={options} data={data} />
+  </>
 }

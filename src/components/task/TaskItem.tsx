@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import _, { get, isEmpty, isEqual } from 'lodash';
+import _, { get, isEmpty, isEqual, map } from 'lodash';
 import 'antd/dist/antd.css';
 import { Space, Button, Skeleton, Card, Typography } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
@@ -560,6 +560,12 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
               return false;
             }
           };
+          const fileList = isTaken &&
+            map(
+              task?.user_assignment_answer?.fileList,
+              file => <a target='_blank' href={file.presignUrl} rel="noreferrer">{file.fileName}</a>
+            );
+
           return <>
             <Title> {task?.task?.assignment?.title}</Title>
             <Typography>Please read the files below: </Typography>
@@ -598,7 +604,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
               <InlineValue title='Status assignment' value='Submited.' />
               <InlineValue title='Time remaining' value='2 hours' />
               <InlineValue title='Lastest modify at' value={(new Date()).toDateString()} />
-              <InlineValue title='Your assignment' value={<a target='_blank' href={task?.task?.assignment?.fileList[ 0 ].presignUrl} rel="noreferrer">{task?.task?.assignment?.fileList[ 0 ].keyFileName}</a>} />
+              <InlineValue title='Your assignment' value={<Space direction="vertical">{fileList}</Space>} />
             </div>}
           </>;
         case TaskCategory.MULTIPLE_CHOICES:
