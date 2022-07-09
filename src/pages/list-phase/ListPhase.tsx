@@ -1,15 +1,25 @@
 import React, {useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import {PlusOutlined} from '@ant-design/icons';
 import {CircularProgress} from '@mui/material';
 import './list-phase.css';
 import DragDrop from './DragDrop';
-import {Modal, Input, Button, Select, message} from 'antd';
-import {getPhasesOfProgram, createPhase, getImages, getProgramById} from '../../api/mentor/mentorApi';
+import {Modal, Input, Button, Select, message, Tooltip, Popconfirm, Tag} from 'antd';
+import {
+  getPhasesOfProgram,
+  createPhase,
+  getImages,
+  getProgramById,
+  getStatOfProgram,
+  getBadgeOfProgram, getProgramDetail
+} from '../../api/mentor/mentorApi';
 import Leaderboard from './Leaderboard';
 import Sidebar from "../../components/side-bar/Sidebar";
+import LineChart from "../../components/line-chart/LineChart";
+import moment from "moment";
+import Avatar from "@mui/material/Avatar";
 
 const {Option} = Select;
 
@@ -30,6 +40,28 @@ interface IProgram {
   title: string;
 }
 
+interface IStat {
+  date: string;
+  totalFreshers: number;
+}
+
+interface IBadge {
+  title: string,
+  image: string,
+  id: number,
+}
+
+interface IParticipant {
+  id: number;
+  username: string;
+  user_information: {
+    avatar: string;
+  }
+  role: {
+    id: number;
+  }
+}
+
 export default function ListPhase() {
   const [loading, setLoading] = useState(false);
   const [phases, setPhases] = useState<IPhase[] | []>([]);
@@ -39,6 +71,9 @@ export default function ListPhase() {
   const [planet, setPlanet] = useState<string>('1');
   const [keyword, setKeyword] = useState('');
   const [images, setImages] = useState<IImage[]>([]);
+  const [stat, setStat] = useState<IStat[] | []>([]);
+  const [badges, setBadges] = useState<IBadge[] | []>([]);
+  const [participants, setParticipants] = useState<IParticipant[] | []>([]);
 
   const programId = useParams<{ programId: string }>().programId;
 
@@ -50,21 +85,38 @@ export default function ListPhase() {
 
   const fetchProgram = async () => {
     const result = await getProgramById(Number(programId));
+    console.log(result)
     setProgram(result);
   }
+
+  const fetchProgramDetail = async () => {
+    const result = await getProgramDetail(programId);
+    setParticipants(result.participants);
+  };
 
   const fetchImages = async () => {
     const result = await getImages("planet");
     setImages(result || []);
   };
 
+  const fetchStat = async () => {
+    if (programId !== undefined) {
+      const result = await getStatOfProgram(programId);
+      setStat(result.newFreshersByDate);
+    }
+  }
+
+  const fetchBadges = async () => {
+    const result = await getBadgeOfProgram(programId);
+    console.log({badges: result});
+    setBadges(result || []);
+  }
+
   useEffect(() => {
     document.title = 'HexF - Phases';
     const fetchData = async () => {
       setLoading(true);
-      await fetchImages();
-      await fetchPhases();
-      await fetchProgram();
+      await Promise.all([fetchPhases(), fetchProgram(), fetchImages(), fetchStat(), fetchProgramDetail(), fetchBadges()]);
       setLoading(false);
     };
     fetchData();
@@ -130,6 +182,44 @@ export default function ListPhase() {
     }
   };
 
+  const options = {
+    title: "New Freshers By Date", hAxis: {
+      title: "Day",
+    }, vAxis: {
+      title: "Number of freshers", viewWindow: {
+        min: 0,
+      }, format: '0'
+    }, series: {
+      1: {curveType: "function"},
+    },
+  };
+
+  const lineData = (stat: any) => {
+    if (stat) {
+      const result = [["Day", "Fresher Count"]];
+      stat.forEach((item: any) => {
+        const date = moment(item.date).format('DD/MM');
+        result.push([date, item.total]);
+      })
+      return result;
+    }
+  }
+
+  const renderRole = (roleId: any) => {
+    switch (roleId) {
+      case 1:
+        return <Tag color="green">Admin</Tag>;
+      case 2:
+        return <Tag color="blue">HR</Tag>;
+      case 3:
+        return <Tag color="purple">Mentor</Tag>;
+      case 4:
+        return <Tag color="orange">Fresher</Tag>;
+      default:
+        return <Tag color="red">Unknown</Tag>;
+    }
+  }
+
   return (
     <div className="list-phase">
       <div className="container">
@@ -164,30 +254,93 @@ export default function ListPhase() {
                 <div className="filter"></div>
               </div>
             </div>
-            <div className="phases">
-              {loading ? (
-                <CircularProgress/>
-              ) : (
-                <>
-                  <div className="phases-left">
-                    <div className="name-space">List phase</div>
-                    <div className="container">
-                      {phases.length === 0 ? (
-                        <div className="img-404">
-                          <img alt="img-404" style={{height: '200px'}} src="/no-records.png"/>
+            <div className={"list-phase-content"}>
+              <div className={"list-phase-content__container"}>
+                <div className="chart">
+                  <LineChart options={options} data={lineData(stat)}/>
+                </div>
+                <div className="phases">
+                  {loading ? (
+                    <CircularProgress/>
+                  ) : (
+                    <>
+                      <div className="phases-left">
+                        <div className="name-space">List phase</div>
+                        <div className="container">
+                          {phases.length === 0 ? (
+                            <div className="img-404">
+                              <img alt="img-404" style={{height: '200px'}} src="/no-records.png"/>
+                            </div>
+                          ) : (
+                            <DragDrop phases={phases} programId={programId} updatePhases={updatePhases}/>
+                          )}
                         </div>
-                      ) : (
-                        <DragDrop phases={phases} programId={programId} updatePhases={updatePhases}/>
-                      )}
-                    </div>
-                  </div>
-                  <div className="leaderboard">
-                    <div className="name-space">Leaderboard</div>
-                    <Leaderboard programId={programId}/>
-                  </div>
-                </>
-              )}
+                      </div>
+                      <div className="leaderboard">
+                        <div className="name-space">Leaderboard</div>
+                        <Leaderboard programId={programId}/>
+                      </div>
+                    </>
+                  )}
+                </div>
+                <div className="phases">
+                  {loading ? (
+                    <CircularProgress/>
+                  ) : (
+                    <>
+                      <div className="phases-left">
+                        <div className="name-space">Users</div>
+                        <div className="users-container">
+                          {participants?.map(participant => {
+                            return (<div key={participant.id} className="user">
+                              <div className="user-left">
+                                <div className="user-avatar">
+                                  <Avatar style={{
+                                    width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover',
+                                  }}
+                                          src={participant.user_information.avatar}
+                                          alt=""/>
+                                </div>
+                                <Link to={`/mentor/freshers/${participant.id}`}
+                                      className="user-name">{participant.username}</Link>
+                              </div>
+                              <div className="user-right">
+                                <div className={"role"}>{renderRole(participant?.role?.id)}</div>
+                              </div>
+
+                            </div>)
+                          })}
+                        </div>
+                      </div>
+                      <div className="badges-list">
+                        <div className="name-space">List badge</div>
+                        <div className={"badges-list-wrap"}>
+                          {badges.map(badge => {
+                            return (<div key={badge.id} className="badge">
+                              <Tooltip title={badge.title}>
+                                <div className="badge-left">
+                                  <div className="badge-avatar">
+                                    <img style={{
+                                      width: '80px', objectFit: 'cover',
+                                    }}
+                                         src={badge.image}
+                                         alt=""/>
+                                  </div>
+                                </div>
+                              </Tooltip>
+                              <div className="badge-right">
+                              </div>
+                            </div>)
+                          })}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+
             </div>
+
           </div>
         </div>
       </div>

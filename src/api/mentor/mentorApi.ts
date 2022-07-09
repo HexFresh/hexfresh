@@ -25,6 +25,17 @@ export const getProgramById = async (id: number) => {
   }
 };
 
+export const getProgramDetail = async (id: any) => {
+  const endpoint = `program/${id}/people`;
+  try {
+    const response = await axiosClient.get(endpoint);
+    const {data} = response;
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const getPhasesOfProgram = async (programId: number, keyword: string) => {
   const endpoint = `program/${programId}/phase`;
   try {
@@ -179,6 +190,28 @@ export const getAllFresher = async (query: any) => {
 
 export const getStatistic = async () => {
   const endpoint = `stat/dashboard-mentor`;
+  try {
+    const response = await axiosClient.get(endpoint);
+    const {data} = response;
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const getStatOfProgram = async (programId: string) => {
+  const endpoint = `stat/program/${programId}`;
+  try {
+    const response = await axiosClient.get(endpoint);
+    const {data} = response;
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const getBadgeOfProgram = async (id: any) => {
+  const endpoint = `program/${id}/badge`;
   try {
     const response = await axiosClient.get(endpoint);
     const {data} = response;
