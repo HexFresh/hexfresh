@@ -111,7 +111,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
 
   render() {
     const { program, imageList } = this.props;
-    const { isLoading, items, active, direction } = this.state;
+    const { isLoading, items, active } = this.state;
 
     if (_.isEmpty(program) || _.isEmpty(imageList) || isLoading) {
       return <RocketLoading />
@@ -121,9 +121,6 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
         {!isEqual(active, INT_ZERO) && <div className="arrow arrow-left" onClick={this.leftClick}>
           <LeftOutlined style={{ color: 'white' }} />
         </div>}
-        {/*         <TransitionGroup transitionName={direction}>
-          {this.generateItems()}
-        </TransitionGroup> */}
         {this.generateItems()}
         {(active < items?.length - INT_ONE) && <div className="arrow arrow-right" onClick={this.rightClick}>
           <RightOutlined style={{ color: 'white' }} />

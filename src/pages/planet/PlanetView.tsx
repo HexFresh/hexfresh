@@ -94,7 +94,7 @@ export class PlanetView extends Component<PlanViewProps, IPlanetViewStates> {
     let content = <Content className='centered' style={{ padding: '0 50px' }}>
       <Breadcrumb style={{ margin: '16px 0' }}>
         <Breadcrumb.Item href='/'>Home</Breadcrumb.Item>
-        <Breadcrumb.Item>{selectedPhase.title}</Breadcrumb.Item>
+        <Breadcrumb.Item>{selectedPhase.phase?.title}</Breadcrumb.Item>
       </Breadcrumb>
       <Layout
         className="site-layout-background"

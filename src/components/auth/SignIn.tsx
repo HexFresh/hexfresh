@@ -154,9 +154,6 @@ const SignIn = () => {
                   {' '}
                 </div>
               </Grid>
-              <Grid item>
-                <Link to="/signup">Don&apos;t have an account? Sign Up</Link>
-              </Grid>
             </Grid>
 
             <Button
