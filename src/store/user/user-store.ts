@@ -108,13 +108,7 @@ export const user: any = {
       
       const endpoint = '/auth/logout';
       try {
-        await axiosAuth.get(endpoint, { withCredentials: true});
-
-        localStorage.removeItem('token');
-        localStorage.removeItem('userId');
-        localStorage.removeItem("roleId");
-        localStorage.removeItem("_grecaptcha");
-  
+        await axiosAuth.get(endpoint, { withCredentials: true});  
         
       } catch (error) {
         throw error;
@@ -194,17 +188,23 @@ export const user: any = {
       }
     },
 
-    async doLogOut() {
-      const endpoint = 'auth/logout';
+    async doLogOutAllDevice({ navigate }: { navigate: NavigateFunction }) {
+
+      dispatch.user.logout();
+      dispatch({ type: 'RESET_APP' });
+      console.log('sign out remove token');
+      const endpoint = '/auth/revoke-token';
 
       try {
-        await axiosClient.get(endpoint);
+        await axiosAuth.get(endpoint);
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        localStorage.removeItem("roleId");
+        localStorage.removeItem("_grecaptcha");
       } catch (error) {
-        notification.error({
-          description: error,
-          message: 'Log out failed.'
-        });
+        throw error;
       }
+      navigate('/signin', { replace: true });
     },
 
     async doFetchCurrentProfileInfo() {
