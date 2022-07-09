@@ -64,6 +64,7 @@ function App() {
   }
 
   useEffect(() => {
+    localStorage.setItem('sideBarTitle', 'dashboard');
     const initialFunc = async () => {
       // await dispatch.user.checkAutoLoginV2({dispatch, navigate, location});
       await dispatch.user.doFetchCurrentProfileInfo();
