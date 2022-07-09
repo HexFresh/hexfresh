@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { Menu, Breadcrumb } from 'antd';
-import { CircularProgress } from '@mui/material';
-import { CheckCircleOutlined, CloseCircleOutlined, HomeOutlined, ApartmentOutlined } from '@ant-design/icons';
-import { getAllFresherChecklist, getPhaseById, getUserInfoById } from '../../api/mentor/review/api';
-import { sortByField } from '../../utils/common';
-import { IUserChecklist, ITask } from './interface';
+import React, {useEffect} from 'react';
+import {Link, useParams} from 'react-router-dom';
+import {Menu, Breadcrumb} from 'antd';
+import {CircularProgress} from '@mui/material';
+import {CheckCircleOutlined, CloseCircleOutlined, HomeOutlined, ApartmentOutlined} from '@ant-design/icons';
+import {getAllFresherChecklist, getPhaseById, getUserInfoById} from '../../api/mentor/review/api';
+import {sortByField} from '../../utils/common';
+import {IUserChecklist, ITask} from './interface';
 import './review-task.css';
 import TaskReview from '../../components/mentor/task-review/TaskReview';
 
-const { SubMenu } = Menu;
+const {SubMenu} = Menu;
 
 export default function ReviewTask() {
   const [username, setUsername] = React.useState('');
@@ -67,12 +67,12 @@ export default function ReviewTask() {
   return (
     <div className="review-task-main">
       {loading ? (
-        <CircularProgress />
+        <CircularProgress/>
       ) : (
         <div className="review-task">
           <div className="topbar">
             <Link className="topbar__left" to="/mentor/freshers">
-              <img src="/logo.svg" width="36px" alt="logo" />
+              <img src="/logo.svg" width="36px" alt="logo"/>
             </Link>
             <div className="topbar__mid">{`Review task in ${phaseTitle} of fresher ${username}`}</div>
             <div className="topbar__right"></div>
@@ -105,7 +105,7 @@ export default function ReviewTask() {
           <div className="content">
             <div className="detail-left">
               <div className="left__container">
-                <Menu mode="inline" style={{ height: '100%', borderRight: 0 }}>
+                <Menu mode="inline" style={{height: '100%', borderRight: 0}}>
                   {checklists.map((checklist) => {
                     return (
                       <SubMenu
@@ -116,7 +116,7 @@ export default function ReviewTask() {
                         title={
                           <div
                             style={{
-                              fontSize: '18px',
+                              fontSize: '14px',
                               fontWeight: 'bold',
                               textTransform: 'uppercase',
                             }}
@@ -168,7 +168,7 @@ export default function ReviewTask() {
             </div>
             <div className="detail-right">
               {selectedTask ? (
-                <TaskReview selectedTask={selectedTask} />
+                <TaskReview selectedTask={selectedTask}/>
               ) : (
                 <div className="no-task">No Selected Task</div>
               )}

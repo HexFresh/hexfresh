@@ -30,6 +30,7 @@
     "faker": "^6.6.6",
     "firebase": "^9.6.10",
     "formik": "^2.2.9",
+    "interweave": "^13.0.0",
     "jodit": "^3.16.5",
     "jodit-react-ts": "^0.9.0",
     "lodash": "^4.17.21",

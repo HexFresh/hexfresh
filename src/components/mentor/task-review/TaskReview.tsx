@@ -7,9 +7,10 @@ import SingleTaskReview from './single-task-review/SingleTaskReview';
 import TrueFalseTaskReview from './true-false-task-review/TrueFalseTaskReview';
 import AssignmentReview from './assignment-review/AssignmentReview';
 import './task-review.css';
+import DocumentTaskReview from "./document-task-review/DocumentTaskReview";
 
 export default function TaskReview(props: any) {
-  const { selectedTask } = props;
+  const {selectedTask} = props;
   console.log(selectedTask);
   const renderType = () => {
     switch (selectedTask.typeId) {
@@ -37,19 +38,21 @@ export default function TaskReview(props: any) {
   const renderTask = () => {
     switch (selectedTask.typeId) {
       case 1:
-        return <SingleTaskReview selectedTask={selectedTask} />;
+        return <SingleTaskReview selectedTask={selectedTask}/>;
       case 2:
-        return <MultipleTaskReview selectedTask={selectedTask} />;
+        return <MultipleTaskReview selectedTask={selectedTask}/>;
       case 3:
-        return <ConstructedTaskReview selectedTask={selectedTask} />;
+        return <ConstructedTaskReview selectedTask={selectedTask}/>;
       case 4:
-        return <TrueFalseTaskReview selectedTask={selectedTask} />;
+        return <TrueFalseTaskReview selectedTask={selectedTask}/>;
       case 5:
-        return <MatchSequenceTaskReview selectedTask={selectedTask} />;
+        return <MatchSequenceTaskReview selectedTask={selectedTask}/>;
       case 6:
-        return <MatchCorrespondingTaskReview selectedTask={selectedTask} />;
+        return <MatchCorrespondingTaskReview selectedTask={selectedTask}/>;
+      case 7:
+        return <DocumentTaskReview selectedTask={selectedTask}/>;
       case 8:
-        return <AssignmentReview selectedTask={selectedTask} />;
+        return <AssignmentReview selectedTask={selectedTask}/>;
       default:
         return <div className="task-type">Chưa làm</div>;
     }
