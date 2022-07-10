@@ -82,7 +82,6 @@ export const MessagesList = memo(({
       className={`${"demo-loadmore-list bg-white"} ${className}`}
       loading={initLoading}
       itemLayout="horizontal"
-      loadMore={loadMore}
       dataSource={conversations}
       style={{/*  height: '100%', */ overflowY: 'auto', overflowX: 'hidden' }}
       renderItem={item => {
