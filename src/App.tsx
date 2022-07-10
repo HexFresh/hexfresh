@@ -36,13 +36,14 @@ import MentorMessage from "./pages/mentor-message/MentorMessage";
 import MentorDashboard from "./pages/mentor-dashboard/MentorDashboard";
 import { ROLE, USER_ROLE } from './constant';
 import { RocketLoading } from './components/loading/rocket-loading.component';
-import { PermissionError } from './pages/permission-error';
+import SelectProgram from './components/layouts/select-program/select-program.component';
 
 const Home = () => {
   return (
     <div className="app">
       <MeteorShower />
       <HeaderInternal />
+      <SelectProgram/>
       <ProgressCard />
       {<Carousel />}
       <div>

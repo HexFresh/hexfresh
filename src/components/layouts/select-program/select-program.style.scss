@@ -1,0 +1,18 @@
+.program-card{
+  position: absolute;
+  left: 5%;
+  top: 15%;
+  width: 400px;
+  .planet-progress{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    .img{
+      margin-right: 16px;
+      img{
+        width:60px;
+      }
+    }
+  }
+}
