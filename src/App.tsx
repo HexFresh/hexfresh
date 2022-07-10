@@ -57,7 +57,7 @@ function App() {
   const auth: IUserStore = useSelector<IRootStore>((state) => state.user);
   const roleId: number = Number(useSelector<IRootStore>((state) => state.user.roleId)) || Number(localStorage.getItem('roleId')) || 0;
   const [socket, setSocket] = useState(io());
-  const token = useSelector<IRootStore>((state) => state.user?.token);
+  const token = useSelector<IRootStore>((state) => state.user?.token)|| localStorage.getItem('token');
 
   if (!auth.token && location.pathname !== '/signin' && location.pathname !== '/planets' && location.pathname !== '/') {
     dispatch.location.startAt(location.pathname + location.search);
@@ -66,7 +66,7 @@ function App() {
   useEffect(() => {
     localStorage.setItem('sideBarTitle', 'dashboard');
     const initialFunc = async () => {
-      // await dispatch.user.checkAutoLoginV2({dispatch, navigate, location});
+      await dispatch.user.checkAutoLoginV2({dispatch, navigate, location});
       await dispatch.user.doFetchCurrentProfileInfo();
       await dispatch.user.fetchProfileUsers();
       // push notification

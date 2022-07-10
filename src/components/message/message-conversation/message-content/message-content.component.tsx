@@ -20,7 +20,7 @@ export const MessageContent = React.memo(({
 
   doFetchRecipientsProfile: any,
 }) => {
-  const userId = useSelector((state: IRootStore) => state.user?.id);
+  const userId = useSelector((state: IRootStore) => state.user?.myProfile?.userId);
   const [ isResponseMessage, setIsResponseMessage ] = useState<boolean>(false);
   const [ avatar, setAvatar ] = useState<string>("");
 

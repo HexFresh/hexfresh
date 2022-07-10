@@ -1,5 +1,6 @@
 import { createModel } from '@rematch/core';
 import { notification } from 'antd';
+import { AxiosError } from 'axios';
 import _ from 'lodash';
 import axiosClient from '../../api/axiosClient';
 import { ICheckList, IImage, IPhase, ITask } from '../../interface/program-interface';
@@ -19,19 +20,19 @@ import rootStore, { IRootDispatch, IRootStore } from '../store';
   isSubmitingAnswer: boolean;
 } */
 
-export const programInititalState ={
+export const programInititalState = {
   program: {},
-    selectedPhase: {},
-    checklists: [],
-    selectedTask: {},
-    imageList: [],
-    isFetchingProgram: false,
-    isFetchingPhase: false,
-    isFetchingTask: false,
-    isFetchingChecklist: false,
-    isFetchingAnswer: false,
-    isSubmitingAnswer: false,
-    isFetchingImageList: false,
+  selectedPhase: {},
+  checklists: [],
+  selectedTask: {},
+  imageList: [],
+  isFetchingProgram: false,
+  isFetchingPhase: false,
+  isFetchingTask: false,
+  isFetchingChecklist: false,
+  isFetchingAnswer: false,
+  isSubmitingAnswer: false,
+  isFetchingImageList: false,
 }
 
 
@@ -53,8 +54,8 @@ export const programStore: any = createModel<IRootStore>()({
     setIsSubmitingAnswer: (state, payload) => ({ ...state, isSubmitingAnswer: payload }),
     setIsFetchingImageList: (state, payload) => ({ ...state, isFetchingImageList: payload }),
 
-    reset: () =>({...programInititalState}),
-    resetSelectedTask: (state)=>({...state, selectedTask:{}}),
+    reset: () => ({ ...programInititalState }),
+    resetSelectedTask: (state) => ({ ...state, selectedTask: {} }),
   },
   effects: (dispatch: IRootDispatch) => ({
 
@@ -67,9 +68,14 @@ export const programStore: any = createModel<IRootStore>()({
         const { programId } = response.data;
 
         dispatch.programStore.doFetchUserPhase({ programId });
-      } catch (error) {
         dispatch.programStore.setIsFetchingProgram(false);
-        /* throw new Error('Failed to fetch program.'); */
+      } catch (error) {
+        const axiosError = error as AxiosError || '400';
+        if (axiosError.code === '400'){
+          dispatch.programStore.setProgram([]);
+        }
+          dispatch.programStore.setIsFetchingProgram(false);
+        throw new Error('Failed to fetch program.');
       }
       dispatch.programStore.setIsFetchingProgram(false);
 
@@ -85,7 +91,7 @@ export const programStore: any = createModel<IRootStore>()({
       } catch (error) {
         dispatch.programStore.setIsFetchingImageList(false);
 
-       /*  throw new Error('Failed to fetch list images.'); */
+        /*  throw new Error('Failed to fetch list images.'); */
       }
     },
 

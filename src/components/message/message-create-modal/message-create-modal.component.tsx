@@ -31,7 +31,7 @@ export const MessageCreateModal = React.memo(({
 
   const onChangeTitle = (event: any) => {
     const { value } = event.target
-    !isEmpty(value) && setTitle(value);
+    setTitle(value);
   }
 
   const handleSubmitForm = useCallback(()=>{
