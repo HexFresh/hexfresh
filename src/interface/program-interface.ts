@@ -1,5 +1,22 @@
 import { AttachmentStatus } from "../utils/enum-utils";
 
+export interface IProgram {
+  id: number,
+  programId: number,
+  title: string,
+  numberOfPhases: number,
+  createdAt: string,
+  updatedAt: string,
+  imageId: number,
+  authorId: string,
+  image: IQuickImage,
+}
+
+export interface IQuickImage {
+  id: number,
+  description: string,
+  imageLink: string,
+}
 export interface IPhase {
   phase?: IPhaseDetail;
   id: string;
@@ -16,7 +33,7 @@ export interface IPhase {
   checklists?: ICheckList[];
 }
 
-export interface IPhaseDetail{
+export interface IPhaseDetail {
   id: string;
   index: string;
   title: string;
@@ -38,7 +55,7 @@ export interface ICheckList {
   phaseId: string;
   tasks?: ITask[];
 }
-export interface ITask{
+export interface ITask {
   id: number;
   title: string;
   index: string;
@@ -55,7 +72,7 @@ export interface ITask{
   match_corresponding_answers: ICorrespondingTassk[];
   assignment: IAssignemtTask;
   document: IDocumentTask;
-  
+
 }
 export interface ISelectedTask {
   id: number;
@@ -66,7 +83,7 @@ export interface ISelectedTask {
   pointByMentor: number;
 
   task: ITask;
-  
+
   user_selected_question_answer: IAnswerSelectedQuestion;
   user_constructed_question_answer: IAnswerContructedQuestion;
   user_true_false_question_answer: IAnswerBinaryQuestion;
@@ -84,7 +101,7 @@ export interface IAssignmentFile {
   presignUrl: string;
 }
 
-export interface IAnswerAssignment{
+export interface IAnswerAssignment {
   answer: string;
   createdAt: string;
   fileList: IAssignmentFile[];

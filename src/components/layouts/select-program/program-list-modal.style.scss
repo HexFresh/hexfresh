@@ -1,0 +1,15 @@
+.ant-list-item{
+  cursor: pointer;
+  .planet-progress{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    .img{
+      margin-right: 16px;
+      img{
+        width:60px;
+      }
+    }
+  }
+}

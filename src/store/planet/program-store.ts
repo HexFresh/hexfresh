@@ -22,11 +22,13 @@ import rootStore, { IRootDispatch, IRootStore } from '../store';
 
 export const programInititalState = {
   program: {},
+  programs: [],
   selectedPhase: {},
   checklists: [],
   selectedTask: {},
   imageList: [],
   isFetchingProgram: false,
+  isFetchingPrograms: false,
   isFetchingPhase: false,
   isFetchingTask: false,
   isFetchingChecklist: false,
@@ -43,10 +45,12 @@ export const programStore: any = createModel<IRootStore>()({
   reducers: {
     setSelectedPhase: (state, payload) => ({ ...state, selectedPhase: payload }),
     setProgram: (state, payload) => ({ ...state, program: payload }),
+    setPrograms: (state, payload) => ({ ...state, programs: payload }),
     setChecklists: (state, payload) => ({ ...state, checklists: payload }),
     setSeletedTask: (state, payload) => ({ ...state, selectedTask: payload }),
     setListImages: (state, payload) => ({ ...state, imageList: payload }),
     setIsFetchingProgram: (state, payload) => ({ ...state, isFetchingProgram: payload }),
+    setIsFetchingPrograms: (state, payload) => ({ ...state, isFetchingPrograms: payload }),
     setIsFetchingPhase: (state, payload) => ({ ...state, isFetchingPhase: payload }),
     setIsFetchingTask: (state, payload) => ({ ...state, isFetchingTask: payload }),
     setIsFetchingChecklist: (state, payload) => ({ ...state, isFetchingChecklist: payload }),
@@ -71,14 +75,50 @@ export const programStore: any = createModel<IRootStore>()({
         dispatch.programStore.setIsFetchingProgram(false);
       } catch (error) {
         const axiosError = error as AxiosError || '400';
-        if (axiosError.code === '400'){
+        if (axiosError.code === '400') {
           dispatch.programStore.setProgram([]);
         }
-          dispatch.programStore.setIsFetchingProgram(false);
+        dispatch.programStore.setIsFetchingProgram(false);
         throw new Error('Failed to fetch program.');
       }
       dispatch.programStore.setIsFetchingProgram(false);
 
+    },
+
+    async doFetchUserPrograms() {
+      const endpoint = `user/program`;
+      dispatch.programStore.setIsFetchingPrograms(true);
+      try {
+        const response = await axiosClient.get(endpoint);
+        dispatch.programStore.setPrograms(response.data);
+
+        dispatch.programStore.setIsFetchingPrograms(false);
+      } catch (error) {
+
+        dispatch.programStore.setIsFetchingProgram(false);
+        throw new Error('Failed to fetch user programs.');
+      }
+    },
+
+    async doFetchProgramByProgramId(id: number){
+      const endpoint = `user/program/${id}`;
+      dispatch.programStore.setIsFetchingProgram(true);
+      try {
+        const response = await axiosClient.get(endpoint);
+        dispatch.programStore.setProgram(response.data);
+        const { programId } = response.data;
+
+        dispatch.programStore.doFetchUserPhase({ programId });
+        dispatch.programStore.setIsFetchingProgram(false);
+      } catch (error) {
+        const axiosError = error as AxiosError || '400';
+        if (axiosError.code === '400') {
+          dispatch.programStore.setProgram([]);
+        }
+        dispatch.programStore.setIsFetchingProgram(false);
+        throw new Error('Failed to fetch program.');
+      }
+      dispatch.programStore.setIsFetchingProgram(false);
     },
 
     async doFetchImageList() {

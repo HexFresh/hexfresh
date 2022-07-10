@@ -3,6 +3,21 @@
   right: 5%;
   top: 15%;
   width: 300px;
+  .planet-progress{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .img{
+      margin-right: 16px;
+      animation: logo-spin infinite 20s linear;
+      img{
+        width:60px;
+      }
+    }
+    .ant-progress-text{
+      color: white;
+    }
+  }
 }
 
 .bg-glassmorphism{
@@ -23,21 +38,7 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
   color: white !important;
 }
 
-.planet-progress{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  .img{
-    margin-right: 16px;
-    animation: logo-spin infinite 20s linear;
-    img{
-      width:60px;
-    }
-  }
-  .ant-progress-text{
-    color: white;
-  }
-}
+
 /* @media (prefers-reduced-motion: no-preference) {
   div.img {
     animation: logo-spin infinite 20s linear;
