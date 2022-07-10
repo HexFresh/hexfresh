@@ -12,6 +12,7 @@ import { RocketLoading } from "../../loading/rocket-loading.component";
 import { INT_ONE, INT_TWO, INT_ZERO } from "../../../constant";
 
 import "./Carousel.scss";
+import { EmptyResult } from "../../results";
 
 type ICarouselProps = StateProps & DispatchProps;
 
@@ -90,7 +91,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
     const { doFetchProgram, doFetchImageList, program, imageList } = this.props;
 
     try {
-      this.setState({ isLoading: true });
+     
       _.isEmpty(program) && doFetchProgram();
 
       _.isEmpty(imageList) && doFetchImageList();
@@ -98,8 +99,6 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
     } catch (error) {
       notification.error({ message: 'Failed to fetch list of phases.' });
     }
-
-    this.setState({ isLoading: false });
   }
 
   componentDidUpdate(prevProps: ICarouselProps, prevState: ICarouselStates) {
@@ -110,11 +109,17 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
   }
 
   render() {
-    const { program, imageList } = this.props;
+    const { program } = this.props;
     const { isLoading, items, active } = this.state;
 
-    if (_.isEmpty(program) || _.isEmpty(imageList) || isLoading) {
+    if (isLoading) {
       return <RocketLoading />
+    }
+
+    if ((_.isEmpty(program)|| _.isEmpty(program?.userPhases)) && !isLoading) {
+      return <div className="carousel-result">
+      <EmptyResult message="Your current program will displayed here." />
+      </div>
     }
     return (
       <div id="carousel" className="noselect">
