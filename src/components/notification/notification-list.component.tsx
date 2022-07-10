@@ -11,6 +11,7 @@ import { NotificationType } from '../../utils/enum-utils';
 import { IUser } from '../../store/user/user-interface';
 
 import './notification-list.style.scss';
+import { RocketLoading } from '../loading/rocket-loading.component';
 
 export const NotificationList = memo(({
   loading,
@@ -37,12 +38,12 @@ export const NotificationList = memo(({
     }
     doFetchNotifications(page);
     setPage((prePage) => prePage + 1);
-  }, [doFetchNotifications, page]);
+  }, [ doFetchNotifications, page ]);
 
   const handleSelectNotif = useCallback(
-    (notif: INotification)=>{
+    (notif: INotification) => {
       onSelectNotification(notif);
-    },[onSelectNotification])
+    }, [ onSelectNotification ])
 
   useEffect(() => {
     loadMore();
@@ -72,7 +73,7 @@ export const NotificationList = memo(({
       border: '1px solid rgba(140, 140, 140, 0.35)',
     }}
   >
-    <InfiniteScroll
+    {loading ? <RocketLoading /> : <InfiniteScroll
       dataLength={notifications.length}
       next={loadMore}
       hasMore={notifications.length < total}
@@ -106,7 +107,7 @@ export const NotificationList = memo(({
             </List.Item>
           }}
       />
-    </InfiniteScroll>
+    </InfiniteScroll>}
   </div>
 });
 

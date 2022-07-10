@@ -3,7 +3,7 @@ import { TransitionGroup } from "react-transition-group";
 import { connect } from "react-redux";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { notification } from "antd";
-import _, { isEqual } from "lodash";
+import _, { isEqual, reverse } from "lodash";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
 import { IRootDispatch, IRootStore } from "../../../store/store";
@@ -48,11 +48,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
 
       for (let i = 0; i < items?.length; i++) {
         let index = i;
-        if (i < 0) {
-          index = items?.length + i;
-        } else if (i >= items?.length) {
-          index = i % items?.length;
-        }
+        
         level = active - i;
         const image = _.find(imageList, { id: items[ index ]?.phase?.imageId })
         itemsPhase.push(
