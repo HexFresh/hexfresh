@@ -339,15 +339,20 @@
 }
 
 .list-phase .badges-list-wrap {
-    display: flex;
     grid-gap: 15px;
-    flex-wrap: wrap;
-    background-color: white;
     padding: 20px;
     border-radius: 10px;
-    justify-content: center;
     overflow-y: scroll;
     height: 100%;
+    background-color: white;
+}
+
+.badges-list-wrap__container {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
 
 .list-phase .badges-list .badge {

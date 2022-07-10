@@ -315,23 +315,25 @@ export default function ListPhase() {
                       <div className="badges-list">
                         <div className="name-space">List badge</div>
                         <div className={"badges-list-wrap"}>
-                          {badges.map(badge => {
-                            return (<div key={badge.id} className="badge">
-                              <Tooltip title={badge.title}>
-                                <div className="badge-left">
-                                  <div className="badge-avatar">
-                                    <img style={{
-                                      width: '80px', objectFit: 'cover',
-                                    }}
-                                         src={badge.image}
-                                         alt=""/>
+                          <div className={"badges-list-wrap__container"}>
+                            {badges.map(badge => {
+                              return (<div key={badge.id} className="badge">
+                                <Tooltip title={badge.title}>
+                                  <div className="badge-left">
+                                    <div className="badge-avatar">
+                                      <img style={{
+                                        width: '80px', objectFit: 'cover',
+                                      }}
+                                           src={badge.image}
+                                           alt=""/>
+                                    </div>
                                   </div>
+                                </Tooltip>
+                                <div className="badge-right">
                                 </div>
-                              </Tooltip>
-                              <div className="badge-right">
-                              </div>
-                            </div>)
-                          })}
+                              </div>)
+                            })}
+                          </div>
                         </div>
                       </div>
                     </>
