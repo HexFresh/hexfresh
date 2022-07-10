@@ -91,10 +91,78 @@ export const FresherLineChart = ({ stats: { tasksDoneByDate, pointsByDate } }: {
       ],
     }
   },[pointsByDate, tasksDoneByDate]);
-  const data: ChartData<'line'> = useMemo(() => getData(), [getData]);
-  const options = useMemo<ChartOptions<'line'>>(() => getOptions(), [getOptions]);
+  const data1 = {
+    labels: map(tasksDoneByDate, task => moment(task.date).format("MMM Do YY")),
+    datasets: [
+      {
+        label: 'Points',
+        data: map(pointsByDate, point => point.totalpoints),
+        borderColor: 'rgb(53, 162, 235)',
+        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+      },
+    ],
+  }
+
+  const data2 = {
+    labels: map(tasksDoneByDate, task => moment(task.date).format("MMM Do YY")),
+    datasets: [
+      {
+        label: 'Task done',
+        data: map(tasksDoneByDate, task => task.totalTasks),
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      },
+    ],
+  }
+
+  const options1: ChartOptions<"line"> = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top' as const,
+      },
+      title: {
+        display: true,
+        text: 'Your current task done status',
+      },
+    },
+    scales: {
+      y:{
+        display: true,
+        position: 'left',
+        title: {
+          display: true,
+          text: 'Number of task done by date'
+        }
+      },
+    }
+  }
+
+  const options2: ChartOptions<"line"> = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top' as const,
+      },
+      title: {
+        display: true,
+        text: 'Your current user\'s point status',
+      },
+    },
+    scales: {
+      y:{
+        display: true,
+        position: 'left',
+        title: {
+          display: true,
+          text: 'Number of user\'s point by date'
+        }
+      },
+    }
+  }
 
   return <>
-    <Line className='mt-medium' options={options} data={data} />
+    <Line className='mt-medium' options={options1} data={data1} />
+    <Line className='mt-medium' options={options2} data={data2} />
   </>
 }
