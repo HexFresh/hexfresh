@@ -13,7 +13,6 @@ export const MessageListHeader = React.memo(({
   }) => {
   return <div className="bg-white">
     <Space direction="horizontal" className={`${'message__list--header'} ${className}`}>
-      <Avatar size='large'>Me</Avatar>
       <Typography style={{fontWeight: 500}} >Chat</Typography>
       <AddBoxOutlinedIcon className="pointer" onClick={onAddChat} />
     </Space>

@@ -144,7 +144,6 @@ export const MessageDetail = memo(({
     <>
       <section className="chat ">
         <div className="header-chat">
-          <Avatar size='large' >Y</Avatar>
           {!isEditTitle ?
             <Typography.Text className="name" ellipsis={true} >{conversation?.title}</Typography.Text> :
             <Form
