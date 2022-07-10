@@ -138,11 +138,7 @@ function App() {
           <Route path="*" element={<Navigate to="/" />} />
         </>
       default:
-        return <>
-          <Route path="/" element={<PermissionError/>} />
-
-          <Route path="*" element={<Navigate to="/" />} />
-        </>
+       break;
     }
   }, [ roleId ])
 
