@@ -1,11 +1,10 @@
-import { NavigateFunction } from "react-router-dom";
+import {NavigateFunction} from "react-router-dom";
 import axiosClient from "../../api/axiosClient";
-import rootStore, { IRootDispatch, IRootStore } from "../store";
-import { retrieveStoredToken } from '../../utils/calc';
-import { socketInstance } from "../../utils/socketioInit";
-import { notification } from "antd";
-import { setAuthToken } from "../../api/axiosMessage";
-import axios from "axios";
+import rootStore, {IRootDispatch, IRootStore} from "../store";
+import {retrieveStoredToken} from '../../utils/calc';
+import {socketInstance} from "../../utils/socketioInit";
+import {notification} from "antd";
+import {setAuthToken} from "../../api/axiosMessage";
 import axiosAuth from "../../api/axiosAuth";
 
 export const userInitialState = {
@@ -43,12 +42,12 @@ export const user: any = {
       }
     },
     logout: (state: IRootStore) => {
-      return { ...userInitialState }
+      return {...userInitialState}
     },
 
-    setUsers: (state: IRootStore, payload: any) => ({ ...state, users: payload }),
-    setIsFetchingUsers: (state: IRootStore, payload: any) => ({ ...state, isFetchingUsers: payload }),
-    setProfile: (state: IRootStore, payload: any) => ({ ...state, myProfile: payload }),
+    setUsers: (state: IRootStore, payload: any) => ({...state, users: payload}),
+    setIsFetchingUsers: (state: IRootStore, payload: any) => ({...state, isFetchingUsers: payload}),
+    setProfile: (state: IRootStore, payload: any) => ({...state, myProfile: payload}),
     setLoadingState: (state: IRootStore, payload: boolean) => ({...state, loadingState: payload})
   },
   effects: (dispatch: IRootDispatch) => ({
@@ -62,7 +61,7 @@ export const user: any = {
       const endpoint = `/auth/login`;
       try {
         const response = await axiosAuth.post(endpoint, `username=${email}&password=${password}`);
-        const { data } = response;
+        const {data} = response;
         dispatch.user.loginSucces({
           body: {
             ...data.user
@@ -75,18 +74,19 @@ export const user: any = {
         // Copy to success
 
         // await dispatch.user.fetchProfileUsers();
-        console.log('sign in token',data.token);
-        
+        console.log('sign in token', data.token);
+
         localStorage.setItem('token', data.token);
-        localStorage.setItem('userId', data.userId);
+        localStorage.setItem('userId', data.user.id);
         localStorage.setItem("roleId", data.user.roleId as string)
         localStorage.setItem('refreshToken', data.refreshToken)
+        localStorage.setItem('username', data.user.username)
 
         if (preLocation) {
           dispatch.location.arrivedStartLocation();
-          navigate(preLocation, { replace: true });
+          navigate(preLocation, {replace: true});
         } else {
-          navigate('/', { replace: true });
+          navigate('/', {replace: true});
         }
       } catch (error) {
 
@@ -97,30 +97,30 @@ export const user: any = {
         throw new Error('Failed to login.');
       }
     },
-    async logoutHandlerAction({ dispatch, navigate }: { dispatch: IRootDispatch, navigate: NavigateFunction }) {
+    async logoutHandlerAction({dispatch, navigate}: { dispatch: IRootDispatch, navigate: NavigateFunction }) {
       localStorage.clear();
       socketInstance.close();
-      await this.signOut({ navigate });
+      await this.signOut({navigate});
     },
-    async signOut({ navigate }: { navigate: NavigateFunction }) {
+    async signOut({navigate}: { navigate: NavigateFunction }) {
       dispatch.user.logout();
-      dispatch({ type: 'RESET_APP' });
+      dispatch({type: 'RESET_APP'});
       console.log('sign out remove token');
-      
+
       const endpoint = '/auth/logout';
       try {
-        await axiosAuth.get(endpoint, { withCredentials: true});  
-        
+        await axiosAuth.get(endpoint, {withCredentials: true});
+
       } catch (error) {
         throw error;
       }
-      navigate('/signin', { replace: true });
+      navigate('/signin', {replace: true});
     },
     checkAutoLogin({
-      dispatch,
-      navigate,
-      location
-    }: { dispatch: IRootDispatch, navigate: NavigateFunction, location: any }) {
+                     dispatch,
+                     navigate,
+                     location
+                   }: { dispatch: IRootDispatch, navigate: NavigateFunction, location: any }) {
       const tokenData = retrieveStoredToken();
       if (tokenData) {
         dispatch.user.retrieveToken(tokenData.token);
@@ -128,10 +128,10 @@ export const user: any = {
       }
     },
     async checkAutoLoginV2({
-      dispatch,
-      navigate,
-      location
-    }: { dispatch: IRootDispatch, navigate: NavigateFunction, location: any }) {
+                             dispatch,
+                             navigate,
+                             location
+                           }: { dispatch: IRootDispatch, navigate: NavigateFunction, location: any }) {
       const endpoint = `/`;
       const token = localStorage.getItem('token');
 
@@ -189,10 +189,10 @@ export const user: any = {
       }
     },
 
-    async doLogOutAllDevice({ navigate }: { navigate: NavigateFunction }) {
+    async doLogOutAllDevice({navigate}: { navigate: NavigateFunction }) {
 
       dispatch.user.logout();
-      dispatch({ type: 'RESET_APP' });
+      dispatch({type: 'RESET_APP'});
       console.log('sign out remove token');
       const endpoint = '/auth/revoke-token';
 
@@ -205,7 +205,7 @@ export const user: any = {
       } catch (error) {
         throw error;
       }
-      navigate('/signin', { replace: true });
+      navigate('/signin', {replace: true});
     },
 
     async doFetchCurrentProfileInfo() {
@@ -213,7 +213,7 @@ export const user: any = {
       dispatch.user.setIsFetchingUsers(true);
       try {
         const response = await axiosClient.get(endpoint);
-        const { data: { id } } = response;
+        const {data: {id}} = response;
         const endpoint_userProfile = `user/${id}/user-profile`;
 
         const responseProfile = await axiosClient.get(endpoint_userProfile);

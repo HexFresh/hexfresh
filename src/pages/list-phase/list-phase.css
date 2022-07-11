@@ -115,6 +115,11 @@
 
 .list-phase-content__container .chart {
     width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .list-phase .container .page-content .phases {

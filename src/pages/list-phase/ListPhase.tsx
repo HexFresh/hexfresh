@@ -6,7 +6,7 @@ import {PlusOutlined} from '@ant-design/icons';
 import {CircularProgress} from '@mui/material';
 import './list-phase.css';
 import DragDrop from './DragDrop';
-import {Modal, Input, Button, Select, message, Tooltip, Popconfirm, Tag} from 'antd';
+import {Modal, Input, Button, Select, message, Tooltip, Tag} from 'antd';
 import {
   getPhasesOfProgram,
   createPhase,
@@ -257,7 +257,10 @@ export default function ListPhase() {
             <div className={"list-phase-content"}>
               <div className={"list-phase-content__container"}>
                 <div className="chart">
-                  <LineChart options={options} data={lineData(stat)}/>
+                  {
+                    loading ? <CircularProgress/> : <LineChart options={options} data={lineData(stat)}/>
+                  }
+
                 </div>
                 <div className="phases">
                   {loading ? (

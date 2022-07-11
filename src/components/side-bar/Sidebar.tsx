@@ -3,10 +3,10 @@ import React, {useEffect, useState} from 'react';
 import './sidebar.css';
 import {Link, useNavigate} from "react-router-dom";
 import {Dropdown, Menu, Tooltip} from "antd";
-import {Apps, School, Message} from "@mui/icons-material";
+import {School, Message} from "@mui/icons-material";
 import {Avatar} from "@mui/material";
-import {useDispatch} from "react-redux";
-import {IRootDispatch} from "../../store/store";
+import {useDispatch, useSelector} from "react-redux";
+import {IRootDispatch, IRootStore} from "../../store/store";
 import LogoutIcon from '@mui/icons-material/Logout';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -16,6 +16,7 @@ export default function Sidebar() {
   const [active, setActive] = useState('');
   const dispatch = useDispatch<IRootDispatch>();
   const navigate = useNavigate();
+  const myProfile = useSelector((state: IRootStore) => state.user.myProfile);
 
   const logoutHandler = React.useCallback(() => {
     dispatch.user.logoutHandlerAction({dispatch, navigate});
@@ -54,6 +55,13 @@ export default function Sidebar() {
     </Menu>
   );
 
+  const renderName = () => {
+    const name = localStorage.getItem('username');
+    if (name) {
+      return name.charAt(0).toUpperCase();
+    }
+    return 'G';
+  }
   return (
     <div className="side-bar">
       <div className="menu">
@@ -110,7 +118,9 @@ export default function Sidebar() {
         <div className="bottom">
           <div className="avatar">
             <Dropdown arrow placement="topRight" overlay={menu}>
-              <Avatar/>
+              <Avatar src={myProfile?.avatar}>
+                {renderName()}
+              </Avatar>
             </Dropdown>
           </div>
         </div>

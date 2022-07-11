@@ -201,13 +201,13 @@ export default function PhaseItem(props: any) {
           <ListItemIcon>
             <EditIcon fontSize="small"/>
           </ListItemIcon>
-          {`Edit ${phase.title}`}
+          {`Edit`}
         </MenuItem>
         <MenuItem onClick={handleDeletePhase}>
           <ListItemIcon>
             <DeleteIcon fontSize="small"/>
           </ListItemIcon>
-          {`Delete ${phase.title}`}
+          {`Delete`}
         </MenuItem>
       </Menu>
     </div>
