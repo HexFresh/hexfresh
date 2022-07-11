@@ -37,13 +37,14 @@ import MentorDashboard from "./pages/mentor-dashboard/MentorDashboard";
 import { ROLE, USER_ROLE } from './constant';
 import { RocketLoading } from './components/loading/rocket-loading.component';
 import SelectProgram from './components/layouts/select-program/select-program.component';
+import { isEmpty } from 'lodash';
 
 const Home = () => {
   return (
     <div className="app">
       <MeteorShower />
       <HeaderInternal />
-      <SelectProgram/>
+      <SelectProgram />
       <ProgressCard />
       {<Carousel />}
       <div>
@@ -63,6 +64,8 @@ function App() {
   const [ socket, setSocket ] = useState(io());
   const token = useSelector<IRootStore>((state) => state.user?.token) || localStorage.getItem('token');
   const loadingState = useSelector<IRootStore>((state) => state.user?.loadingState);
+  const users = useSelector<IRootStore>((state) => state.user?.users);
+  const myProfile = useSelector<IRootStore>((state) => state.user?.myProfile);
 
   if (!auth.token && location.pathname !== '/signin' && location.pathname !== '/planets' && location.pathname !== '/') {
     dispatch.location.startAt(location.pathname + location.search);
@@ -71,7 +74,7 @@ function App() {
   useEffect(() => {
     localStorage.setItem('sideBarTitle', 'dashboard');
     const initialFunc = async () => {
-      await dispatch.user.checkAutoLoginV2({dispatch, navigate, location});
+      await dispatch.user.checkAutoLoginV2({ dispatch, navigate, location });
 
       // push notification
       onMessageListener()
@@ -86,16 +89,16 @@ function App() {
     setSocket(socketInstance);
   }, [ dispatch ]);
 
-  useEffect(()=>{
-    const loadUserInfor= async()=>{
-      if(auth.token){
-        await dispatch.user.doFetchCurrentProfileInfo();
-        await dispatch.user.fetchProfileUsers();
+  useEffect(() => {
+    const loadUserInfor = async () => {
+      if (auth.token) {
+        isEmpty(myProfile) && await dispatch.user.doFetchCurrentProfileInfo();
+        isEmpty(users) && await dispatch.user.fetchProfileUsers();
       }
     }
 
     loadUserInfor();
-  },[auth.token, dispatch.user])
+  }, [auth.token, dispatch.user, myProfile, users])
 
   useEffect(() => {
     if (socket.disconnected) {
@@ -149,7 +152,7 @@ function App() {
           <Route path="*" element={<Navigate to="/" />} />
         </>
       default:
-       break;
+        break;
     }
   }, [ roleId ])
 
