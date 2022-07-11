@@ -2,7 +2,7 @@ import React from "react";
 import { TransitionGroup } from "react-transition-group";
 import { connect } from "react-redux";
 import { NavigateFunction, useNavigate } from "react-router-dom";
-import { notification, Typography } from "antd";
+import { notification, Tooltip, Typography } from "antd";
 import _, { includes, isEqual, reverse } from "lodash";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
@@ -189,7 +189,9 @@ class ItemClass extends React.Component<IItemProps, IItemStates> {
             backgroundPosition: "center center",
           }}
         >
-         <Typography.Text className="itemname txt-color-white" ellipsis={true} >{program?.title}</Typography.Text>
+          <Tooltip title={program?.title}>
+            <Typography.Text className="itemname txt-color-white" ellipsis={true} >{program?.title}</Typography.Text>
+          </Tooltip>
           <span className="item_index" >{program?.index}</span>
           <button onClick={() => { navigate(`/planets/${program?.id}`) }} className="btn btn-5">Press to do</button>
         </div>
