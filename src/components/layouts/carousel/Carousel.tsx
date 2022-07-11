@@ -2,8 +2,8 @@ import React from "react";
 import { TransitionGroup } from "react-transition-group";
 import { connect } from "react-redux";
 import { NavigateFunction, useNavigate } from "react-router-dom";
-import { notification } from "antd";
-import _, { isEqual, reverse } from "lodash";
+import { notification, Typography } from "antd";
+import _, { includes, isEqual, reverse } from "lodash";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
 import { IRootDispatch, IRootStore } from "../../../store/store";
@@ -48,7 +48,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
 
       for (let i = 0; i < items?.length; i++) {
         let index = i;
-        
+
         level = active - i;
         const image = _.find(imageList, { id: items[ index ]?.phase?.imageId })
         itemsPhase.push(
@@ -87,7 +87,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
     const { doFetchProgram, doFetchImageList, program, imageList } = this.props;
 
     try {
-     
+
       _.isEmpty(program) && doFetchProgram();
 
       _.isEmpty(imageList) && doFetchImageList();
@@ -112,9 +112,9 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
       return <RocketLoading />
     }
 
-    if ((_.isEmpty(program)|| _.isEmpty(program?.userPhases)) && !isLoading) {
+    if ((_.isEmpty(program) || _.isEmpty(program?.userPhases)) && !isLoading) {
       return <div className="carousel-result">
-      <EmptyResult message="Your current program will displayed here." />
+        <EmptyResult message="Your current program will displayed here." />
       </div>
     }
     return (
@@ -174,14 +174,14 @@ class ItemClass extends React.Component<IItemProps, IItemStates> {
   }
 
   render() {
-    const className = "item level" + this.props.level;
-    const backgroundSize = this.props.level === 0 ? '400px' : this.props.level === -INT_TWO ? '50% ' : 'auto';
-    const { program, navigate, image } = this.props;
+    const { level, program, navigate, image } = this.props
+    const className = "item level" + level;
+    const backgroundSize = level === 0 ? '400px' : level === -INT_TWO ? '50% ' : 'auto';
 
     return (
       <>
         <div
-          className={className}
+          className={`${className} ${includes([ INT_ZERO, INT_ONE, INT_TWO ], Math.abs(level)) ? '' : 'hide'}`}
           style={{
             backgroundImage: `url(${image?.imageLink})`,
             backgroundSize: backgroundSize/* "cover" */,
@@ -189,7 +189,7 @@ class ItemClass extends React.Component<IItemProps, IItemStates> {
             backgroundPosition: "center center",
           }}
         >
-          <span className="itemname">{program?.title}</span>
+         <Typography.Text className="itemname txt-color-white" ellipsis={true} >{program?.title}</Typography.Text>
           <span className="item_index" >{program?.index}</span>
           <button onClick={() => { navigate(`/planets/${program?.id}`) }} className="btn btn-5">Press to do</button>
         </div>
