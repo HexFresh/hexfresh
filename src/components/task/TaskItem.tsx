@@ -693,7 +693,7 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
                 {!_.includes([ TaskCategory.WRITTING, TaskCategory.DOCUMENT ], task?.task?.typeId) && isTaken && isCorrect && !isEdit ? <Text type='success'>Your anwser is correct.</Text> : ''}
                 {!_.includes([ TaskCategory.WRITTING, TaskCategory.DOCUMENT ], task?.task?.typeId) && isTaken && !isCorrect && !isEdit ? <Text type='danger'>Your anwser is incorrect.</Text> : ''}
                 <Space direction="horizontal">
-                  {(!_.isEmpty(task) && !isEmptyQuiz && !isTaken || isTaken && isEdit) && <Button type='primary' className='mt-medium mr-medium' loading={isSubmitingAnswer} onClick={this._onSubmitTask}>Submit</Button>}
+                  {(!_.isEmpty(task) && !isEmptyQuiz && !isTaken || isTaken && isEdit) && <Button type='primary' className='mt-medium mr-medium' loading={isSubmitingAnswer} onClick={this._onSubmitTask}>{(task?.task?.typeId === TaskCategory.DOCUMENT) ? 'Mark as read' : 'Submit'}</Button>}
                   {isTaken && !isEdit && !_.includes([ TaskCategory.DOCUMENT ], task?.task?.typeId) ? <Button type='ghost' className='mt-medium' onClick={this._onRetakeTask}>Retake</Button> : ''}
                 </Space>
               </Space>

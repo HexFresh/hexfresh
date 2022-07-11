@@ -57,7 +57,8 @@ const setup = (store: IStore) => {
 
         } catch (_error) {
           dispatch.user.setLoadingState(false);
-
+          dispatch.user.logout();
+          dispatch({type: 'RESET_APP'});
           return Promise.reject(_error);
         }
       }
@@ -114,6 +115,8 @@ const setup = (store: IStore) => {
 
         } catch (_error) {
           dispatch.user.setLoadingState(false);
+          dispatch.user.logout();
+          dispatch({type: 'RESET_APP'});
           return Promise.reject(_error);
         }
       }

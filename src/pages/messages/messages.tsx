@@ -143,7 +143,7 @@ const Messages: FC<MessageProps> = ({
               <MessageListHeader className="mb-medium" onAddChat={handleAddChat}/>
               <Search
                 className="mb-medium"
-                placeholder="Search conversaiclatons"
+                placeholder="Search conversations"
                 allowClear
                 enterButton
                 size="large"
