@@ -248,6 +248,10 @@ body {
   z-index: 2;
 }
 
+.hide{
+  opacity: 0;
+}
+
 .left-enter {
   opacity: 0;
   left: $level2-left;

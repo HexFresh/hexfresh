@@ -115,7 +115,7 @@ export const FresherLineChart = ({ stats: { tasksDoneByDate, pointsByDate } }: {
     ],
   }
 
-  const options1: ChartOptions<"line"> = {
+  const options2: ChartOptions<"line"> = {
     responsive: true,
     plugins: {
       legend: {
@@ -138,7 +138,7 @@ export const FresherLineChart = ({ stats: { tasksDoneByDate, pointsByDate } }: {
     }
   }
 
-  const options2: ChartOptions<"line"> = {
+  const options1: ChartOptions<"line"> = {
     responsive: true,
     plugins: {
       legend: {
