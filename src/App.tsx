@@ -72,8 +72,7 @@ function App() {
     localStorage.setItem('sideBarTitle', 'dashboard');
     const initialFunc = async () => {
       await dispatch.user.checkAutoLoginV2({dispatch, navigate, location});
-      await dispatch.user.doFetchCurrentProfileInfo();
-      await dispatch.user.fetchProfileUsers();
+
       // push notification
       onMessageListener()
         .then((payload) => {
@@ -86,6 +85,17 @@ function App() {
     initialFunc();
     setSocket(socketInstance);
   }, [ dispatch ]);
+
+  useEffect(()=>{
+    const loadUserInfor= async()=>{
+      if(auth.token){
+        await dispatch.user.doFetchCurrentProfileInfo();
+        await dispatch.user.fetchProfileUsers();
+      }
+    }
+
+    loadUserInfor();
+  },[auth.token, dispatch.user])
 
   useEffect(() => {
     if (socket.disconnected) {
