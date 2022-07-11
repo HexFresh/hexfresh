@@ -14,5 +14,11 @@
         width:60px;
       }
     }
+    button.switch-button{
+      padding: 0.5rem;
+      &:hover{
+        cursor: pointer;
+      }
+    }
   }
 }
