@@ -24,7 +24,7 @@ export const SelectProgramItem = memo(({
       <img src={image?.imageLink} alt="your planet" />
     </div>
     <Typography.Text className={`txt-color-${txtColor}`}>{title}</Typography.Text>
-    {enableSwitch&&<Button onClick={onToggleSelectProgramModal} className={`bg-glassmorphism border-card txt-color-${txtColor}`}> Switch Program</Button>}
+    {enableSwitch&&<button onClick={onToggleSelectProgramModal} className={`bg-glassmorphism border-card txt-color-${txtColor} switch-button`}> Switch Program</button>}
   </div>
 });
 
