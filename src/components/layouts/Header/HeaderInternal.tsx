@@ -1,7 +1,7 @@
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { AssignmentInd, Logout } from '@mui/icons-material';
 import { handleBreakpoints } from '@mui/system';
-import { Avatar, Button, Dropdown, Menu, Modal } from 'antd';
+import { Avatar, Button, Dropdown, Menu, Modal, Space, Typography } from 'antd';
 import { isEmpty } from 'lodash';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,14 +24,16 @@ const HeaderInternal = ({ textColorClassName }: { textColorClassName?: string })
     confirm({
       title: 'Do you Want to log out on all device?',
       icon: <ExclamationCircleOutlined />,
-      content: 'Your account in others device will be logged out.',
-
+      content: <Space direction='vertical'>
+        <Typography>Your account in others device will be logged out. Or click Ok to normal log out.</Typography>
+        <Button onClick={logouAllDeviceHandler}>Logout in all devices</Button>
+        </Space>,
       onOk() {
-        logouAllDeviceHandler();
+        logoutHandler();
       },
 
       onCancel() {
-        logoutHandler();
+       
       },
     });
   };
@@ -41,6 +43,7 @@ const HeaderInternal = ({ textColorClassName }: { textColorClassName?: string })
   }, [ dispatch, navigate ]);
 
   const logouAllDeviceHandler = React.useCallback(async () => {
+    Modal.destroyAll();
     await dispatch.user.doLogOutAllDevice({ navigate });
   }, [ dispatch, navigate ]);
 

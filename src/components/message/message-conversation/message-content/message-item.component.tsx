@@ -30,7 +30,8 @@ export const NotificationMessage = memo(({ message }: { message: IMessage }) => 
       case MessageType.CREATE:
         return `${getFullName(profile)} created this conversation.`;
       case MessageType.RENAME:
-        return `${getFullName(profile)} has rename this conversation.`;
+        const renameBy = find(profileRecipients, [ 'userId', message?.from ]);
+        return `${getFullName(renameBy)} has rename this conversation.`;
       default:
         break;
     }
