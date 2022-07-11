@@ -1,4 +1,4 @@
-import { Button, List, Modal } from "antd";
+import { Button, List, Modal, Spin } from "antd";
 import { isEmpty } from "lodash";
 import { memo, useCallback, useMemo } from "react";
 import { IProgram } from "../../../interface/program-interface";
@@ -8,6 +8,7 @@ import { SelectProgramItem } from "./select-program-item.component";
 import './program-list-modal.style.scss';
 import { useDispatch, useSelector } from "react-redux";
 import { IRootDispatch, IRootStore } from "../../../store/store";
+import { LoadingOutlined } from "@ant-design/icons";
 
 export const ProgramsModal = memo((
   {
@@ -30,13 +31,13 @@ export const ProgramsModal = memo((
       await dispatch.programStore.doFetchProgramByProgramId(program.id);
     }
     onCancel();
-  }, [currentProggram?.programId, dispatch.programStore, onCancel])
+  }, [ currentProggram?.programId, dispatch.programStore, onCancel ])
 
   const actions = useMemo(() => ([
     <Button key="back" onClick={onCancel}>
       Close
     </Button>
-  ]), [onCancel]);
+  ]), [ onCancel ]);
 
   const modalContent = isEmpty(programs) ?
     <EmptyResult message="Your list program will display here." /> :
@@ -56,7 +57,9 @@ export const ProgramsModal = memo((
     onCancel={onCancel}
     footer={actions}
   >
-    {modalContent}
+    {isLoading ?<div className="loading">
+       <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} /> 
+      </div>: modalContent}
   </Modal>;
 })
 

@@ -13,7 +13,7 @@ import { ProgramsModal } from './program-list-modal.component';
 const SelectProgram = () => {
   const dispatch = useDispatch<IRootDispatch>();
   const { program } = useSelector((state: IRootStore) => state.programStore?.program);
-  const { programs, isFetchingPrograms } = useSelector((state: IRootStore) => state.programStore);
+  const { programs, isFetchingProgram } = useSelector((state: IRootStore) => state.programStore);
   const [ openModal, setOpenModal ] = useState<boolean>(false);
 
   useEffect(() => {
@@ -36,7 +36,7 @@ const SelectProgram = () => {
         isOpen={openModal}
         onCancel={() => {setOpenModal(false); console.log('123123123123123123');
         }}
-        isLoading={isFetchingPrograms}
+        isLoading={isFetchingProgram}
       />
     </>
   )
