@@ -296,7 +296,7 @@ export default function UserProfile() {
                     tab={
                       <span>
                         <ProfileOutlined />
-                        Persional Information
+                        Personal Information
                       </span>
                     }
                     tabKey={USER_PROFILE_TABS.INFORMATIONS}
