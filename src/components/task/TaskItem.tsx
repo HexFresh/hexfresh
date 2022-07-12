@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import _, { get, isEmpty, isEqual, map } from 'lodash';
 import 'antd/dist/antd.css';
-import { Space, Button, Skeleton, Card, Typography } from 'antd';
+import { Space, Button, Skeleton, Card, Typography, message } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import Title from 'antd/lib/typography/Title';
 import Text from 'antd/lib/typography/Text';
@@ -18,7 +18,7 @@ import { MatchSequence } from './match-sequence/MatchSequence';
 import { SingleChoice } from './single-choice-quiz/SingleChoice';
 import { MultipleChoices } from './multiple-task/MultipleChoices';
 import { BinaryQuiz } from './binary-quiz/BinaryQuiz';
-import { INT_ONE, INT_TWO, INT_ZERO } from '../../constant';
+import { INT_ONE, INT_TWO, INT_ZERO, UPLOAD_FILE_SIZE } from '../../constant';
 import { MatchCorrespond } from './match-corresponding/MatchCorrespond';
 import { CloseOutlined } from '@mui/icons-material';
 import { InlineValue } from '../../core/component/inline-value';
@@ -338,6 +338,10 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
 
   private _onChangeFile = (info: any) => {
     const file = info.file;
+    if( file.size>UPLOAD_FILE_SIZE){
+      message.error(`${file.name} size is greater than 25MB`);
+      return;
+     }
     !isEmpty(file) && this.setState({ selectedFiles: [ file ] });
   }
 
@@ -552,11 +556,12 @@ export class TaskItem extends Component<ITaskItemProps, ITaskItemState> {
             multiple: false,
             showUploadList: false,
 
-            beforeUpload(file: any) {
+            beforeUpload(file: File) {
               /*  const isValid = file.type === 'application/pdf';
                if (!isValid) {
                  message.error(`${file.name} is not a valid file`);
                } */
+
               return false;
             }
           };

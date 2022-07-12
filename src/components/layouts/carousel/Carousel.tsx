@@ -51,8 +51,16 @@ class Carousel extends React.Component<ICarouselProps, ICarouselStates> {
 
         level = active - i;
         const image = _.find(imageList, { id: items[ index ]?.phase?.imageId })
+        const isAvailable = index === 0 || (index > 0 && items[ index - 1 ].isCompleted);
         itemsPhase.push(
-          <Item key={index} level={level} program={items[ index ].phase} image={image} />
+          <Item
+            key={index}
+            level={level}
+            program={items[ index ].phase}
+            image={image}
+            completedPercentage={items[ index ].completedPercentage}
+            isAvailable={isAvailable}
+          />
         );
       }
 
@@ -153,6 +161,8 @@ interface IItemProps {
   program: IPhase;
   navigate: NavigateFunction;
   image: IImage;
+  completedPercentage: number;
+  isAvailable: boolean;
 }
 
 interface IItemStates {
@@ -174,14 +184,14 @@ class ItemClass extends React.Component<IItemProps, IItemStates> {
   }
 
   render() {
-    const { level, program, navigate, image } = this.props
+    const { level, program, navigate, image, completedPercentage, isAvailable } = this.props
     const className = "item level" + level;
     const backgroundSize = level === 0 ? '400px' : level === -INT_TWO ? '50% ' : 'auto';
 
     return (
       <>
         <div
-          className={`${className} ${includes([ INT_ZERO, INT_ONE, INT_TWO ], Math.abs(level)) ? '' : 'hide'}`}
+          className={`${className} ${includes([ INT_ZERO, INT_ONE, INT_TWO ], Math.abs(level)) ? '' : 'hide'} ${!isAvailable&&'lock'}`}
           style={{
             backgroundImage: `url(${image?.imageLink})`,
             backgroundSize: backgroundSize/* "cover" */,
@@ -189,11 +199,15 @@ class ItemClass extends React.Component<IItemProps, IItemStates> {
             backgroundPosition: "center center",
           }}
         >
-          <Tooltip title={program?.title}>
-            <Typography.Text className="itemname txt-color-white" ellipsis={true} >{program?.title}</Typography.Text>
-          </Tooltip>
-          <span className="item_index" >{program?.index}</span>
-          <button onClick={() => { navigate(`/planets/${program?.id}`) }} className="btn btn-5">Press to do</button>
+            <Tooltip title={program?.title}>
+              <Typography.Text className="itemname txt-color-white" ellipsis={true} >{program?.title}</Typography.Text>
+            </Tooltip>
+          {isAvailable ? <>
+            <span className="item_percentage">{Math.ceil(completedPercentage * 100)} <span>%</span></span>
+            <span className="item_index" >{program?.index}</span>
+            <button onClick={() => { navigate(`/planets/${program?.id}`) }} className="btn btn-5">Press to do</button>
+          </> : <div className="lock-phase"><img src="/locked.png" alt="lock image" /></div>
+          }
         </div>
 
       </>

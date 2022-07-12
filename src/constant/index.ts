@@ -21,3 +21,5 @@ export enum USER_PROFILE_TABS{
   [ROLE.MENTOR]: INT_THREE,
   [ROLE.FRESHER]: INT_FOUR,
  })
+
+ export const UPLOAD_FILE_SIZE = 25*1024*1024;
