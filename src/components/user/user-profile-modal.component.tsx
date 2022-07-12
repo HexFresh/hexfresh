@@ -70,7 +70,7 @@ export const UserProfileModal = memo((
             tab={
               <span>
                 <ProfileOutlined />
-                Persional Information
+                Personal Information
               </span>
             }
             tabKey={USER_PROFILE_TABS.INFORMATIONS}
