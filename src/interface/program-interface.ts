@@ -30,6 +30,8 @@ export interface IPhase {
   programId: number;
   image: IImage;
   name: string;
+  numberOfCompletedChecklists: number;
+  completedPercentage: number;
   checklists?: ICheckList[];
 }
 

@@ -74,10 +74,8 @@ export const programStore: any = createModel<IRootStore>()({
         dispatch.programStore.doFetchUserPhase({ programId });
         dispatch.programStore.setIsFetchingProgram(false);
       } catch (error) {
-        const axiosError = error as AxiosError || '400';
-        if (axiosError.code === '400') {
-          dispatch.programStore.setProgram([]);
-        }
+
+        dispatch.programStore.setProgram([]);
         dispatch.programStore.setIsFetchingProgram(false);
         throw new Error('Failed to fetch program.');
       }
@@ -100,7 +98,7 @@ export const programStore: any = createModel<IRootStore>()({
       }
     },
 
-    async doFetchProgramByProgramId(id: number){
+    async doFetchProgramByProgramId(id: number) {
       const endpoint = `user/program/${id}`;
       dispatch.programStore.setIsFetchingProgram(true);
       try {
@@ -150,12 +148,13 @@ export const programStore: any = createModel<IRootStore>()({
     async doFetchUserPhase({ programId }) {
       const endpoint = `user/program/${programId}/phase`;
       dispatch.programStore.setIsFetchingPhase(true);
+      const program = _.cloneDeep(rootStore.getState().programStore.program);
       try {
         const response = await axiosClient.get(endpoint);
-        const program = _.cloneDeep(rootStore.getState().programStore.program);
 
         dispatch.programStore.setProgram({ ...program, userPhases: response.data });
       } catch (error) {
+        dispatch.programStore.setProgram({ ...program, userPhases: [] });
         dispatch.programStore.setIsFetchingPhase(false);
         throw new Error('Failed to fetch phase.');
       }
