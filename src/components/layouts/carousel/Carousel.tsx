@@ -204,7 +204,7 @@ class ItemClass extends React.Component<IItemProps, IItemStates> {
             </Tooltip>
           {isAvailable ? <>
             <span className="item_percentage">{Math.ceil(completedPercentage * 100)} <span>%</span></span>
-            <span className="item_index" >{program?.index}</span>
+            {/* <span className="item_index" >{program?.index}</span> */}
             <button onClick={() => { navigate(`/planets/${program?.id}`) }} className="btn btn-5">Press to do</button>
           </> : <div className="lock-phase"><img src="/locked.png" alt="lock image" /></div>
           }
