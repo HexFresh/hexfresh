@@ -31,6 +31,10 @@ import './user-profile.css';
 const dateFormat = 'YYYY-MM-DD';
 const BASE_ADDRESS_API_URL = 'https://provinces.open-api.vn/api';
 
+function onlySpaces(str: string) {
+  return str.trim().length === 0;
+}
+
 export default function UserProfile() {
   const [loading, setLoading] = useState<boolean>(false);
   const [userAccount, setUserAccount] = useState<IUserAccount | null>(null);
@@ -152,6 +156,16 @@ export default function UserProfile() {
   };
 
   const handleUpdateUserProfile = async () => {
+    // @ts-ignore
+    if (onlySpaces(userProfile.firstName)) {
+      message.error('First name could not be empty');
+      return;
+    }
+    // @ts-ignore
+    if (onlySpaces(userProfile.lastName)) {
+      message.error('Last name could not be empty');
+      return;
+    }
     message.loading('Updating...').then(async () => {
       const newUserProfile = {
         ...userProfile,
