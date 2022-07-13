@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { find, forEach, isEmpty, isEqual } from 'lodash';
+import { find, forEach, includes, isEmpty, isEqual } from 'lodash';
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import { List, Skeleton, Divider, Typography, Avatar } from 'antd';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -95,7 +95,7 @@ export const NotificationList = memo(({
           (item) => {
             const user = find(profileRecipients, [ 'userId', item.from ]);
             const avatarUser = (isEmpty(user) || isEmpty(user?.avatar)) ? <Avatar>{user?.username[ 0 ].toUpperCase()}</Avatar> : <Avatar src={user?.avatar} />;
-            const notifAvatar = isEqual(item.type, NotificationType.SYSTEM) ? <Avatar src={AVATAR_SYSTEM_SRC} /> : avatarUser;
+            const notifAvatar = includes([ NotificationType.SYSTEM, NotificationType.BADGE ], item.type) ? <Avatar src={AVATAR_SYSTEM_SRC} /> : avatarUser;
 
             return <List.Item className='notif-item' key={item._id} onClick={handleSelectNotif.bind(null, item)}>
               <List.Item.Meta
