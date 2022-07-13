@@ -125,23 +125,22 @@ export default function ListProgram() {
           <Tooltip title="Assign program">
             <Button
               onClick={() => showModal(fresher.id)}
-              disabled={fresher?.currentProgram !== null}
               shape="circle"
               icon={<AuditOutlined/>}
             ></Button>
           </Tooltip>
-          <Tooltip title="Remove Program">
-            <Popconfirm
-              disabled={fresher?.currentProgram === null}
-              placement="bottomLeft"
-              title="Are you sure to remove this program from fresher?"
-              okText="Yes"
-              onConfirm={() => handleRemoveProgram(fresher.id, fresher.currentProgram?.program.id)}
-              cancelText="No"
-            >
-              <Button disabled={fresher?.currentProgram === null} shape="circle" icon={<FileExcelOutlined/>}></Button>
-            </Popconfirm>
-          </Tooltip>
+          {/*<Tooltip title="Remove Program">*/}
+          {/*  <Popconfirm*/}
+          {/*    disabled={fresher?.currentProgram === null}*/}
+          {/*    placement="bottomLeft"*/}
+          {/*    title="Are you sure to remove this program from fresher?"*/}
+          {/*    okText="Yes"*/}
+          {/*    onConfirm={() => handleRemoveProgram(fresher.id, fresher.currentProgram?.program.id)}*/}
+          {/*    cancelText="No"*/}
+          {/*  >*/}
+          {/*    <Button disabled={fresher?.currentProgram === null} shape="circle" icon={<FileExcelOutlined/>}></Button>*/}
+          {/*  </Popconfirm>*/}
+          {/*</Tooltip>*/}
         </div>
       ),
     },
