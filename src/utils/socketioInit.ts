@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 
 export const initSocket = () => {
   const accessToken = localStorage.getItem('token');
-  const url = 'https://hexfresh-socket.herokuapp.com';
+  const url =  process.env.REACT_APP_CHAT_SERVER_URL;
   const socket = io(url as string, {
     transports: ['websocket'],
     query: { token: accessToken },
